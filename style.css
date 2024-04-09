@@ -1,0 +1,40 @@
+* {
+  box-sizing: border-box;
+}
+
+.flex-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.flex-container > div {
+  background-color: gray;
+  border: 4px solid brown;
+  width: 100%;
+}
+
+.header {
+  flex: 1;
+}
+
+.body {
+  flex: 6;
+}
+
+.footer {
+  flex: 1;
+}
+
+p {
+  font-family: Georgia;
+  text-align: center;
+}
+
+.big-text {
+  font-size: 2em;
+}
+
+
+
+
