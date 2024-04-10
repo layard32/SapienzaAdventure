@@ -46,7 +46,7 @@ body {
 }
 
 .rect {
-  margin-bottom: 150px;
+  margin: auto 0;
   height: 400px;
   width: 700px;
 
@@ -89,7 +89,7 @@ body {
 }
 
 .roomCode {
-  font-size: calc(1.2vw + 1.2vh);
+  font-size: calc(1.3vw + 1.3vh);
 }
 
 .randomNumber {
