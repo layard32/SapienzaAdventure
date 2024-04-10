@@ -29,13 +29,25 @@ loader.classList.add("loader", "text");
 
 // creo in anticipo un input per inserire il codice della stanza con label
 const inputCode = document.createElement("input");
-inputCode.classList.add("roomJoin", "text");
+inputCode.id = "inputCode";
+inputCode.classList.add("text");
 inputCode.setAttribute("type", "text"); // Imposta il tipo dell'input su "text"
 const labelCode = document.createElement("label");
 labelCode.classList.add("roomJoinLabel", "text");
 labelCode.setAttribute("for", "inputCode");
 labelCode.textContent = "Inserisci il codice della stanza:";
 labelCode.appendChild(inputCode);
+
+// creo in anticipo un bottone per unirsi alla stanza
+const confirmJoin = document.createElement("button");
+confirmJoin.classList.add("btn", "confirmJoin", "text");
+confirmJoin.textContent = "Unisciti alla stanza";
+
+// unisco il bottone per unirsi alla stanza e quello per tornare indietro all'interno di un flexbox container
+const joinContainer = document.createElement("div");
+joinContainer.classList.add("joinContainer");
+joinContainer.append(goBack);
+joinContainer.append(confirmJoin);
 
 startGame.addEventListener("click", () => {
     // preparo gli elementi alla rimozione, con una transazione sull'opacità
@@ -89,13 +101,13 @@ joinGame.addEventListener("click", () => {
         joinGame.remove();
         
         rect.appendChild(labelCode);
-        rect.appendChild(goBack);
+        rect.appendChild(joinContainer);
 
-        goBack.style.opacity = 0;
+        joinContainer.style.opacity = 0;
         roomCode.style.opacity = 0;
         loader.style.opacity = 0;
 
-        // imposto il display di rect con flex-direction pari a column e 
+        // imposto il display di rect cambiando flex direction e justify content
         rect.style.flexDirection = "column";
         rect.style.justifyContent = "space-around";
 
@@ -107,8 +119,8 @@ joinGame.addEventListener("click", () => {
     setTimeout(() => {
         labelCode.style.transition = "opacity 0.5s";
         labelCode.style.opacity = 1;
-        goBack.style.transition = "opacity 0.5s transform 0.2s, box-shadow 0.2s";
-        goBack.style.opacity = 1;
+        joinContainer.style.transition = "opacity 0.5s";
+        joinContainer.style.opacity = 1;
     }, 600);
 });
 
@@ -119,10 +131,12 @@ goBack.addEventListener("click", () => {
     roomCode.style.transition = "opacity 0.5s";
     loader.style.transition = "opacity 0.5s";
     labelCode.style.transition = "opacity 0.5s";
+    joinContainer.style.transition = "opacity 0.5s";
     goBack.style.opacity = 0;
     roomCode.style.opacity = 0;
     loader.style.opacity = 0;
     labelCode.style.opacity = 0;
+    inputCode.value = '';
 
     // li rimuovo effettivamente, aggiungendo, opacizzati a zero (per la transizione) gli elementi precedenti (stessa cosa per div del codice e loader)
     setTimeout( () => {
@@ -130,6 +144,7 @@ goBack.addEventListener("click", () => {
         roomCode.remove();
         loader.remove();
         labelCode.remove();
+        joinContainer.remove();
 
         rect.appendChild(startGame);
         rect.appendChild(joinGame);
