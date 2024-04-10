@@ -21,7 +21,7 @@ roomCode.appendChild(randomNumberSpan);
 
 // funzione per generare un numero randomico
 function generateRandomNumber() {
-    return Math.floor(Math.random() * 10000);
+    return Math.floor(Math.random() * 900) + 100;
 }
 
 startGame.addEventListener("click", () => {
@@ -89,3 +89,5 @@ goBack.addEventListener("click", () => {
         startGame.style.opacity = 1;
     }, 600);
 });
+
+joinGame.addEventListener();
