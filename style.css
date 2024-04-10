@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
 * {
   box-sizing: border-box;
 }
@@ -9,8 +11,8 @@ body {
   background-size: cover;
 }
 
-p {
-  font-family: Georgia;
+.text,p{
+  font-family: Roboto;
   text-align: center;
 }
 
@@ -18,7 +20,7 @@ p {
   display: flex;
   flex-direction: column;
   height: 120vh;
-  opacity: 0.85;
+  opacity: 0.95;
   gap: 5px;
 }
 
@@ -45,36 +47,64 @@ p {
 
 .rect {
   margin-bottom: 150px;
-  height: 300px;
-  width: 550px;
+  height: 400px;
+  width: 700px;
 
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  gap: 20px;
+  gap: 18px;
 
   opacity: 1;
-  background-color: rgba(165, 42, 42);
-  border-radius: 15px;
+  background-color: #A67A53;
+  border-radius: 8px;
+}
+
+.rect > .btn {
+  width: 43%;
+  height: 90px;
+  margin: 0 10px;
 }
 
 .btn {
-  font-size: 1.3em;
-  width: 100%;
-  height: 70px;
+  font-family : "Roboto";
+  font-size: calc(1.2vw + 1.2vh);
+  font-weight: 500;
+  color: white;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+
+  border: 0;
+  cursor: pointer;
+  background-color: #8C4A4A;
+  border-radius: 20px;
+
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
+.btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 3px 4px 3px rgba(0, 0, 0, 0.3);
+}
 
+.roomCode {
+  font-size: calc(1.2vw + 1.2vh);
+}
 
+.randomNumber {
+  font-size: calc(1.45vw + 1.45vh);
+  font-weight: 900;
+  display: block;
+  text-align: center;
+  margin-top: 22px;
+}
 
-
-
-.big-text {
+.big {
   font-size: 2em;
 }
 
-.small-text {
+.small {
   font-size: 1.3em;
 }
 
