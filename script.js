@@ -37,7 +37,6 @@ joinContainer.appendChild(goBackButton2);
 joinContainer.appendChild(confirmJoinButton);
 insertCodeLabel.appendChild(insertCodeInput);
 insertCodeForm.appendChild(insertCodeLabel);
-insertCodeForm.appendChild(loader);
 insertCodeForm.appendChild(joinContainer);
 
 // setto le classi, gli id ed eventuali attributi degli elementi creati

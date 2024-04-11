@@ -1,19 +1,15 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto');
+/* importazioni e definizioni di scheletro fondamentale */
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
 
-html {
-  min-height: 100dvh;
-}
+* { box-sizing: border-box; }
 
-* {
-  box-sizing: border-box;
-}
+html { min-height: 100dvh; }
 
-#logo {
-  display: block;
-  height: auto;
-  max-width: calc(20vw + 15vh);
-  margin: 0 auto;
+.text,p{ 
+  font-family: Roboto Mono; 
+  text-align: center;   
+  word-wrap: break-word;
+  overflow: hidden;
 }
 
 body {
@@ -23,40 +19,35 @@ body {
   background-size: cover;
 }
 
-.text,p{
-  font-family: Roboto Mono;
-  text-align: center;
-}
-
 .flex-container {
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  height: 110vh;
 }
 
-.flex-container > div {
-  width: 100%;
-}
+.header { flex: 1; }
 
-.header {
-  flex: 1;
+.body { flex: 6; }
+
+.footer { flex: 0.5; }
+
+.flex-container > div { width: 100%; }
+
+#logo {
+  display: block;
+  height: auto;
+  max-width: calc(20vw + 15vh);
+  margin: 0 auto;
 }
 
 .body {
   flex: 6;
   display: flex;
-  align-items:flex-end;
+  align-items: center;
   justify-content: center;
 }
 
-.footer {
-  flex: 0.8;
-  position: fixed;
-  bottom: 0;
-}
-
 .rect {
-  margin: auto 0;
   height: 400px;  
   width: 700px;
   display: flex;
@@ -76,6 +67,8 @@ body {
   margin: 0 10px;
 }
 
+
+/* definizione di altri elementi */
 .btn {
   min-width: 120px;
   font-size: 140%;
@@ -97,39 +90,46 @@ body {
   box-shadow: 3px 4px 3px rgba(0, 0, 0, 0.3);
 }
 
-#roomCode {
-  font-size: 170%;
+.header > .small {
+  font-size: 180%;
+  font-weight: 900;
 }
+
+.loader {
+  width: fit-content;
+  font-weight: bold;
+  font-size: 130%; 
+}
+
+.loader:before {
+  content: "In attesa di un altro giocatore";
+  overflow: hidden;
+  white-space: nowrap;
+  animation: dot-animation 1.5s infinite;
+}
+
+@keyframes dot-animation {
+  0%, 10% {
+    content: "In attesa di un altro giocatore";
+  }
+  20%, 30% {
+    content: "In attesa di un altro giocatore.";
+  }
+  40%, 50% {
+    content: "In attesa di un altro giocatore..";
+  }
+  60%, 70% {
+    content: "In attesa di un altro giocatore...";
+  }
+}
+
+#roomCode { font-size: 170%; }
 
 #randomNumber {
   font-size: 200%;
   font-weight: 900;
   display: block;
   text-align: center;
-}
-
-.big {
-  font-size: 2em;
-}
-
-.header > .small {
-  font-size: 180%;
-  font-weight: 900;
-  word-wrap: break-word;
-}
-
-.loader {
-  margin-top: -15px;
-  width: fit-content;
-  font-weight: bold;
-  font-size: 130%;
-  clip-path: inset(0 3ch 0 0);
-  animation: l4 1s steps(4) infinite;
-}
-@keyframes l4 {to{clip-path: inset(0 -1ch 0 0)}}
-
-.loader:before {
-  content:"In attesa di un altro giocatore..."
 }
 
 #inputCode {
@@ -157,10 +157,9 @@ body {
 }
 
 #roomJoinLabel {
-  text-align:center;
+  text-align: center;
   font-size: 160%;
 }
-
 
 #joinContainer {
   display: flex;
