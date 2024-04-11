@@ -81,12 +81,12 @@ const removeElements =  function (elems) {
 // funzione per aggiungere gli elementi all'elemento parent con una transizione di trasparenza (stesso meccanismo della precedente)
 const addElements = function (elems, parent) {
     for (const elem of elems) {
-        // transizione a comparsa
+        // li aggiungo effettivamente ma con opacità a zero
         elem.style.transition = "opacity 0.5s";
         elem.style.opacity = 0;
-        // aggiunta effettiva al DOM (impostando opacity = 1)
+        parent.appendChild(elem);
+        // transizione a comparsa
         setTimeout( () => {
-            parent.appendChild(elem);
             elem.style.opacity = 1;
         }, 500);
     }
@@ -94,12 +94,16 @@ const addElements = function (elems, parent) {
 
 startGameButton.addEventListener("click", () => {
     removeElements ([startGameButton, joinGameButton]);
-    addElements ([roomCode, loader, goBackButton1], rect);
+    setTimeout(function() {
+        addElements([roomCode, loader, goBackButton1], rect);
+    }, 500);
 });
 
 joinGameButton.addEventListener("click", () => {
     removeElements ([startGameButton, joinGameButton]);
-    addElements ([insertCodeForm], rect);
+    setTimeout(() => {
+        addElements([insertCodeForm], rect);
+    }, 500);
 });
 
 // startGame.addEventListener("click", () => {
