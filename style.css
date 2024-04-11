@@ -8,7 +8,8 @@
 #logo {
   display: block;
   height: auto;
-  width: 450px;
+  max-width: 80%;
+  min-width: 25%;
   margin: 0 auto;
 }
 
@@ -42,7 +43,7 @@ body {
 .body {
   flex: 6;
   display: flex;
-  align-items:flex-end;
+  align-items: flex-end;
   justify-content: center;
 }
 
@@ -73,6 +74,7 @@ body {
 }
 
 .btn {
+  min-width: 120px;
   font-size: 140%;
   font-weight: 500;
   color: white;
@@ -92,11 +94,11 @@ body {
   box-shadow: 3px 4px 3px rgba(0, 0, 0, 0.3);
 }
 
-.roomCode {
+#roomCode {
   font-size: 170%;
 }
 
-.randomNumber {
+#randomNumber {
   font-size: 200%;
   font-weight: 900;
   display: block;
@@ -110,6 +112,7 @@ body {
 .header > .small {
   font-size: 180%;
   font-weight: 900;
+  word-wrap: break-word;
 }
 
 .loader {
@@ -150,18 +153,22 @@ body {
   box-shadow: 0 0 0 0.25rem rgba(13 110 253 0);
 }
 
-.roomJoinLabel {
+#roomJoinLabel {
   text-align:center;
   font-size: 160%;
 }
 
-.confirmJoin {
 
-}
-
-.joinContainer {
+#joinContainer {
   display: flex;
   justify-content: center;
   align-items: center;  
   gap: 30px;
+}
+
+#codeForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 50px;
 }
