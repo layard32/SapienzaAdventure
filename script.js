@@ -7,6 +7,7 @@ function generateRandomNumber() {
 const rect = document.querySelector(".rect");
 const startGameButton = rect.querySelector(".start-game");
 const joinGameButton = rect.querySelector(".join-game");
+const usernameForm = rect.querySelector("#usernameForm");
 
 // creo gli elementi da integrare nel DOM
 // questi elementi appaiono quando si clicca il bottone start game o join game
@@ -49,10 +50,9 @@ roomCodeNumber.classList.add("text");
 roomCodeNumber.id = "randomNumber";
 loader.classList.add("loader", "text");
 joinContainer.id = "joinContainer";
-insertCodeInput.id = "inputCode";
-insertCodeInput.classList.add("text");
+insertCodeInput.classList.add("text", "inputCode");
 insertCodeInput.setAttribute("pattern", "[0-9]+");
-insertCodeInput.setAttribute("title", "Solamente numeri");
+insertCodeInput.setAttribute("title", "Puoi inserire solamente numeri.");
 insertCodeInput.setAttribute("required", "");
 insertCodeInput.setAttribute("maxlength", "4");
 insertCodeLabel.classList.add("text");
@@ -72,8 +72,7 @@ const removeElements =  function (elems) {
         // rimozione effettiva dal DOM
         setTimeout( () => {
             elem.remove();
-            console.log("elemento rimosso");        
-        }, 350);
+        }, 500);
     }
 };
 
@@ -87,35 +86,35 @@ const addElements = function (elems, parent) {
         // transizione a comparsa
         setTimeout( () => {
             elem.style.opacity = 1;
-        }, 350);
+        }, 500);
     }
 };
 
 startGameButton.addEventListener("click", () => {
-    removeElements ([startGameButton, joinGameButton]);
+    removeElements ([startGameButton, joinGameButton, usernameForm]);
     roomCodeNumber.textContent = generateRandomNumber(); // genera randomicamente il numero della stanza
     setTimeout(function() {
         addElements([roomCode, loader, goBackButton1], rect);
-    }, 450);
+    }, 500);
 });
 
 joinGameButton.addEventListener("click", () => {
-    removeElements ([startGameButton, joinGameButton]);
+    removeElements ([startGameButton, joinGameButton, usernameForm]);
     setTimeout(() => {
         addElements([insertCodeForm], rect);
-    }, 450);
+    }, 500);
 });
 
 goBackButton1.addEventListener("click", () => {
     removeElements ([roomCode, loader, goBackButton1]);
     setTimeout(() => {
-        addElements([startGameButton, joinGameButton], rect);
-    }, 450);
+        addElements([usernameForm, startGameButton, joinGameButton], rect);
+    }, 500);
 });
 
 goBackButton2.addEventListener("click", () => {
     removeElements ([insertCodeForm]);
     setTimeout(() => {
-        addElements([startGameButton, joinGameButton], rect);
-    }, 450);
+        addElements([usernameForm, startGameButton, joinGameButton], rect);
+    }, 500);
 });

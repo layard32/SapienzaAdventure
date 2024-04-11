@@ -22,14 +22,14 @@ body {
 .flex-container {
   display: flex;
   flex-direction: column;
-  height: 110vh;
+  height: 125vh;
 }
 
 .header { flex: 1; }
 
 .body { flex: 6; }
 
-.footer { flex: 0.5; }
+.footer { flex: 0.5; text-align: center;}
 
 .flex-container > div { width: 100%; }
 
@@ -48,7 +48,7 @@ body {
 }
 
 .rect {
-  min-height: 270px;
+  min-height: 450px;
   height: 70%;
   width: 700px;
   display: flex;
@@ -68,6 +68,12 @@ body {
   margin: 0 10px;
 }
 
+.footer > .list {
+  display: inline-block;
+  text-align: left;
+}
+
+.footer > * { font-weight: 500; font-size: 105%; }
 
 /* definizione di altri elementi */
 .btn {
@@ -106,7 +112,7 @@ body {
   content: "In attesa di un altro giocatore";
   overflow: hidden;
   white-space: nowrap;
-  animation: dot-animation 1.5s infinite;
+  animation: dot-animation 3s infinite;
 }
 
 @keyframes dot-animation {
@@ -133,7 +139,7 @@ body {
   text-align: center;
 }
 
-#inputCode {
+.inputCode {
   display: block;
   margin: 20px auto;
 
@@ -149,7 +155,7 @@ body {
   transition: border-color 0.1s ease-in-out, box-shadow 0.1s ease-in-out;
 }
 
-#inputCode:focus {
+.inputCode:focus {
   color: #212529;
   background-color: #e9e9e9;
   border-color: #8C4A4A;  
@@ -181,4 +187,17 @@ body {
   flex-shrink: 1;
 }
 
+#usernameFormInput {
+  display: inline;
+  width: 50%;
+  font-size: 150%;
+  margin-right: 15px;
+  margin-left: 15px;
+  margin-top: 10px;
+}
 
+#usernameForm { width: 100%; }
+
+#usernameForm > button {
+  margin-top: 10px;
+}
