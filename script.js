@@ -99,8 +99,6 @@ const addElements = function (elems, parent) {
 submitButton.addEventListener("click", (event) => {
     event.preventDefault();
     username = usernameFormInput.value;
-    // Use the retrieved username here
-    console.log(username);
 });
 
 // event listener dei bottoni
