@@ -23,7 +23,6 @@ roomCode.textContent = "Il codice della tua stanza è:";
 const loader = document.createElement("div");
 
 const roomCodeNumber = document.createElement("span"); // span contenente numero randomico, che aggiungo come figlio a roomCode
-roomCodeNumber.textContent = generateRandomNumber();
 roomCode.appendChild(roomCodeNumber);
 
 const insertCodeForm = document.createElement("form"); // form per inserire il codice
@@ -74,7 +73,7 @@ const removeElements =  function (elems) {
         setTimeout( () => {
             elem.remove();
             console.log("elemento rimosso");        
-        }, 500);
+        }, 350);
     }
 };
 
@@ -88,136 +87,35 @@ const addElements = function (elems, parent) {
         // transizione a comparsa
         setTimeout( () => {
             elem.style.opacity = 1;
-        }, 500);
+        }, 350);
     }
 };
 
 startGameButton.addEventListener("click", () => {
     removeElements ([startGameButton, joinGameButton]);
+    roomCodeNumber.textContent = generateRandomNumber(); // genera randomicamente il numero della stanza
     setTimeout(function() {
         addElements([roomCode, loader, goBackButton1], rect);
-    }, 500);
+    }, 450);
 });
 
 joinGameButton.addEventListener("click", () => {
     removeElements ([startGameButton, joinGameButton]);
     setTimeout(() => {
         addElements([insertCodeForm], rect);
-    }, 500);
+    }, 450);
 });
 
-// startGame.addEventListener("click", () => {
-//     // preparo gli elementi alla rimozione, con una transazione sull'opacità
-//     startGame.style.transition = "opacity 0.5s"; 
-//     joinGame.style.transition = "opacity 0.5s";
-//     startGame.style.opacity = 0;
-//     joinGame.style.opacity = 0;  
+goBackButton1.addEventListener("click", () => {
+    removeElements ([roomCode, loader, goBackButton1]);
+    setTimeout(() => {
+        addElements([startGameButton, joinGameButton], rect);
+    }, 450);
+});
 
-//     // li rimuovo effettivamente ed aggiungo il pulsante per tornare indietro, ma opacizzato a 0 (stessa cosa per il div con il codice ed il loader)
-//     setTimeout( () => {
-//         startGame.remove();
-//         joinGame.remove();
-        
-//         rect.appendChild(roomCode);
-//         rect.appendChild(loader);
-//         rect.appendChild(goBack);
-
-//         goBack.style.opacity = 0;
-//         roomCode.style.opacity = 0;
-//         loader.style.opacity = 0;
-
-//         // imposto il display di rect con flex-direction pari a column e 
-//         rect.style.flexDirection = "column";
-//         rect.style.justifyContent = "space-around";
-
-//         // imposto il codice randomico calcolato tramite l'apposita funzione
-//         randomNumberSpan.textContent = generateRandomNumber();
-//     }, 500);
-
-//     // faccio comparire il pulsante (insieme al div con il codice ed il loader) con una transizione dell'opacità
-//     setTimeout(() => {
-//         roomCode.style.transition = "opacity 0.5s";
-//         roomCode.style.opacity = 1;
-//         goBack.style.transition = "opacity 0.5s transform 0.2s, box-shadow 0.2s";
-//         goBack.style.opacity = 1;
-//         loader.style.transition = "opacity 0.5s";
-//         loader.style.opacity = 1;
-//     }, 600);
-// });
-
-// joinGame.addEventListener("click", () => {
-//     // preparo gli elementi alla rimozione, con una transazione sull'opacità
-//     startGame.style.transition = "opacity 0.5s"; 
-//     joinGame.style.transition = "opacity 0.5s";
-//     startGame.style.opacity = 0;
-//     joinGame.style.opacity = 0;
-
-//     // li rimuovo effettivamente ed aggiungo il pulsante per tornare indietro, ma opacizzato a 0 (stessa cosa per il div con il codice ed il loader)
-//     setTimeout( () => {
-//         startGame.remove();
-//         joinGame.remove();
-        
-//         rect.appendChild(labelCode);
-//         rect.appendChild(joinContainer);
-
-//         joinContainer.style.opacity = 0;
-//         roomCode.style.opacity = 0;
-//         loader.style.opacity = 0;
-
-//         // imposto il display di rect cambiando flex direction e justify content
-//         rect.style.flexDirection = "column";
-//         rect.style.justifyContent = "space-around";
-
-//         // imposto il codice randomico calcolato tramite l'apposita funzione
-//         randomNumberSpan.textContent = generateRandomNumber();
-//     }, 500);
-
-//     // faccio comparire il pulsante (insieme al div con il codice ed il loader) con una transizione dell'opacità
-//     setTimeout(() => {
-//         labelCode.style.transition = "opacity 0.5s";
-//         labelCode.style.opacity = 1;
-//         joinContainer.style.transition = "opacity 0.5s";
-//         joinContainer.style.opacity = 1;
-//     }, 600);
-// });
-
-// // PER ORA RIMUOVO TUTTO QUANTO NEL GOBACK!!! MIGLIORARE IL CODICE
-// goBack.addEventListener("click", () => {
-//     // preparo gli elementi alla rimozione, con una transazione sull'opacità
-//     goBack.style.transition = "opacity 0.5s"; 
-//     roomCode.style.transition = "opacity 0.5s";
-//     loader.style.transition = "opacity 0.5s";
-//     labelCode.style.transition = "opacity 0.5s";
-//     joinContainer.style.transition = "opacity 0.5s";
-//     goBack.style.opacity = 0;
-//     roomCode.style.opacity = 0;
-//     loader.style.opacity = 0;
-//     labelCode.style.opacity = 0;
-//     inputCode.value = '';
-
-//     // li rimuovo effettivamente, aggiungendo, opacizzati a zero (per la transizione) gli elementi precedenti (stessa cosa per div del codice e loader)
-//     setTimeout( () => {
-//         goBack.remove();
-//         roomCode.remove();
-//         loader.remove();
-//         labelCode.remove();
-//         joinContainer.remove();
-
-//         rect.appendChild(startGame);
-//         rect.appendChild(joinGame);
-//         joinGame.style.opacity = 0;
-//         startGame.style.opacity = 0;
-    
-//         // imposto rect come prima
-//         rect.style.flexDirection = "row";
-//         rect.style.justifyContent = "center";
-//         }, 500);
-
-//     // faccio ricomparire gli elementi precedenti con una transizione
-//     setTimeout(() => {
-//         joinGame.style.transition = "opacity 0.5s transform 0.2s, box-shadow 0.2s";
-//         joinGame.style.opacity = 1;
-//         startGame.style.transition = "opacity 0.5s transform 0.2s, box-shadow 0.2s";
-//         startGame.style.opacity = 1;
-//     }, 600);
-// });
+goBackButton2.addEventListener("click", () => {
+    removeElements ([insertCodeForm]);
+    setTimeout(() => {
+        addElements([startGameButton, joinGameButton], rect);
+    }, 450);
+});
