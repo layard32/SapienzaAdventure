@@ -1,40 +1,49 @@
-*{
+body{
+    min-height: 100vh;
     margin: 0;
     padding: 0;
+    overflow: hidden;
     box-sizing: border-box;
+    font-family: fantasy;
+    display: grid;
+    place-items: center;
 
 }
 
 
-.container{
+/*.container{
     display: grid;
     place-items: center;
     min-height: 100vh;
-}
+}*/
 
-.heading{
-    text-align: center;
-    font-family: fantasy;
-    font-size: 4rem;
-    font-weight: 500;
+.header{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
     
 
 
+}
+
+header h1{
+    font-size: 80px;
 }
 
 main{
     display: flex;
     justify-content: center;
-    align-items: center;
+    place-items: center;
     gap: 3em;
 }
 
-.cards{
+#game-board{
     display: grid;
     grid-template-columns: repeat(6, 1fr);
     grid-gap: 2em;
-    
 }
+
 
 .card{
     height: 110px;
@@ -45,6 +54,18 @@ main{
     border-radius: 10px;
     cursor: pointer;
     transition: 0.3 all ease;
+    background-image: url('./sapienza\ adventure\ \(4\).png'); /* Percorso dell'immagine */
+    opacity: 1;
+    background-size: 70px 70px; /* Imposta le dimensioni desiderate */
+    background-repeat: no-repeat;
+    background-position: center;
+    
+
+
+}
+
+.card.flipped{
+    background-image: transparent;
 }
 
 #player1, #player2{
@@ -67,37 +88,9 @@ main{
     margin-left: 10%;
 }
 
-/*si aumenta la dimensione della carta quando siamo con il cursore su di essa*/
-.card:hover{
-    transform: scale(1.03);
-}
-
-/*scaliamo le immagini alla dimensione corretta per le carte*/
-.card img{
-    width: 80%;
-    max-height: 90px;
-    opacity: 0;
-    transition: 0.3 all ease;
-    
-}
-
-.card.clicked{
-    background-color: #8C4A4A;
-    
-}
-
-.card.checked{
-    background-color: #F2EFE9;
-
-}
-
-.card.clicked img, 
-.card.checked img{
-    opacity: 1;
-}
-
+/*
 .card.shake{
-    background-color: dimgray;
+    background-color: #696969;
     animation: shake 0.5s;
 }
 
@@ -114,4 +107,4 @@ main{
   90% { transform: translate(1px, 2px) rotate(0deg); }
   100% { transform: translate(1px, -2px) rotate(-1deg); }
 
-}
+} */

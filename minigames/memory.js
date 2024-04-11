@@ -1,49 +1,149 @@
-let counter=0;
-let firstSelection="";
-let secondSelection="";
+
+var images=[
+    "./analisi.png", 
+    "./economia.png", 
+    "./elettronica.png", 
+    "./fisica.png", 
+    "./geometria.png", 
+    "./intartificiale.png", 
+    "./probabilita.png", 
+    "./programmazione.png", 
+    "./sicurezza.png"
+];
+
+var gameBoard=document.getElementById('game-board');
+var cards=[];
+var flippedCards=[];
+var matchedCards=[];
+var currentPlayer=1;
+var player1Pairs=0;
+var player2Pairs=0;
+
+/*vengono create le 18 carte (inserite in un array) a cui viene legato un eventolistener quando viene cliccata*/
+for(var i=0; i<18; i++){
+    var card = document.createElement('div');
+    card.className='card';
+    card.dataset.image=images[Math.floor(i/2)];
+    card.addEventListener('click', flipCard);
+    gameBoard.appendChild(card);
+    cards.push(card);
 
 
-const cards=document.querySelectorAll(".cards .card");
-cards.forEach((card)=> {
-    card.addEventListener("click", ()=>{
-        card.classList.add("clicked"); /*viene aggiunta la classe clicked alle carte quando vengono cliccate*/
+}
+shuffleCards();
 
-        /*se il counter è a 0 allora si seleziona la prima carta e si memorizza l'attributo subject*/
-        if(counter === 0){
-            carta1=card
-            firstSelection=carta1.getAttribute("subject");
-            counter++;
+/*vengono mescolate le carte */
+function shuffleCards(){
+    for(var i=cards.length -1; i>0; i--){
+        var j = Math.floor(Math.random()*(i+1));
+        var temp =cards[i].dataset.image;
+        cards[i].dataset.image=cards[j].dataset.image;
+        cards[j].dataset.image=temp;
+    }
+}
+
+
+
+
+function flipCard(){
+    if(flippedCards.length<2 && !matchedCards.includes(this)){
+        if (this.classList.contains('flipped')){
+            return;
+        }
+        this.style.backgroundImage= 'url('+this.dataset.image+')';
+        this.style.backgroundColor='#F2EFE9';
+        flippedCards.push(this);
+        this.classList.add('player'+ currentPlayer);
+
+        if(flippedCards.length === 2){
+            setTimeout(checkMatch, 1000);
+
+        }
+    }
+}
+
+
+
+
+function checkMatch(){
+    var card1 = flippedCards[0];
+    var card2 = flippedCards[1];
+
+    if(card1.dataset.image === card2.dataset.image){
+        card1.style.boxShadow = getPlayerBoxShadowColor(currentPlayer);
+        card2.style.boxShadow = getPlayerBoxShadowColor(currentPlayer);
+        if(currentPlayer===1){
+            card1.style.backgroundColor='#F2EFE9';
+            card2.style.backgroundColor='#F2EFE9';
         }
         else{
-            carta2=card
-            secondSelection=carta2.getAttribute("subject");
-            counter=0;
-
-            if(secondSelection===firstSelection && carta1!==carta2){
-                const correctCards=document.querySelectorAll(".card[subject='" + firstSelection+ "']");
-
-                correctCards[0].classList.add("checked");
-                correctCards[0].classList.remove("clicked");
-                correctCards[1].classList.add("checked");
-                correctCards[1].classList.remove("clicked");
-            }
-            else{
-                const incorrectCards=document.querySelectorAll(".card.clicked");
-
-                incorrectCards[0].classList.add("shake");
-                incorrectCards[1].classList.add("shake");
-
-                setTimeout(()=>{
-                    incorrectCards[0].classList.remove("shake");
-                    incorrectCards[0].classList.remove("clicked");
-                    incorrectCards[1].classList.remove("shake");
-                    incorrectCards[1].classList.remove("clicked");
-                }, 800);
-            }
-
+            card1.style.backgroundColor='#548DBF';
+            card2.style.backgroundColor='#548DBF';
         }
         
+        matchedCards.push(card1, card2);
+        updateScore();
+        checkGameEnd();
+
+    }
+    else{
+        card1.style.backgroundImage='';
+        card2.style.backgroundImage='';
+        card1.style.backgroundColor='#8C4A4A';
+        card2.style.backgroundColor='#8C4A4A'
+        card1.classList.remove('player'+ currentPlayer);
+        card2.classList.remove('player'+ currentPlayer);
+
+        if(currentPlayer ===1){
+            currentPlayer=2;
+
+        }
+        else{
+            currentPlayer=1;
+        }
+    }
+    flippedCards=[];
+}
+
+function updateScore(){
+    if(currentPlayer===1){
+        player1Pairs++;
+        document.getElementById('player1').textContent= 'Score: '+player1Pairs;
+
+    }
+    else{
+        player2Pairs++;
+        document.getElementById('player2').textContent= 'Score: '+player2Pairs;
+
+    }
+}
+
+function getPlayerBoxShadowColor(player){
+    if(player===1){
+        return '5px 5px 20px #8C4A4A'
+    }
+    else{
+        return '5px 5px 20px #696969'
+    }
+
+}
+
+function checkGameEnd(){
+    if(matchedCards.length === cards.length){
+        var result;
+        if(player1Pairs > player2Pairs){
+            result='Player 1 won';
+            window.alert(result);
+            document.location.reload();
+        }
+        else if(player2Pairs > player1Pairs){
+            result='Player 2 won';
+            window.alert(result);
+            document.location.reload();
+        }
+            
+    }   
+}
+    
 
 
-    });
-});
