@@ -8,6 +8,11 @@ const rect = document.querySelector(".rect");
 const startGameButton = rect.querySelector(".start-game");
 const joinGameButton = rect.querySelector(".join-game");
 const usernameForm = rect.querySelector("#usernameForm");
+const usernameFormInput = document.querySelector("#usernameFormInput");
+const submitButton = document.querySelector(".btn.username.text");
+
+// setto prelinarmente l'username a stringa vuota
+let username = String();
 
 // creo gli elementi da integrare nel DOM
 // questi elementi appaiono quando si clicca il bottone start game o join game
@@ -90,7 +95,20 @@ const addElements = function (elems, parent) {
     }
 };
 
+// prende l'username dal form
+submitButton.addEventListener("click", (event) => {
+    event.preventDefault();
+    username = usernameFormInput.value;
+    // Use the retrieved username here
+    console.log(username);
+});
+
+// event listener dei bottoni
 startGameButton.addEventListener("click", () => {
+    if (username === "") { 
+        alert("Devi inserire un username prima di proseguire!");
+        return;
+    }
     removeElements ([startGameButton, joinGameButton, usernameForm]);
     roomCodeNumber.textContent = generateRandomNumber(); // genera randomicamente il numero della stanza
     setTimeout(function() {
@@ -99,6 +117,10 @@ startGameButton.addEventListener("click", () => {
 });
 
 joinGameButton.addEventListener("click", () => {
+    if (username === "") { 
+        alert("Devi inserire un username prima di proseguire!");
+        return;
+    }
     removeElements ([startGameButton, joinGameButton, usernameForm]);
     setTimeout(() => {
         addElements([insertCodeForm], rect);
