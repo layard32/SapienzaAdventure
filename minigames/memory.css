@@ -43,11 +43,12 @@ main {
 
 
 .card{
-    height: 7em;
-    width: 6em;
+    height: 8.60em;
+    width: 7em;
     background-color: #8C4A4A;  
     display: grid;
     place-items: center;
+    border: 4px solid #002c53;
     border-radius: 10px;
     cursor: pointer;
     transition: 0.3 all ease;
@@ -124,7 +125,8 @@ main {
 
 .modal-content {
     background-color: #F2EFE9;
-    margin: 15% auto;
+    border: 4px solid #002c53;
+    margin: 27% auto;
     padding: 20px;
     width: 80%;
     max-width: 400px;
