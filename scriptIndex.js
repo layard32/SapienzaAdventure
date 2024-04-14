@@ -130,7 +130,9 @@ goBackButton2.addEventListener("click", () => {
 
 // gestione toast
 const toastElem = document.querySelector('#usernameToast');
-const toast = new bootstrap.Toast(toastElem);
+const toast = new bootstrap.Toast(toastElem, {
+    delay: 1800
+});
 
 // prende l'username dal form ?? gestire lato server?? INSERIRE CONTROLLI LATO SERVER
 usernameForm.addEventListener("submit", (event) => {
