@@ -129,7 +129,7 @@ body {
 }
 
 .header > .small {
-  margin-top: 28px;
+  margin: 15px 0;
   font-size: 180%;
   font-weight: 900;
 }
