@@ -17,6 +17,7 @@ body {
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
+  min-height: 50dvh; 
 }
 
 .flex-container {
@@ -52,10 +53,10 @@ body {
   height: 70%;
   width: 700px;
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  gap: 18px;
+  justify-content: space-evenly;
+  gap: 10px;
 
   opacity: 1;
   background-color: rgba(166, 122, 83, 0.8);
@@ -74,6 +75,28 @@ body {
 }
 
 .footer > * { font-weight: 500; font-size: 105%; }
+
+#usernameFormInput {
+  width: 50%;
+  font-size: 150%;
+}
+
+#usernameForm { width: 100%; }
+
+#usernameForm > button {
+  margin-top: 5px;
+  width: 30%;
+  font-size: 120%;
+  height: 80px;
+}
+
+#basicButton {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  width: 100%;
+}
+
 
 /* definizione di altri elementi */
 .btn {
@@ -164,25 +187,11 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-evenly;
   height: 100%;
+  gap: 15px;
 }
 
 #codeForm > * {
   flex-shrink: 1;
-}
-
-#usernameFormInput {
-  display: inline;
-  width: 50%;
-  font-size: 150%;
-  margin-right: 15px;
-  margin-left: 15px;
-  margin-top: 10px;
-}
-
-#usernameForm { width: 100%; }
-
-#usernameForm > button {
-  margin-top: 10px;
 }

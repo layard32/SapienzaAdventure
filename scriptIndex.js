@@ -5,6 +5,7 @@ function generateRandomNumber() {
 
 // prendo gli elementi dal dom HTML
 const rect = document.querySelector(".rect");
+const basicButton = rect.querySelector("#basicButton");
 const startGameButton = rect.querySelector(".start-game");
 const joinGameButton = rect.querySelector(".join-game");
 const usernameForm = rect.querySelector("#usernameForm");
@@ -56,13 +57,14 @@ roomCodeNumber.id = "randomNumber";
 loader.classList.add("loader", "text");
 joinContainer.id = "joinContainer";
 insertCodeInput.classList.add("text", "inputCode");
+insertCodeInput.id = "inputCodeInput";
 insertCodeInput.setAttribute("pattern", "[0-9]+");
 insertCodeInput.setAttribute("title", "Puoi inserire solamente numeri.");
 insertCodeInput.setAttribute("required", "");
 insertCodeInput.setAttribute("maxlength", "4");
 insertCodeLabel.classList.add("text");
 insertCodeLabel.id = "roomJoinLabel";
-insertCodeLabel.setAttribute("for", "inputCode");
+insertCodeLabel.setAttribute("for", "inputCodeInput");
 confirmJoinButton.setAttribute("type", "submit");
 confirmJoinButton.setAttribute("value", "Unisciti")
 insertCodeForm.id = "codeForm";
@@ -95,19 +97,9 @@ const addElements = function (elems, parent) {
     }
 };
 
-// prende l'username dal form
-submitButton.addEventListener("click", (event) => {
-    event.preventDefault();
-    username = usernameFormInput.value;
-});
-
 // event listener dei bottoni
 startGameButton.addEventListener("click", () => {
-    if (username === "") { 
-        alert("Devi inserire un username prima di proseguire!");
-        return;
-    }
-    removeElements ([startGameButton, joinGameButton, usernameForm]);
+    removeElements ([basicButton, usernameForm]);
     roomCodeNumber.textContent = generateRandomNumber(); // genera randomicamente il numero della stanza
     setTimeout(function() {
         addElements([roomCode, loader, goBackButton1], rect);
@@ -115,11 +107,7 @@ startGameButton.addEventListener("click", () => {
 });
 
 joinGameButton.addEventListener("click", () => {
-    if (username === "") { 
-        alert("Devi inserire un username prima di proseguire!");
-        return;
-    }
-    removeElements ([startGameButton, joinGameButton, usernameForm]);
+    removeElements ([basicButton, usernameForm]);
     setTimeout(() => {
         addElements([insertCodeForm], rect);
     }, 500);
@@ -128,13 +116,22 @@ joinGameButton.addEventListener("click", () => {
 goBackButton1.addEventListener("click", () => {
     removeElements ([roomCode, loader, goBackButton1]);
     setTimeout(() => {
-        addElements([usernameForm, startGameButton, joinGameButton], rect);
+        addElements([usernameForm, basicButton], rect);
     }, 500);
 });
 
 goBackButton2.addEventListener("click", () => {
     removeElements ([insertCodeForm]);
     setTimeout(() => {
-        addElements([usernameForm, startGameButton, joinGameButton], rect);
+        addElements([usernameForm, basicButton], rect);
     }, 500);
 });
+
+
+
+// prende l'username dal form ?? gestire lato server?? INSERIRE CONTROLLI LATO SERVER
+// submitButton.addEventListener("click", (event) => {
+//     event.preventDefault();
+//     username = usernameFormInput.value;
+// });
+
