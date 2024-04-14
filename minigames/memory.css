@@ -1,62 +1,93 @@
-*{
+
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-
 }
 
-
-.container{
+.container {
     display: grid;
     place-items: center;
     min-height: 100vh;
+    overflow: auto;
 }
 
-.heading{
+.heading {
     text-align: center;
     font-family: fantasy;
-    font-size: 4rem;
+    font-size: /*4rem*/13vw;
     font-weight: 500;
-    
-
-
+    padding: 3%;
 }
 
-main{
+main {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 3em;
+    flex-direction: column; /* Modificato il layout in colonna */
+    gap: 5em; /* Aggiunta spaziatura tra gli elementi */
 }
 
-.cards{
+#game-info {
+    display: flex;
+    flex-direction: row; /* Modificato il layout in colonna */
+    align-items: center;
+    gap: 10vw; /* Aggiunta spaziatura tra gli elementi */
+}
+
+#game-board {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
-    grid-gap: 2em;
+    grid-gap: 1.5vw;
+    padding-bottom: 7%;
+    
+    
+
     
 }
 
+
+
 .card{
-    height: 110px;
-    width: 90px;
-    background-color: #8C4A4A;
+    height: /*8.60em*/16vw;
+    width: /*7em*/13vw;
+    background-color: #8C4A4A;  
     display: grid;
     place-items: center;
+    border: 0.8vw solid #002c53;
     border-radius: 10px;
     cursor: pointer;
     transition: 0.3 all ease;
+    background-image: url('./sapienza\ adventure\ \(4\).png'); /* Percorso dell'immagine */
+    opacity: 1;
+    background-size: 10vw;/*70px 70px; /* Imposta le dimensioni desiderate */
+    background-repeat: no-repeat;
+    background-position: center;
+    
+
+
+}
+
+
+
+.card.flipped{
+    background-image: transparent;
 }
 
 #player1, #player2{
-    font-size: 30px;
+    font-size: /*30px;*/ 4vw;
     margin-top: 0;
     padding-left: 18.5.px;
+    
 }
+
+
 
 .first, .second{
     display: flex;
     justify-content: center;
     flex-direction: column;
+    place-items: center;
 }
 
 .first{
@@ -67,37 +98,10 @@ main{
     margin-left: 10%;
 }
 
-/*si aumenta la dimensione della carta quando siamo con il cursore su di essa*/
-.card:hover{
-    transform: scale(1.03);
-}
 
-/*scaliamo le immagini alla dimensione corretta per le carte*/
-.card img{
-    width: 80%;
-    max-height: 90px;
-    opacity: 0;
-    transition: 0.3 all ease;
-    
-}
-
-.card.clicked{
-    background-color: #8C4A4A;
-    
-}
-
-.card.checked{
-    background-color: #F2EFE9;
-
-}
-
-.card.clicked img, 
-.card.checked img{
-    opacity: 1;
-}
 
 .card.shake{
-    background-color: dimgray;
+    background-color: #696969;
     animation: shake 0.5s;
 }
 
@@ -114,4 +118,45 @@ main{
   90% { transform: translate(1px, 2px) rotate(0deg); }
   100% { transform: translate(1px, -2px) rotate(-1deg); }
 
+} 
+
+/* Aggiungi questi stili CSS per la finestra modale */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    /*overflow: auto;*/
+    background-color: #002c53(0,0,0,0.4);
+    
 }
+
+.modal-content {
+    background-color: #F2EFE9;
+    border: 4px solid #002c53;
+    margin: 27% auto;
+    padding: 20px;
+    width: 80%;
+    max-width: 400px;
+    text-align: center;
+    border-radius: 10px;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #002c53;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+

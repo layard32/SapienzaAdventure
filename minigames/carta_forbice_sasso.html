@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Metadati del documento -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Titolo della pagina -->
+    <title>Sasso - Carta - Forbice</title>
+    <!-- Collegamento al foglio di stile CSS -->
+    <link rel="stylesheet" href="carta_forbice_sasso.css">
+</head>
+<body>
+    <!-- Contenitore principale -->
+    <div id="container">
+        <!-- Schermata iniziale -->
+        <div id="startScreen">
+            <!-- Titolo del gioco -->
+            <h1>Sasso - Carta - Forbice</h1>
+            <!-- Pulsante per avviare la partita -->
+            <button id="startButton">Avvio Partita</button>
+        </div>
+
+        <!-- Schermata del gioco (nascosta all'avvio) -->
+        <div id="gameScreen" style="display: none;">
+            <!-- Sezione delle scelte dei giocatori -->
+            <div class="choices">
+                <!-- Colonna per il giocatore 1 -->
+                <div class="player-column">
+                    <h2>Player One</h2>
+                    <!-- Pulsanti per le scelte del giocatore 1 -->
+                    <div class="emoji-buttons">
+                        <button onclick="playGame('rock', 1)"><span>&#128511;</span></button>
+                        <button onclick="playGame('paper', 1)"><span>&#x1F4C4;</span></button>
+                        <button onclick="playGame('scissors', 1)"><span>&#x2702;</span></button>
+                    </div>
+                </div>
+                <!-- Colonna per il giocatore 2 -->
+                <div class="player-column">
+                    <h2>Player Two</h2>
+                    <!-- Pulsanti per le scelte del giocatore 2 -->
+                    <div class="emoji-buttons">
+                        <button onclick="playGame('rock', 2)"><span>&#128511;</span></button>
+                        <button onclick="playGame('paper', 2)"><span>&#x1F4C4;</span></button>
+                        <button onclick="playGame('scissors', 2)"><span>&#x2702;</span></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visualizzazione delle scelte dei giocatori -->
+            <div class="player-info">
+                <div id="playerOneDisplay">Player One:  </div>
+                <!-- Div vuoto per creare spazio -->
+                <div class="spacer"></div>
+                <div id="playerTwoDisplay">Player Two:  </div>
+            </div>
+
+            <!-- Visualizzazione del risultato -->
+            <div id="resultDisplay"></div>
+            <!-- Visualizzazione del vincitore -->
+            <div id="winnerDisplay"></div>
+            <!-- Visualizzazione del turno corrente -->
+            <div id="turnDisplay"></div>
+
+            <!-- Modal di fine gioco -->
+            <div id="gameOverModal" class="modal">
+                <div class="modal-content">
+                    <!-- Pulsante per chiudere il modal -->
+                    <span class="close" onclick="closeModal()">&times;</span>
+                    <!-- Messaggio di vittoria -->
+                    <p id="winMessage"></p>
+                    <!-- Pulsanti per ricominciare o abbandonare la partita -->
+                    <div id="modalButtons">
+                        <button onclick="restartGame()">Ricomincia Partita</button>
+                        <button onclick="quitGame()">Abbandona Partita</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visualizzazione del punteggio -->
+            <div class="scoreDisplay">Player One Score: 
+                <span id="playerOneScoreDisplay">0</span>
+            </div>
+            <div class="scoreDisplay">Player Two Score: 
+                <span id="playerTwoScoreDisplay">0</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Collegamento al file JavaScript -->
+    <script src="carta_forbice_sasso.js"></script>
+</body>
+</html>
