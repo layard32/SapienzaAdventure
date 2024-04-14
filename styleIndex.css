@@ -6,6 +6,7 @@
 html { min-height: 100dvh; }
 
 .text,p{ 
+  color: black;
   font-family: Roboto Mono; 
   text-align: center;   
   word-wrap: break-word;
@@ -39,6 +40,7 @@ body {
   height: auto;
   max-width: calc(20vw + 15vh);
   margin: 0 auto;
+  margin-top: 10px;
 }
 
 .body {
@@ -127,6 +129,7 @@ body {
 }
 
 .header > .small {
+  margin-top: 28px;
   font-size: 180%;
   font-weight: 900;
 }
