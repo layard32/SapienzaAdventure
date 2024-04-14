@@ -10,7 +10,7 @@ const startGameButton = rect.querySelector(".start-game");
 const joinGameButton = rect.querySelector(".join-game");
 const usernameForm = rect.querySelector("#usernameForm");
 const usernameFormInput = document.querySelector("#usernameFormInput");
-const submitButton = document.querySelector(".btn.username.text");
+const submitButton = document.querySelector(".my-btn.text");
 
 // setto prelinarmente l'username a stringa vuota
 let username = String();
@@ -38,7 +38,7 @@ const insertCodeLabel = document.createElement("label"); // label associato all'
 insertCodeLabel.textContent = "Inserisci il codice della stanza:";
 const confirmJoinButton = document.createElement("button"); // tasto per confermare l'entrata nella stanza (in join game)
 confirmJoinButton.textContent = "Unisciti alla stanza";
-const joinContainer = document.createElement("div"); // metto il submit e goback button dentro un flexbox container
+const joinContainer = document.createElement("div"); // metto il submit e goback my-btn dentro un flexbox container
 joinContainer.appendChild(goBackButton2);
 joinContainer.appendChild(confirmJoinButton);
 insertCodeLabel.appendChild(insertCodeInput);
@@ -46,10 +46,10 @@ insertCodeForm.appendChild(insertCodeLabel);
 insertCodeForm.appendChild(joinContainer);
 
 // setto le classi, gli id ed eventuali attributi degli elementi creati
-goBackButton1.classList.add("btn", "text");
-goBackButton2.classList.add("btn", "text");
+goBackButton1.classList.add("my-btn", "text", "primary");
+goBackButton2.classList.add("my-btn", "text", "primary");
 goBackButton2.setAttribute("type", "button");
-confirmJoinButton.classList.add("btn", "text");
+confirmJoinButton.classList.add("my-btn", "text", "primary");
 roomCode.classList.add("text");
 roomCode.id = "roomCode";
 roomCodeNumber.classList.add("text");
@@ -60,7 +60,6 @@ insertCodeInput.classList.add("text", "inputCode");
 insertCodeInput.id = "inputCodeInput";
 insertCodeInput.setAttribute("pattern", "[0-9]+");
 insertCodeInput.setAttribute("title", "Puoi inserire solamente numeri.");
-insertCodeInput.setAttribute("required", "");
 insertCodeInput.setAttribute("maxlength", "4");
 insertCodeLabel.classList.add("text");
 insertCodeLabel.id = "roomJoinLabel";
@@ -129,9 +128,14 @@ goBackButton2.addEventListener("click", () => {
 
 
 
+// gestione toast
+const toastElem = document.querySelector('#usernameToast');
+const toast = new bootstrap.Toast(toastElem);
+
 // prende l'username dal form ?? gestire lato server?? INSERIRE CONTROLLI LATO SERVER
-// submitButton.addEventListener("click", (event) => {
-//     event.preventDefault();
-//     username = usernameFormInput.value;
-// });
+usernameForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    username = usernameFormInput.value;
+    toast.show();
+});
 

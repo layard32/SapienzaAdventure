@@ -63,7 +63,7 @@ body {
   border-radius: 20px;
 }
 
-.rect .btn {
+.rect .my-btn {
   width: 43%;
   height: 90px;
   margin: 0 10px;
@@ -83,7 +83,7 @@ body {
 
 #usernameForm { width: 100%; }
 
-#usernameForm > button {
+#usernameForm > my-btn {
   margin-top: 5px;
   width: 30%;
   font-size: 120%;
@@ -97,9 +97,16 @@ body {
   width: 100%;
 }
 
+.primary {
+  background-color: #8C4A4A !important;
+}
+
+.secondary {
+  background-color: #4679A6 !important;
+}
 
 /* definizione di altri elementi */
-.btn {
+.my-btn {
   min-width: 120px;
   font-size: 140%;
   font-weight: 500;
@@ -109,13 +116,12 @@ body {
 
   border: 0;
   cursor: pointer;
-  background-color: #8C4A4A;
   border-radius: 20px;
 
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.btn:hover {
+.my-btn:hover {
   transform: translateY(-3px);
   box-shadow: 3px 4px 3px rgba(0, 0, 0, 0.3);
 }
@@ -172,6 +178,7 @@ body {
 }
 
 #roomJoinLabel {
+  color: black;
   text-align: center;
   font-size: 160%;
 }
@@ -194,4 +201,10 @@ body {
 
 #codeForm > * {
   flex-shrink: 1;
+}
+
+#usernameToast {
+  top: 10%;
+  font-size: 90%;
+  box-shadow: 4px 4px 2.5px rgba(0, 0, 0, 0.3);
 }
