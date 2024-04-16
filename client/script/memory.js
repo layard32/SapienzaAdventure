@@ -2,15 +2,15 @@
 
 
 var images=[
-    "./analisi.png", 
-    "./economia.png", 
-    "./elettronica.png", 
-    "./fisica.png", 
-    "./geometria.png", 
-    "./intartificiale.png", 
-    "./probabilita.png", 
-    "./programmazione.png", 
-    "./sicurezza.png"
+    "../images/analisi.png", 
+    "../images/economia.png", 
+    "../images/elettronica.png", 
+    "../images/fisica.png", 
+    "../images/geometria.png", 
+    "../images/intartificiale.png", 
+    "../images/probabilita.png", 
+    "../images/programmazione.png", 
+    "../images/sicurezza.png"
 ];
 
 var gameBoard=document.getElementById('game-board');
@@ -44,10 +44,13 @@ function shuffleCards(){
     }
 }
 
-
-
+var canFlip=true;
 
 function flipCard(){
+    if (!canFlip || flippedCards.length >= 2 || matchedCards.includes(this)|| flippedCards.includes(this)) {
+        return;
+    }
+
     if(flippedCards.length<2 && !matchedCards.includes(this)){
         if (this.classList.contains('flipped')){
             return;
@@ -58,7 +61,12 @@ function flipCard(){
         this.classList.add('player'+ currentPlayer);
 
         if(flippedCards.length === 2){
-            setTimeout(checkMatch, 1000);
+            canFlip = false;
+            setTimeout(function() {
+                canFlip = true; // Reimposta la possibilità di girare le carte dopo un certo periodo di tempo
+            }, 1600);
+            setTimeout(checkMatch, 900); //
+
 
         }
     }

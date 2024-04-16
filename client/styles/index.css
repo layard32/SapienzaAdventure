@@ -6,6 +6,7 @@
 html { min-height: 100dvh; }
 
 .text,p{ 
+  color: black;
   font-family: Roboto Mono; 
   text-align: center;   
   word-wrap: break-word;
@@ -13,16 +14,18 @@ html { min-height: 100dvh; }
 }
 
 body {
-  background-image: url("./pictures/test-wallpaper.png");
+  background-image: url("../images/wallpaper.png");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
+  min-height: 50dvh; 
 }
 
 .flex-container {
   display: flex;
   flex-direction: column;
   height: 125vh;
+  gap: 30px;
 }
 
 .header { flex: 1; }
@@ -36,11 +39,13 @@ body {
 #logo {
   display: block;
   height: auto;
-  max-width: calc(20vw + 15vh);
+  max-width: calc(20vw + 18vh);
   margin: 0 auto;
+  margin-top: 10px;
 }
 
 .body {
+  margin-top: 10px;
   flex: 6;
   display: flex;
   align-items: center;
@@ -52,17 +57,17 @@ body {
   height: 70%;
   width: 700px;
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  gap: 18px;
+  justify-content: space-evenly;
+  gap: 10px;
 
   opacity: 1;
-  background-color: rgba(166, 122, 83, 0.8);
+  background-color: rgba(242, 239, 233, 0.6);
   border-radius: 20px;
 }
 
-.rect .btn {
+.rect .my-btn {
   width: 43%;
   height: 90px;
   margin: 0 10px;
@@ -75,31 +80,54 @@ body {
 
 .footer > * { font-weight: 500; font-size: 105%; }
 
+#usernameFormInput {
+  width: 50%;
+  font-size: 150%;
+}
+
+#usernameForm { width: 100%; }
+
+#usernameForm > my-btn {
+  margin-top: 5px;
+  width: 30%;
+  font-size: 120%;
+  height: 80px;
+}
+
+#basicButton {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.primary {
+  background-color: #8C4A4A !important;
+}
+
+.secondary {
+  background-color: #4679A6 !important;
+}
+
 /* definizione di altri elementi */
-.btn {
+.my-btn {
   min-width: 120px;
   font-size: 140%;
   font-weight: 500;
   color: white;
   text-overflow: ellipsis;
   word-wrap: break-word;
-
+  
   border: 0;
   cursor: pointer;
-  background-color: #8C4A4A;
   border-radius: 20px;
 
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.btn:hover {
+.my-btn:hover {
   transform: translateY(-3px);
   box-shadow: 3px 4px 3px rgba(0, 0, 0, 0.3);
-}
-
-.header > .small {
-  font-size: 180%;
-  font-weight: 900;
 }
 
 .loader {
@@ -149,6 +177,7 @@ body {
 }
 
 #roomJoinLabel {
+  color: black;
   text-align: center;
   font-size: 160%;
 }
@@ -164,25 +193,17 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-evenly;
   height: 100%;
+  gap: 15px;
 }
 
 #codeForm > * {
   flex-shrink: 1;
 }
 
-#usernameFormInput {
-  display: inline;
-  width: 50%;
-  font-size: 150%;
-  margin-right: 15px;
-  margin-left: 15px;
-  margin-top: 10px;
-}
-
-#usernameForm { width: 100%; }
-
-#usernameForm > button {
-  margin-top: 10px;
+#usernameToast {
+  top: 10%;
+  font-size: 90%;
+  box-shadow: 4px 4px 2.5px rgba(0, 0, 0, 0.3);
 }

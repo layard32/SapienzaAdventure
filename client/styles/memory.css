@@ -9,13 +9,15 @@
     display: grid;
     place-items: center;
     min-height: 100vh;
+    overflow: auto;
 }
 
 .heading {
     text-align: center;
     font-family: fantasy;
-    font-size: 4rem;
+    font-size: /*4rem*/13vw;
     font-weight: 500;
+    padding: 3%;
 }
 
 main {
@@ -30,30 +32,35 @@ main {
     display: flex;
     flex-direction: row; /* Modificato il layout in colonna */
     align-items: center;
-    gap: 4em; /* Aggiunta spaziatura tra gli elementi */
+    gap: 10vw; /* Aggiunta spaziatura tra gli elementi */
 }
 
 #game-board {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
-    grid-gap: 1em;
+    grid-gap: 1.5vw;
+    padding-bottom: 7%;
+    
+    
+
     
 }
 
 
 
 .card{
-    height: 7em;
-    width: 6em;
+    height: /*8.60em*/16vw;
+    width: /*7em*/13vw;
     background-color: #8C4A4A;  
     display: grid;
     place-items: center;
+    border: 0.8vw solid #002c53;
     border-radius: 10px;
     cursor: pointer;
     transition: 0.3 all ease;
-    background-image: url('./sapienza\ adventure\ \(4\).png'); /* Percorso dell'immagine */
+    background-image: url('../images/cropped-logo.png'); /* Percorso dell'immagine */
     opacity: 1;
-    background-size: 70px 70px; /* Imposta le dimensioni desiderate */
+    background-size: 10vw;/*70px 70px; /* Imposta le dimensioni desiderate */
     background-repeat: no-repeat;
     background-position: center;
     
@@ -61,16 +68,20 @@ main {
 
 }
 
+
+
 .card.flipped{
     background-image: transparent;
 }
 
 #player1, #player2{
-    font-size: 30px;
+    font-size: /*30px;*/ 4vw;
     margin-top: 0;
     padding-left: 18.5.px;
     
 }
+
+
 
 .first, .second{
     display: flex;
@@ -86,6 +97,7 @@ main {
 .second{
     margin-left: 10%;
 }
+
 
 
 .card.shake{
@@ -117,14 +129,15 @@ main {
     top: 0;
     width: 100%;
     height: 100%;
-    overflow: auto;
+    /*overflow: auto;*/
     background-color: #002c53(0,0,0,0.4);
     
 }
 
 .modal-content {
     background-color: #F2EFE9;
-    margin: 15% auto;
+    border: 4px solid #002c53;
+    margin: 27% auto;
     padding: 20px;
     width: 80%;
     max-width: 400px;

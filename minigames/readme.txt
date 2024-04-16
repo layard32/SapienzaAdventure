@@ -1,1 +1,0 @@
-in questa cartella vengono salvati i minigiochi

@@ -5,11 +5,12 @@ function generateRandomNumber() {
 
 // prendo gli elementi dal dom HTML
 const rect = document.querySelector(".rect");
+const basicButton = rect.querySelector("#basicButton");
 const startGameButton = rect.querySelector(".start-game");
 const joinGameButton = rect.querySelector(".join-game");
 const usernameForm = rect.querySelector("#usernameForm");
 const usernameFormInput = document.querySelector("#usernameFormInput");
-const submitButton = document.querySelector(".btn.username.text");
+const submitButton = document.querySelector(".my-btn.text");
 
 // setto prelinarmente l'username a stringa vuota
 let username = String();
@@ -37,7 +38,7 @@ const insertCodeLabel = document.createElement("label"); // label associato all'
 insertCodeLabel.textContent = "Inserisci il codice della stanza:";
 const confirmJoinButton = document.createElement("button"); // tasto per confermare l'entrata nella stanza (in join game)
 confirmJoinButton.textContent = "Unisciti alla stanza";
-const joinContainer = document.createElement("div"); // metto il submit e goback button dentro un flexbox container
+const joinContainer = document.createElement("div"); // metto il submit e goback my-btn dentro un flexbox container
 joinContainer.appendChild(goBackButton2);
 joinContainer.appendChild(confirmJoinButton);
 insertCodeLabel.appendChild(insertCodeInput);
@@ -45,10 +46,10 @@ insertCodeForm.appendChild(insertCodeLabel);
 insertCodeForm.appendChild(joinContainer);
 
 // setto le classi, gli id ed eventuali attributi degli elementi creati
-goBackButton1.classList.add("btn", "text");
-goBackButton2.classList.add("btn", "text");
+goBackButton1.classList.add("my-btn", "text", "primary");
+goBackButton2.classList.add("my-btn", "text", "primary");
 goBackButton2.setAttribute("type", "button");
-confirmJoinButton.classList.add("btn", "text");
+confirmJoinButton.classList.add("my-btn", "text", "primary");
 roomCode.classList.add("text");
 roomCode.id = "roomCode";
 roomCodeNumber.classList.add("text");
@@ -56,13 +57,13 @@ roomCodeNumber.id = "randomNumber";
 loader.classList.add("loader", "text");
 joinContainer.id = "joinContainer";
 insertCodeInput.classList.add("text", "inputCode");
+insertCodeInput.id = "inputCodeInput";
 insertCodeInput.setAttribute("pattern", "[0-9]+");
 insertCodeInput.setAttribute("title", "Puoi inserire solamente numeri.");
-insertCodeInput.setAttribute("required", "");
 insertCodeInput.setAttribute("maxlength", "4");
 insertCodeLabel.classList.add("text");
 insertCodeLabel.id = "roomJoinLabel";
-insertCodeLabel.setAttribute("for", "inputCode");
+insertCodeLabel.setAttribute("for", "inputCodeInput");
 confirmJoinButton.setAttribute("type", "submit");
 confirmJoinButton.setAttribute("value", "Unisciti")
 insertCodeForm.id = "codeForm";
@@ -95,19 +96,9 @@ const addElements = function (elems, parent) {
     }
 };
 
-// prende l'username dal form
-submitButton.addEventListener("click", (event) => {
-    event.preventDefault();
-    username = usernameFormInput.value;
-});
-
 // event listener dei bottoni
 startGameButton.addEventListener("click", () => {
-    if (username === "") { 
-        alert("Devi inserire un username prima di proseguire!");
-        return;
-    }
-    removeElements ([startGameButton, joinGameButton, usernameForm]);
+    removeElements ([basicButton, usernameForm]);
     roomCodeNumber.textContent = generateRandomNumber(); // genera randomicamente il numero della stanza
     setTimeout(function() {
         addElements([roomCode, loader, goBackButton1], rect);
@@ -115,11 +106,7 @@ startGameButton.addEventListener("click", () => {
 });
 
 joinGameButton.addEventListener("click", () => {
-    if (username === "") { 
-        alert("Devi inserire un username prima di proseguire!");
-        return;
-    }
-    removeElements ([startGameButton, joinGameButton, usernameForm]);
+    removeElements ([basicButton, usernameForm]);
     setTimeout(() => {
         addElements([insertCodeForm], rect);
     }, 500);
@@ -128,13 +115,29 @@ joinGameButton.addEventListener("click", () => {
 goBackButton1.addEventListener("click", () => {
     removeElements ([roomCode, loader, goBackButton1]);
     setTimeout(() => {
-        addElements([usernameForm, startGameButton, joinGameButton], rect);
+        addElements([usernameForm, basicButton], rect);
     }, 500);
 });
 
 goBackButton2.addEventListener("click", () => {
     removeElements ([insertCodeForm]);
     setTimeout(() => {
-        addElements([usernameForm, startGameButton, joinGameButton], rect);
+        addElements([usernameForm, basicButton], rect);
     }, 500);
 });
+
+
+
+// gestione toast
+const toastElem = document.querySelector('#usernameToast');
+const toast = new bootstrap.Toast(toastElem, {
+    delay: 1800
+});
+
+// prende l'username dal form ?? gestire lato server?? INSERIRE CONTROLLI LATO SERVER
+usernameForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    username = usernameFormInput.value;
+    toast.show();
+});
+
