@@ -12,7 +12,7 @@ const PORT = 3000;
 
 // questa funzione prende in input un file e restituisce il percorso completo di un file all'interno di ../client/pages 
 // dove si trovano i file html
-const srcPath = (file) => path.join(dir, "../client/pages", file);
+const srcPath = (file) => path.join(dir, "./client/pages", file);
 
 // settiamo il middleware del server affinché possa analizzare i dati sia in HTTP che JSON
 server.use(bodyParser.urlencoded({ extended: false }));
