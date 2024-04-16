@@ -58,7 +58,7 @@ main {
     border-radius: 10px;
     cursor: pointer;
     transition: 0.3 all ease;
-    background-image: url('./sapienza\ adventure\ \(4\).png'); /* Percorso dell'immagine */
+    background-image: url('../images/cropped-logo.png'); /* Percorso dell'immagine */
     opacity: 1;
     background-size: 10vw;/*70px 70px; /* Imposta le dimensioni desiderate */
     background-repeat: no-repeat;

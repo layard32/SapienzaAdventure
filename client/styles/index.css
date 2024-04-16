@@ -14,10 +14,10 @@ html { min-height: 100dvh; }
 }
 
 body {
-  background-image: url("./pictures/test-wallpaper.png");
+  background-image: url("../images/wallpaper.png");
   background-position: center;
   background-repeat: no-repeat;
-  background-size: cover;
+  background-size: contain;
   min-height: 50dvh; 
 }
 

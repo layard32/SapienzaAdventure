@@ -2,15 +2,15 @@
 
 
 var images=[
-    "./analisi.png", 
-    "./economia.png", 
-    "./elettronica.png", 
-    "./fisica.png", 
-    "./geometria.png", 
-    "./intartificiale.png", 
-    "./probabilita.png", 
-    "./programmazione.png", 
-    "./sicurezza.png"
+    "../images/analisi.png", 
+    "../images/economia.png", 
+    "../images/elettronica.png", 
+    "../images/fisica.png", 
+    "../images/geometria.png", 
+    "../images/intartificiale.png", 
+    "../images/probabilita.png", 
+    "../images/programmazione.png", 
+    "../images/sicurezza.png"
 ];
 
 var gameBoard=document.getElementById('game-board');
