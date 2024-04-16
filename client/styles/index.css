@@ -15,7 +15,7 @@ html { min-height: 100dvh; }
 
 body {
   background-image: url("../images/wallpaper.png");
-  background-position: center;
+  background-position: top;
   background-repeat: no-repeat;
   background-size: cover;
   min-height: 50dvh; 
@@ -30,9 +30,12 @@ body {
 
 .header { flex: 1; }
 
-.body { flex: 6; }
-
-.footer { flex: 0.5; text-align: center;}
+.footer {
+  padding-top: 10px; 
+  flex: 0.5; 
+  text-align: center;
+  background-color: #4679A6;
+}
 
 .flex-container > div { width: 100%; }
 
@@ -61,6 +64,7 @@ body {
   align-items: center;
   justify-content: space-evenly;
   gap: 10px;
+  margin: 10px;
 
   opacity: 1;
   background-color: rgba(242, 239, 233, 0.6);
@@ -78,7 +82,7 @@ body {
   text-align: left;
 }
 
-.footer > * { font-weight: 500; font-size: 105%; }
+.footer > * { font-weight: 500; font-size: 100% !important;}
 
 #usernameFormInput {
   width: 50%;
@@ -117,7 +121,8 @@ body {
   color: white;
   text-overflow: ellipsis;
   word-wrap: break-word;
-  
+  line-height: 1.1;
+
   border: 0;
   cursor: pointer;
   border-radius: 20px;
