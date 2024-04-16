@@ -2,9 +2,10 @@
   "name": "webserver",
   "version": "1.0.0",
   "description": "server for goose game",
-  "main": "routes.js",
+  "main": "nodes.js",
   "type": "module",
   "scripts": {
+    "start": "node index.js",
     "build": "npm install",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
