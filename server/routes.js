@@ -4,6 +4,7 @@ import path from "path"; // per la gestione delle path
 import bodyParser from "body-parser"; // per il parsing delle chiamate http
 
 const dir = path.resolve(); // percorso assoluto corrente
+console.log(dir);
 
 // avvio un server con express
 const server = express(); 
@@ -16,6 +17,7 @@ const srcPath = (file) => path.join(dir, "../client/pages", file);
 // settiamo il middleware del server affinché possa analizzare i dati sia in HTTP che JSON
 server.use(bodyParser.urlencoded({ extended: false }));
 server.use(bodyParser.json());
+
 // settiamo il middleware per servire i file statici nella cartella client
 // per immagini, fogli di stile e script
 server.use(express.static(path.join(dir, "../client")));
