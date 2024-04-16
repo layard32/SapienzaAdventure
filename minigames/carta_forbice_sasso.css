@@ -44,30 +44,25 @@ body {
 /* Stili per la sezione delle scelte dei giocatori */
 .choices {
     display: flex;
-    justify-content: center;
+    flex-direction: column; /* Organizza le colonne in colonna su schermi stretti */
+    align-items: center; /* Centra gli elementi orizzontalmente */
     margin-bottom: 20px;
 }
 
 /* Stili per le colonne dei giocatori */
 .player-column {
-    margin: 0 20px;
-}
-
-/* Stili per i pulsanti delle scelte */
-.emoji-buttons {
-    display: flex;
-    justify-content: center;
+    margin: 10px 0; /* Imposta il margine superiore e inferiore per le colonne */
 }
 
 /* Stili per i pulsanti delle scelte */
 .emoji-buttons button {
-    font-size: 3rem;
-    margin: 0 10px;
+    font-size: min(10vw, 5rem); /* Imposta la dimensione del carattere in base alla larghezza dello schermo, ma non superiore a 5 rem */
+    margin: 5px; /* Imposta un margine uniforme intorno ai pulsanti */
+    padding: 15px; /* Imposta il padding in base alla larghezza dello schermo */
     border-radius: 50%;
     background-color: #3498db;
     color: white;
     border: none;
-    padding: 20px;
     cursor: pointer;
     transition: background-color 0.3s;
 }
@@ -81,7 +76,7 @@ body {
 .player-info {
     display: flex;
     justify-content: center;
-    margin-bottom: 20px;
+    margin-bottom: 5vh; /* Imposta il margine inferiore in base all'altezza dello schermo */
 }
 
 /* Stili per il modal di fine gioco */
@@ -125,7 +120,7 @@ body {
 
 /* Stili per la visualizzazione del punteggio */
 .scoreDisplay {
-    margin-bottom: 10px;
+    margin-bottom: 5vh; /* Imposta il margine inferiore in base all'altezza dello schermo */
     font-weight: bold;
 }
 
@@ -133,6 +128,7 @@ body {
 .scoreDisplay span {
     color: #3498db;
 }
+
 /* per lo spazio vuoto tra le scritte*/
 .spacer {
     width: 20px; /* Imposta la larghezza dello spazio vuoto */
