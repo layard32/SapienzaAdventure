@@ -14,7 +14,7 @@ html { min-height: 100dvh; }
 }
 
 body {
-  background-image: url("../images/wallpaper.png");
+  background-image: url("../images/output-onlinepngtools.png");
   background-position: top;
   background-repeat: no-repeat;
   background-size: cover;
@@ -42,7 +42,7 @@ body {
 #logo {
   display: block;
   height: auto;
-  max-width: calc(20vw + 18vh);
+  max-width: calc(20vw + 17vh);
   margin: 0 auto;
   margin-top: 10px;
 }
@@ -110,7 +110,7 @@ body {
 }
 
 .secondary {
-  background-color: #4679A6 !important;
+  background-color: rgb(70, 121, 166) !important;
 }
 
 /* definizione di altri elementi */
@@ -209,6 +209,6 @@ body {
 
 #usernameToast {
   top: 10%;
-  font-size: 90%;
+  font-size: 110%;
   box-shadow: 4px 4px 2.5px rgba(0, 0, 0, 0.3);
 }
