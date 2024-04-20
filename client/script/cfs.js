@@ -1,184 +1,300 @@
+let gameStarted = false; // Flag per indicare se il gioco è in corso
+let playerOneScore = 0; // Punteggio del giocatore uno
+let playerTwoScore = 0; // Punteggio del giocatore due
+let playerOneChoice = ''; // Scelta del giocatore uno
+let playerTwoChoice = ''; // Scelta del giocatore due
+let timer; // Timer per il turno del computer
+let timeout; // Timeout per il turno del computer
 
-// Variabili per tenere traccia dello stato del gioco
-let gameStarted = false; // Indica se la partita è in corso o no
-let currentTurn = 1; // Il turno corrente (1 per il giocatore 1, 2 per il giocatore 2)
-let playerOneChoice = ''; // Scelta del giocatore 1
-let playerTwoChoice = ''; // Scelta del giocatore 2
-let timer; // Variabile per il timer del turno
-let timeout; // Variabile per il timeout del turno
-
-// Funzione per iniziare il turno di un giocatore con un limite di tempo
-function startTurn(playerNum) {
-    // Imposta il timer
-    timer = setTimeout(() => {
-        // Se il tempo scade, esegue una mossa casuale per il giocatore
-        const choices = ['rock', 'paper', 'scissors'];
-        const randomChoice = choices[Math.floor(Math.random() * choices.length)];
-        playGame(randomChoice, playerNum);
-    }, 10000); // Tempo in millisecondi (10 secondi)
-
-    // Imposta un timeout per interrompere il timer se il giocatore fa una scelta prima del tempo
-    timeout = setTimeout(() => {
-        clearTimeout(timer);
-    }, 10000);
+// Funzione per la scelta casuale del computer
+function computerChoice() {
+    const choices = ['rock', 'paper', 'scissors']; // Opzioni possibili
+    return choices[Math.floor(Math.random() * choices.length)]; // Restituisce una scelta casuale
 }
 
-// Funzione per gestire il gioco
-function playGame(choice, playerNum) {
-    clearTimeout(timeout); // Cancella il timeout se il giocatore ha fatto una scelta
-    clearTimeout(timer); // Cancella il timer se il giocatore ha fatto una scelta
+// Funzione per aggiornare le scelte dei giocatori
+function updateChoices(playerSelection, computerSelection) {
+    const playerSign = document.getElementById('playerSign'); // Emoji del giocatore
+    const computerSign = document.getElementById('computerSign'); // Emoji del computer
 
-    if (!checkGameStarted()) {
+    // Imposta l'emoji corrispondente alla scelta del giocatore
+    switch (playerSelection) {
+        case 'rock':
+            playerSign.textContent = '✊'; // Pugno
+            break;
+        case 'paper':
+            playerSign.textContent = '✋'; // Mano
+            break;
+        case 'scissors':
+            playerSign.textContent = '✌'; // Forbici
+            break;
+    }
+
+    // Imposta l'emoji corrispondente alla scelta del computer
+    switch (computerSelection) {
+        case 'rock':
+            computerSign.textContent = '✊'; // Pugno
+            break;
+        case 'paper':
+            computerSign.textContent = '✋'; // Mano
+            break;
+        case 'scissors':
+            computerSign.textContent = '✌'; // Forbici
+            break;
+    }
+}
+
+// Funzione per iniziare il turno
+function startTurn(playerNum) {
+    timer = setTimeout(() => {
+        const randomChoice = computerChoice(); // Scelta casuale del computer
+        playGame(randomChoice, playerNum); // Avvia il gioco con la scelta casuale del computer
+    }, 100000); // Timeout di 100 secondi per il turno del computer
+
+    timeout = setTimeout(() => {
+        clearTimeout(timer); // Interrompe il timer se il giocatore fa una mossa prima del timeout
+    }, 100000);
+}
+
+// Funzione per giocare una partita
+function playGame(choice, playerNum) {
+    clearTimeout(timeout); // Interrompe il timeout se il giocatore fa una mossa
+
+    // Controlla se il gioco è in corso
+    if (!gameStarted) {
+        alert('You must start the game before playing!');
         return;
     }
 
+    // Assegna la scelta al giocatore corrispondente
     if (playerNum === 1) {
-        playerOneChoice = choice;
-        const playerOneDisplay = document.getElementById('playerOneDisplay');
-        playerOneDisplay.textContent = "PLAYER_ONE: " + playerOneChoice;
-    } else if (playerNum === 2) {
-        playerTwoChoice = choice;
-        const playerTwoDisplay = document.getElementById('playerTwoDisplay');
-        playerTwoDisplay.textContent = "PLAYER_TWO: " + playerTwoChoice;
+        playerOneChoice = choice; // Assegna la scelta del giocatore uno
+        updateChoices(playerOneChoice, ''); // Aggiorna le emoji dei giocatori
+
+        const computerMove = computerChoice(); // Scelta casuale del computer
+        updateChoices('', computerMove); // Aggiorna l'emoji del computer
+
+        playerTwoChoice = computerMove; // Assegna la scelta del computer al giocatore due
+    } else {
+        playerTwoChoice = choice; // Assegna la scelta del giocatore due
+        updateChoices('', playerTwoChoice); // Aggiorna l'emoji del computer
     }
 
+    // Verifica se entrambi i giocatori hanno fatto una scelta
     if (playerOneChoice && playerTwoChoice) {
-        let result = '';
+        let result = ''; // Risultato della partita
 
+        // Determina il vincitore o se c'è un pareggio
         if (playerOneChoice === playerTwoChoice) {
-            result = 'PAREGGIO';
+            result = 'TIE'; // Pareggio
         } else {
             switch (playerOneChoice) {
                 case 'rock':
-                    result = (playerTwoChoice === 'scissors') ? 'PLAYER ONE' : 'PLAYER TWO';
+                    result = (playerTwoChoice === 'scissors') ? 'PLAYER' : 'COMPUTER'; // Vincitore in base alla scelta del giocatore uno
                     break;
                 case 'paper':
-                    result = (playerTwoChoice === 'rock') ? 'PLAYER ONE' : 'PLAYER TWO';
+                    result = (playerTwoChoice === 'rock') ? 'PLAYER' : 'COMPUTER'; // Vincitore in base alla scelta del giocatore uno
                     break;
                 case 'scissors':
-                    result = (playerTwoChoice === 'paper') ? 'PLAYER ONE' : 'PLAYER TWO';
+                    result = (playerTwoChoice === 'paper') ? 'PLAYER' : 'COMPUTER'; // Vincitore in base alla scelta del giocatore uno
                     break;
             }
         }
 
-        const playerOneScoreDisplay = document.getElementById("playerOneScoreDisplay");
-        const playerTwoScoreDisplay = document.getElementById("playerTwoScoreDisplay");
+        // Aggiorna i punteggi
+        updateScores(result);
 
-        if (result === 'PLAYER ONE') {
-            playerOneScoreDisplay.textContent++;
-        } else if (result === 'PLAYER TWO') {
-            playerTwoScoreDisplay.textContent++;
+        // Mostra il risultato della partita
+        displayResult(result);
+
+        // Controlla se il gioco è finito
+        if (playerOneScore === 2 || playerTwoScore === 2) {
+            endGame(); // Termina il gioco
         }
 
-        currentTurn++;
-
-        const turnDisplay = document.getElementById('turnDisplay');
-        turnDisplay.textContent = "FINE TURNO " + (currentTurn-1);
-
-        if (playerOneScoreDisplay.textContent === '2' || playerTwoScoreDisplay.textContent === '2') {
-            const winner = (playerOneScoreDisplay.textContent === '2') ? 'PLAYER ONE' : 'PLAYER TWO';
-            const winMessage = document.getElementById('winMessage');
-            winMessage.textContent = `GIOCO FINITO! ${winner} VINCE!`;
-
-            const gameOverModal = document.getElementById('gameOverModal');
-            gameOverModal.style.display = 'block';
-
-            // Disabilita i pulsanti per impedire ulteriori mosse
-            document.querySelectorAll('.emoji-buttons button').forEach(button => {
-                button.disabled = true;
-            });
-        }
-
+        // Resetta le scelte dei giocatori
         playerOneChoice = '';
         playerTwoChoice = '';
     }
 }
 
-// Funzione per avviare la partita
+// Funzione per aggiornare i punteggi
+function updateScores(result) {
+    // Se il giocatore uno vince, incrementa il suo punteggio
+    if (result === 'PLAYER') {
+        playerOneScore++;
+    } 
+    // Se il computer vince, incrementa il suo punteggio
+    else if (result === 'COMPUTER') {
+        playerTwoScore++;
+    }
+
+    // Aggiorna i punteggi visualizzati a schermo
+    const playerOneScoreDisplay = document.getElementById("playerScore");
+    const playerTwoScoreDisplay = document.getElementById("computerScore");
+    playerOneScoreDisplay.textContent = "Player: " + playerOneScore;
+    playerTwoScoreDisplay.textContent = "Computer: " + playerTwoScore;
+}
+
+// Funzione per mostrare il risultato della partita
+function displayResult(result) {
+    // Ottiene gli elementi per visualizzare il risultato
+    const scoreInfo = document.getElementById("scoreInfo");
+    const scoreMessage = document.getElementById("scoreMessage");
+
+    // Mostra il messaggio corrispondente al risultato
+    switch (result) {
+        case 'TIE':
+            scoreInfo.textContent = "It's a tie!"; // Pareggio
+            scoreMessage.textContent = "Both players chose the same weapon."; // Entrambi i giocatori hanno scelto la stessa arma
+            break;
+        case 'PLAYER':
+            scoreInfo.textContent = "You win!"; // Vittoria del giocatore
+            scoreMessage.textContent = getWinningMessage(playerOneChoice, playerTwoChoice); // Messaggio di vittoria
+            break;
+        case 'COMPUTER':
+            scoreInfo.textContent = "You lose..."; // Sconfitta del giocatore
+            scoreMessage.textContent = getWinningMessage(playerTwoChoice, playerOneChoice); // Messaggio di sconfitta
+            break;
+    }
+}
+
+// Funzione per ottenere il messaggio di vittoria/sconfitta
+function getWinningMessage(winningChoice, losingChoice) {
+    // Determina il messaggio in base alle scelte
+    switch (winningChoice) {
+        case 'rock':
+            return (losingChoice === 'scissors') ? 'Rock crushes scissors' : 'Paper covers rock';
+        case 'paper':
+            return (losingChoice === 'rock') ? 'Paper covers rock' : 'Scissors cuts paper';
+        case 'scissors':
+            return (losingChoice === 'paper') ? 'Scissors cuts paper' : 'Rock crushes scissors';
+    }
+}
+
+// Funzione per avviare il gioco
 function startGame() {
     const startScreen = document.getElementById('startScreen');
     const gameScreen = document.getElementById('gameScreen');
     const gameOverModal = document.getElementById('gameOverModal');
 
+    // Nasconde lo schermo iniziale e mostra quello di gioco
     startScreen.style.display = 'none';
     gameScreen.style.display = 'block';
     gameOverModal.style.display = 'none';
 
-    resetGame(); // Resettare lo stato del gioco
+    // Resetta il gioco
+    resetGame();
 
-    gameStarted = true; // Imposta gameStarted su true
-    currentTurn = 1;
+    // Imposta il flag del gioco a true
+    gameStarted = true;
 
-    // Avvia il turno del primo giocatore
+    // Inizia il turno del giocatore uno
     startTurn(1);
 }
 
-// Aggiungi un gestore di eventi al pulsante "Avvio Partita" nella schermata iniziale
+// Aggiunge un event listener al pulsante di avvio del gioco
 document.getElementById('startButton').addEventListener('click', startGame);
 
-// Funzione per controllare se la partita è stata avviata prima di eseguire un'azione di gioco
+// Funzione per controllare se il gioco è in corso
 function checkGameStarted() {
+    // Se il gioco non è in corso, mostra un messaggio e ritorna falso
     if (!gameStarted) {
-        alert('Devi avviare la partita prima di giocare!');
+        alert('You must start the game before playing!');
         return false;
     }
+    // Altrimenti ritorna vero
     return true;
 }
 
-// Funzione per ricominciare la partita
+// Funzione per riavviare il gioco
 function restartGame() {
     const gameOverModal = document.getElementById('gameOverModal');
     gameOverModal.style.display = 'none';
 
-    // Riabilita i pulsanti
+    // Abilita tutti i pulsanti delle scelte
     document.querySelectorAll('.emoji-buttons button').forEach(button => {
         button.disabled = false;
     });
 
-    startGame(); // Ricomincia la partita
+    // Resetta il gioco
+    resetGame();
+
+    // Avvia il gioco
+    startGame();
 }
 
-// Funzione per abbandonare la partita
+// Funzione per uscire dal gioco
 function quitGame() {
     const startScreen = document.getElementById('startScreen');
     const gameScreen = document.getElementById('gameScreen');
     const gameOverModal = document.getElementById('gameOverModal');
 
+    // Mostra lo schermo iniziale e nasconde quello di gioco
     startScreen.style.display = 'block';
     gameScreen.style.display = 'none';
     gameOverModal.style.display = 'none';
 
-    resetGame(); // Resettare lo stato del gioco
+    // Resetta il gioco
+    resetGame();
 }
 
-// Funzione per chiudere il modal di fine gioco
+// Funzione per chiudere il modale
 function closeModal() {
     const gameOverModal = document.getElementById('gameOverModal');
     gameOverModal.style.display = 'none';
 }
 
-// Funzione per resettare lo stato del gioco
+// Funzione per resettare il gioco
 function resetGame() {
-    const playerOneDisplay = document.getElementById('playerOneDisplay');
-    const playerTwoDisplay = document.getElementById('playerTwoDisplay');
-    const playerOneScoreDisplay = document.getElementById("playerOneScoreDisplay");
-    const playerTwoScoreDisplay = document.getElementById("playerTwoScoreDisplay");
+    const playerSign = document.getElementById('playerSign');
+    const computerSign = document.getElementById('computerSign');
+    const playerOneScoreDisplay = document.getElementById("playerScore");
+    const playerTwoScoreDisplay = document.getElementById("computerScore");
 
-    playerOneDisplay.textContent = "PLAYER_ONE:";
-    playerTwoDisplay.textContent = "PLAYER_TWO:";
-    playerOneScoreDisplay.textContent = "0";
-    playerTwoScoreDisplay.textContent = "0";
+    // Resetta le emoji e i punteggi
+    playerSign.textContent = "❔";
+    computerSign.textContent = "❔";
+    playerOneScoreDisplay.textContent = "Player: 0";
+    playerTwoScoreDisplay.textContent = "Computer: 0";
 
-    const turnDisplay = document.getElementById('turnDisplay');
-    turnDisplay.textContent = ""; // Resettare il display del turno
-
-    // Riabilita i pulsanti
+    // Abilita tutti i pulsanti delle scelte
     document.querySelectorAll('.emoji-buttons button').forEach(button => {
         button.disabled = false;
     });
 
+    // Resetta le variabili di gioco
     gameStarted = false;
-    currentTurn = 1;
+    playerOneScore = 0;
+    playerTwoScore = 0;
     playerOneChoice = '';
     playerTwoChoice = '';
+
+    // Resetta il testo di scelta dei giocatori
+    document.getElementById('scoreInfo').textContent = 'Choose your weapon';
+    document.getElementById('scoreMessage').textContent = 'First to win 2 rounds wins the game';
+}
+
+// Funzione per terminare il gioco
+function endGame() {
+    // Disabilita tutti i pulsanti delle scelte
+    document.querySelectorAll('.emoji-buttons button').forEach(button => {
+        button.disabled = true;
+    });
+
+    // Mostra il messaggio di vittoria/sconfitta dopo un secondo
+    setTimeout(() => {
+        const message = (playerOneScore === 2) ? 'You won!' : 'You lost...';
+        const winMessage = document.getElementById('winMessage');
+        winMessage.textContent = message;
+
+        // Mostra il modale di fine gioco
+        const gameOverModal = document.getElementById('gameOverModal');
+        gameOverModal.style.display = 'block';
+
+        // Disabilita tutti i pulsanti delle scelte
+        document.querySelectorAll('.emoji-buttons button').forEach(button => {
+            button.disabled = true;
+        });
+    }, 1000);
 }

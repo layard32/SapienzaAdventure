@@ -1,92 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Metadati del documento -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Titolo della pagina -->
-    <title>Sasso - Carta - Forbice</title>
-    <script src="../script/cfs.js" defer></script>
-    <!-- Collegamento al foglio di stile CSS -->
-    <link rel="stylesheet" href="../styles/cfs.css">
+    <title>Rock Paper Scissors</title>
+    <script src="../script/cfs.js" defer></script> <!-- Collega il file JavaScript -->
+    <link rel="stylesheet" href="../styles/cfs.css"> <!-- Collega il foglio di stile CSS -->
 </head>
 <body>
-    <!-- Contenitore principale -->
     <div id="container">
-        <!-- Schermata iniziale -->
+        <!-- Schermo di avvio -->
         <div id="startScreen">
-            <!-- Titolo del gioco -->
-            <h1>Sasso - Carta - Forbice</h1>
-            <!-- Pulsante per avviare la partita -->
-            <button id="startButton">Avvio Partita</button>
+            <h1>Rock Paper Scissors</h1> <!-- Intestazione del gioco -->
+            <button id="startButton">Start Game</button> <!-- Pulsante per avviare il gioco -->
         </div>
 
-        <!-- Schermata del gioco (nascosta all'avvio) -->
-        <div id="gameScreen" style="display: none;">
-            <!-- Sezione delle scelte dei giocatori -->
+        <!-- Schermo di gioco -->
+        <div id="gameScreen" style="display: none;"> <!-- Inizialmente nascosto -->
+            <header>
+                <h1>Rock Paper Scissors</h1> <!-- Intestazione del gioco -->
+            </header>
+            <div class="scoreboard">
+                <h2 class="score-info" id="scoreInfo">Choose your weapon</h2> <!-- Informazioni sul punteggio -->
+                <h3 class="score-message" id="scoreMessage">First to win 2 rounds wins the game</h3> <!-- Messaggio sulle regole del gioco -->
+                <div class="scores-container">
+                    <!-- Contenitore per i punteggi dei giocatori -->
+                    <div class="score-box">
+                        <div class="sign" id="playerSign">❔</div> <!-- Emoji del giocatore -->
+                        <p id="playerScore" class="score">Player: 0</p> <!-- Punteggio del giocatore -->
+                    </div>
+                    <div class="score-box">
+                        <div class="sign" id="computerSign">❔</div> <!-- Emoji del computer -->
+                        <p id="computerScore" class="score">Computer: 0</p> <!-- Punteggio del computer -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scelte del giocatore -->
             <div class="choices">
-                <!-- Colonna per il giocatore 1 -->
-                <div class="player-column">
-                    <h2>Player One</h2>
-                    <!-- Pulsanti per le scelte del giocatore 1 -->
-                    <div class="emoji-buttons">
-                        <button onclick="playGame('rock', 1)"><span>&#128511;</span></button>
-                        <button onclick="playGame('paper', 1)"><span>&#x1F4C4;</span></button>
-                        <button onclick="playGame('scissors', 1)"><span>&#x2702;</span></button>
-                    </div>
-                </div>
-                <!-- Colonna per il giocatore 2 -->
-                <div class="player-column">
-                    <h2>Player Two</h2>
-                    <!-- Pulsanti per le scelte del giocatore 2 -->
-                    <div class="emoji-buttons">
-                        <button onclick="playGame('rock', 2)"><span>&#128511;</span></button>
-                        <button onclick="playGame('paper', 2)"><span>&#x1F4C4;</span></button>
-                        <button onclick="playGame('scissors', 2)"><span>&#x2702;</span></button>
-                    </div>
+                <div class="emoji-buttons">
+                    <!-- Pulsanti per le scelte del giocatore -->
+                    <button onclick="playGame('rock', 1)"><span>&#9994;</span></button> <!-- Pugno -->
+                    <button onclick="playGame('paper', 1)"><span>&#9996;</span></button> <!-- Mano -->
+                    <button onclick="playGame('scissors', 1)"><span>&#9995;</span></button> <!-- Forbici -->
                 </div>
             </div>
 
-            <!-- Visualizzazione delle scelte dei giocatori -->
-            <div class="player-info">
-                <div id="playerOneDisplay">Player One:  </div>
-                <!-- Div vuoto per creare spazio -->
-                <div class="spacer"></div>
-                <div id="playerTwoDisplay">Player Two:  </div>
-            </div>
-
-            <!-- Visualizzazione del risultato -->
+            <!-- Messaggio di risultato della partita -->
             <div id="resultDisplay"></div>
-            <!-- Visualizzazione del vincitore -->
             <div id="winnerDisplay"></div>
-            <!-- Visualizzazione del turno corrente -->
             <div id="turnDisplay"></div>
 
-            <!-- Modal di fine gioco -->
+            <!-- Modale di fine gioco -->
             <div id="gameOverModal" class="modal">
-                <div class="modal-content">
-                    <!-- Pulsante per chiudere il modal -->
-                    <span class="close" onclick="closeModal()">&times;</span>
-                    <!-- Messaggio di vittoria -->
-                    <p id="winMessage"></p>
-                    <!-- Pulsanti per ricominciare o abbandonare la partita -->
-                    <div id="modalButtons">
-                        <button onclick="restartGame()">Ricomincia Partita</button>
-                        <button onclick="quitGame()">Abbandona Partita</button>
-                    </div>
+                <span class="close" onclick="closeModal()">&times;</span> <!-- Pulsante per chiudere il modale -->
+                <p id="winMessage"></p> <!-- Messaggio di vittoria o sconfitta -->
+                <div class="modal-buttons">
+                    <button class="restart-button" onclick="restartGame()">Restart Game</button> <!-- Pulsante per riavviare il gioco -->
+                    <button class="quit-button" onclick="quitGame()">Quit Game</button> <!-- Pulsante per uscire dal gioco -->
                 </div>
             </div>
-
-            <!-- Visualizzazione del punteggio -->
-            <div class="scoreDisplay">Player One Score: 
-                <span id="playerOneScoreDisplay">0</span>
-            </div>
-            <div class="scoreDisplay">Player Two Score: 
-                <span id="playerTwoScoreDisplay">0</span>
-            </div>
+            
         </div>
     </div>
 
-    <!-- Collegamento al file JavaScript -->
+    
 </body>
 </html>
