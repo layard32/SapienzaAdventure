@@ -18,8 +18,8 @@ class Player {
         this.cell = 1;
 
         const image = new Image();
-        if (n == 0) image.src = '/client/images/rook.png';
-        if (n == 1) image.src = '/client/images/queen.png';
+        if (n == 0) image.src = '../images/rook.png';
+        if (n == 1) image.src = '../images/queen.png';
 
         // aspettiamo che l'immagine si carichi
         image.onload = () => {
