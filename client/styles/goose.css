@@ -1,0 +1,17 @@
+body {
+    margin: 0;
+}
+
+#canvas {
+    background: url('/client/images/tabellone_finale.png');
+    background-size: 100% 100%;
+    position: absolute;
+}
+
+/* @media screen and (max-width: 600px) {
+    #canvas {
+        background: url('/client/images/tabellone_finale_ruotato.png');
+        background-size: 100% 100%;
+        position: absolute;
+    }
+} */
