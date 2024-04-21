@@ -1,17 +1,13 @@
-const canvas = document.getElementById('canvas'); // si prende l'elemento canvas
-const c = canvas.getContext('2d'); // in questo modo verrà renderizzato in 2d
+const canvas = document.getElementById('canvas');
+const button = document.getElementById('button');
+const c = canvas.getContext('2d'); // in questo modo canvas verrà renderizzato in 2d
 
-// settiamo le dimensioni uguali all'oggetto window
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
-// settiamo un event listener alla window così che in caso di resize, canvas
-// continui ad occupare l'intera finestra
-// const resizeCanvas = function() {
-//     canvas.width = window.innerWidth;
-//     canvas.height = window.innerHeight;
-// };
-// window.addEventListener('resize', resizeCanvas);
+// n = 0 per il primo giocatore, n = 1 per il secondo!
+// questa costante viene gestita dal server
+const n = 0;
+// anche questa costante viene gestita dal server, se è pari a true significa
+// che il player attuale può lanciare il dado
+const turn = true;
 
 // la classe per un player
 class Player {
@@ -22,30 +18,35 @@ class Player {
 
         // aspettiamo che l'immagine si carichi
         image.onload = () => {
-            const SCALE = 0.10;
+            const SCALE = 0.15;
             this.image = image;
             this.width = image.width * SCALE;
             this.height = image.height * SCALE;
-            this.position = {
-                x: 200,
-                y: 200
-            }    
+            if (n == 0) this.position = {x: 75, y: 75};
+            if (n == 1) this.position = {x: 150, y: 75};
         };
     }
 
-    // funzione per disegnare effettivamente su canvas il giocatore
-    draw() {
+    firstDraw() {
         if (this.image) c.drawImage(this.image, this.position.x, this.position.y, this.width, this.height);
     };
 };
 
-// creiamo player 0
-const player = new Player(0);
-
-// funzione loop di animazione
+// inizializziamo il player e facciamo partire il loop di animazione
+const player = new Player(n);
 function animate() {
     requestAnimationFrame(animate);    
-    player.draw();
+    player.firstDraw();
 };
 
 animate();
+
+// gestione del lancio del dado
+button.addEventListener('click', () => {
+    if (turn) rollDice();
+});
+
+function rollDice() {
+    const dice = Math.floor(Math.random() * 6) + 1;
+}
+
