@@ -18,6 +18,7 @@
     font-size: /*4rem*/13vw;
     font-weight: 500;
     padding: 3%;
+    
 }
 
 main {
@@ -30,9 +31,10 @@ main {
 
 #game-info {
     display: flex;
-    flex-direction: row; /* Modificato il layout in colonna */
+    flex-direction: column; /* Modificato il layout in colonna */
     align-items: center;
-    gap: 10vw; /* Aggiunta spaziatura tra gli elementi */
+    
+    gap: 2vw; /* Aggiunta spaziatura tra gli elementi */
 }
 
 #game-board {
@@ -40,6 +42,7 @@ main {
     grid-template-columns: repeat(6, 1fr);
     grid-gap: 1.5vw;
     padding-bottom: 7%;
+    
     
     
 
@@ -74,31 +77,24 @@ main {
     background-image: transparent;
 }
 
-#player1, #player2{
-    font-size: /*30px;*/ 4vw;
-    margin-top: 0;
-    padding-left: 18.5.px;
-    
-}
 
 
-
-.first, .second{
+#timer{
+    font-size: 6vw;
     display: flex;
     justify-content: center;
     flex-direction: column;
     place-items: center;
+    font-family: fantasy;
+    color: #002c53 ;
 }
 
-.first{
-    margin-right: 10%;
+#tempo{
+    font-family: fantasy;
+    color: #002c53 ;
+    font-size: 7vw;
+
 }
-
-.second{
-    margin-left: 10%;
-}
-
-
 
 .card.shake{
     background-color: #696969;
@@ -120,7 +116,6 @@ main {
 
 } 
 
-/* Aggiungi questi stili CSS per la finestra modale */
 .modal {
     display: none;
     position: fixed;
@@ -145,6 +140,8 @@ main {
     border-radius: 10px;
 }
 
+
+
 .close {
     color: #aaa;
     float: right;
@@ -158,5 +155,8 @@ main {
     text-decoration: none;
     cursor: pointer;
 }
+
+
+
 
 
