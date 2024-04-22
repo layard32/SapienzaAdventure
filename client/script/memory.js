@@ -17,6 +17,7 @@ var gameBoard=document.getElementById('game-board');
 var cards=[];
 var flippedCards=[];
 var matchedCards=[];
+var gameOver=false;
 
 
 
