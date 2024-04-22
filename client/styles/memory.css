@@ -51,6 +51,8 @@ main {
     grid-template-columns: repeat(6, 1fr);
     grid-gap: 1.5vw;
     padding-bottom: 7%;
+    padding-left: 5%;
+    padding-right: 3%;
     overflow: auto;
     
 }
