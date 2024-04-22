@@ -34,6 +34,7 @@ main {
     align-items: center;
     flex-direction: column; /* Modificato il layout in colonna */
     gap: 5em; /* Aggiunta spaziatura tra gli elementi */
+    overflow: auto;
     
 }
 
@@ -50,6 +51,7 @@ main {
     grid-template-columns: repeat(6, 1fr);
     grid-gap: 1.5vw;
     padding-bottom: 7%;
+    overflow: auto;
     
 }
 
@@ -61,8 +63,8 @@ main {
     width: 13vw;
     max-width: 120px; /*decidere se lasciare max-width*/
     max-height: 150px;
-    min-width: 65px;
-    min-height: 85px;
+    min-width: 60px;
+    min-height: 80px;
     background-color: #8C4A4A;  
     display: grid;
     place-items: center;
@@ -76,7 +78,8 @@ main {
     background-repeat: no-repeat;
     background-position: center;
     background-size:80%;
-    overflow: auto;
+    /*margin-left: 20%;
+    margin-right: 20%;*/
 
 
 }
