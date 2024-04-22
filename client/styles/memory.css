@@ -90,12 +90,12 @@ main {
 
 #timer{
     font-size: 40px/*300% /*6vw*/;
-    font-family: fantasy;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
     color: #002c53 ;
 }
 
 #tempo{
-    font-family: fantasy;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
     color: #002c53 ;
     font-size: 40px/*7vw*/;
 
