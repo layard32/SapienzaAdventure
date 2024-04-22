@@ -5,36 +5,44 @@
     box-sizing: border-box;
 }
 
+
 .container {
     display: grid;
     place-items: center;
     min-height: 100vh;
     overflow: auto;
+   
 }
+
+
 
 .heading {
     text-align: center;
     font-family: fantasy;
-    font-size: /*4rem*/13vw;
+    font-size: 65px;/*11vw; /*13vw*/
     font-weight: 500;
-    padding: 3%;
+    padding-top: 3%;
+    padding-bottom: 1%;
+    
     
 }
 
 main {
+
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column; /* Modificato il layout in colonna */
     gap: 5em; /* Aggiunta spaziatura tra gli elementi */
+    
 }
 
 #game-info {
     display: flex;
     flex-direction: column; /* Modificato il layout in colonna */
     align-items: center;
+    gap: 1vw; /* Aggiunta spaziatura tra gli elementi */
     
-    gap: 2vw; /* Aggiunta spaziatura tra gli elementi */
 }
 
 #game-board {
@@ -43,34 +51,35 @@ main {
     grid-gap: 1.5vw;
     padding-bottom: 7%;
     
-    
-    
-
-    
 }
 
 
 
+
 .card{
-    height: /*8.60em*/16vw;
-    width: /*7em*/13vw;
+    height: 16vw;
+    width: 13vw;
+    max-width: 120px; /*decidere se lasciare max-width*/
+    max-height: 150px;
+    min-width: 65px;
+    min-height: 85px;
     background-color: #8C4A4A;  
     display: grid;
     place-items: center;
-    border: 0.8vw solid #002c53;
+    border: 0.5vw solid #002c53;
     border-radius: 10px;
     cursor: pointer;
     transition: 0.3 all ease;
     background-image: url('../images/cropped-logo.png'); /* Percorso dell'immagine */
     opacity: 1;
-    background-size: 10vw;/*70px 70px; /* Imposta le dimensioni desiderate */
+    /*background-size: 65px;/*10vw*//*70px 70px; /* Imposta le dimensioni desiderate */
     background-repeat: no-repeat;
     background-position: center;
-    
+    background-size:80%;
+    overflow: auto;
 
 
 }
-
 
 
 .card.flipped{
@@ -80,11 +89,7 @@ main {
 
 
 #timer{
-    font-size: 6vw;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    place-items: center;
+    font-size: 40px/*300% /*6vw*/;
     font-family: fantasy;
     color: #002c53 ;
 }
@@ -92,7 +97,7 @@ main {
 #tempo{
     font-family: fantasy;
     color: #002c53 ;
-    font-size: 7vw;
+    font-size: 40px/*7vw*/;
 
 }
 
