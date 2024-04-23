@@ -43,3 +43,5 @@ server.get("/cfs", (req, res) => {
 server.listen(PORT, () => {
   console.log(`Il server è in esecuzione sulla porta: ${PORT}`);
 });
+
+export default server
