@@ -20,7 +20,7 @@ server.use(bodyParser.json());
 
 // settiamo il middleware per servire i file statici nella cartella client
 // per immagini, fogli di stile e script
-server.use(express.static(path.join(dir, "./client")));
+server.use(express.static(path.join(dir, "./client/pages")));
 
 // definiamo le chiamate get per le routes
 server.get("/", (req, res) => {
