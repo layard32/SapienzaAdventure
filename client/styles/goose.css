@@ -12,7 +12,6 @@ body {
     background: url(../images/sfondo1.png);
     background-size: 100% 100%;
     background-repeat: no-repeat;
-    transform: scale(calc(1vw + 1vh)); /* Esempio di zoom proporzionale */
 }
 
 #button {
