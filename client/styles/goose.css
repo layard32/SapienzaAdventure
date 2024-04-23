@@ -1,5 +1,6 @@
 body {
     margin: 0; padding: 0;
+    background-color: #8C4A4A;
 }
 
 #background {
@@ -11,13 +12,14 @@ body {
     background: url(../images/sfondo1.png);
     background-size: 100% 100%;
     background-repeat: no-repeat;
+    transform: scale(calc(1vw + 1vh)); /* Esempio di zoom proporzionale */
 }
 
 #button {
     position: fixed;
     top: 100%;
-    left: 50%;
-    transform: translate(-50%, -100%);
+    left: 100%;
+    transform: translate(-100%, -100%);
     
     cursor: pointer;
     padding: 20px;
@@ -29,9 +31,11 @@ body {
 
 #playerName {
     position: fixed;
+    top: 100%;
+    transform: translate(0, -100%);
+
     font-size: 50px;
     color: white;
-    left: 1%;
     background-color: black;
 }
 
@@ -43,3 +47,4 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
 }
+
