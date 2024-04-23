@@ -5,100 +5,106 @@
     box-sizing: border-box;
 }
 
+
 .container {
     display: grid;
     place-items: center;
     min-height: 100vh;
     overflow: auto;
+   
 }
+
+
 
 .heading {
     text-align: center;
-    font-family: fantasy;
-    font-size: /*4rem*/13vw;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-size: 65px;/*11vw; /*13vw*/
     font-weight: 500;
-    padding: 3%;
+    padding-top: 3%;
+    padding-bottom: 1%;
+    
+    
 }
 
 main {
+
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column; /* Modificato il layout in colonna */
     gap: 5em; /* Aggiunta spaziatura tra gli elementi */
+    overflow: auto;
+    
 }
 
 #game-info {
     display: flex;
-    flex-direction: row; /* Modificato il layout in colonna */
+    flex-direction: column; /* Modificato il layout in colonna */
     align-items: center;
-    gap: 10vw; /* Aggiunta spaziatura tra gli elementi */
+    gap: 1vw; /* Aggiunta spaziatura tra gli elementi */
+    
 }
 
 #game-board {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
-    grid-gap: 1.5vw;
+    grid-gap: 1vw;
     padding-bottom: 7%;
-    
-    
-
+    padding-left: 3%;
+    padding-right: 3%;
+    overflow: auto;
     
 }
 
 
 
+
 .card{
-    height: /*8.60em*/16vw;
-    width: /*7em*/13vw;
+    height: 16vw;
+    width: 13vw;
+    max-width: 105px;/*120px; /*decidere se lasciare max-width*/
+    max-height: 130px;/*150px;**/
+    min-width: 40px;/*60px;*/
+    min-height: 60px;/*80px;*/
     background-color: #8C4A4A;  
     display: grid;
     place-items: center;
-    border: 0.8vw solid #002c53;
+    border: 0.5vw solid #002c53;
     border-radius: 10px;
     cursor: pointer;
     transition: 0.3 all ease;
     background-image: url('../images/cropped-logo.png'); /* Percorso dell'immagine */
     opacity: 1;
-    background-size: 10vw;/*70px 70px; /* Imposta le dimensioni desiderate */
+    /*background-size: 65px;/*10vw*//*70px 70px; /* Imposta le dimensioni desiderate */
     background-repeat: no-repeat;
     background-position: center;
-    
+    background-size:80%;
+    /*margin-left: 20%;
+    margin-right: 20%;*/
 
 
 }
-
 
 
 .card.flipped{
     background-image: transparent;
 }
 
-#player1, #player2{
-    font-size: /*30px;*/ 4vw;
-    margin-top: 0;
-    padding-left: 18.5.px;
-    
+
+
+#timer{
+    font-size: 40px/*300% /*6vw*/;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    color: #002c53 ;
 }
 
+#tempo{
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    color: #002c53 ;
+    font-size: 40px/*7vw*/;
 
-
-.first, .second{
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    place-items: center;
 }
-
-.first{
-    margin-right: 10%;
-}
-
-.second{
-    margin-left: 10%;
-}
-
-
 
 .card.shake{
     background-color: #696969;
@@ -120,7 +126,6 @@ main {
 
 } 
 
-/* Aggiungi questi stili CSS per la finestra modale */
 .modal {
     display: none;
     position: fixed;
@@ -145,6 +150,8 @@ main {
     border-radius: 10px;
 }
 
+
+
 .close {
     color: #aaa;
     float: right;
@@ -158,5 +165,8 @@ main {
     text-decoration: none;
     cursor: pointer;
 }
+
+
+
 
 

@@ -39,7 +39,6 @@ class Player {
     }
 
     draw() {
-        c.clearRect(0, 0, canvas.width, canvas.height);
         c.drawImage(this.image, this.position.x, this.position.y, this.width, this.height);
     };
 
@@ -136,19 +135,22 @@ class Player {
     }
 };
 
-// inizializziamo il player e facciamo partire il loop di animazione
-const player = new Player(n);
+// inizializziamo i due player e facciamo partire il loop di animazione
+const primaryPlayer = new Player(n);
+const secondaryPlayer = new Player(1 - n);
 function animate() {
     requestAnimationFrame(animate);    
-    player.update();
+    c.clearRect(0, 0, canvas.width, canvas.height);
+    primaryPlayer.update();
+    secondaryPlayer.update();
 };
 animate();
 
 // gestione del lancio del dado
 button.addEventListener('click', () => {
-    if (turn && player.isMoving == false) {
+    if (turn && primaryPlayer.isMoving == false) {
         dice = Math.floor(Math.random() * 6) + 1;
-        player.moveByCells(dice);
+        primaryPlayer.moveByCells(dice);
     };
 });
 
