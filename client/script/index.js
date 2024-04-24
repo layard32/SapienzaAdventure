@@ -115,6 +115,7 @@ goBackButton2.addEventListener("click", () => {
 
 // DA QUI IN POI CONNESSIONE BACK-END
 // inizializziamo socket
+let roomId = null;
 const socket = io.connect('http://localhost:3000');
 
 // il pulsante 'crea la nuova stanza' manda al server il comando 'createRoom'
@@ -122,9 +123,9 @@ startGameButton.addEventListener("click", () => {
     socket.emit('createRoom');
 });
 
-// attesa del segnale 'newGame' in arrivo dal server
+// attesa del segnale 'newGame' dal server
 socket.on('newGame', (data) => {
-    const roomId = data;
+    roomId = data;
     removeElements ([basicButton, usernameForm]);
     roomCodeNumber.textContent = roomId;
     setTimeout(function() {
@@ -135,14 +136,29 @@ socket.on('newGame', (data) => {
 // il pulsante 'unisciti alla stanza' manda al server il comando 'joinRoom'
 insertCodeForm.addEventListener('submit', (event) => {
     event.preventDefault();
-    const roomId = insertCodeInput.value;
+    roomId = insertCodeInput.value;
     socket.emit('joinRoom', roomId);
+});
+
+// attesa del segnale 'fullRoom' dal server
+socket.on('fullRoom', () => {
+    const roomFullToast = document.getElementById('roomFullToast');
+    const bootstrapRoomFullToast = new bootstrap.Toast(roomFullToast, {
+        delay: 1000
+    });
+    bootstrapRoomFullToast.show();
+});
+
+// quando entra in una stanza, il client riceve il segnale 'playerConnected' che lo fa passare al gioco
+socket.on('playersConnected', (data) => {
+    const nextPage = `/goose?room=${data}`
+    window.location.href = nextPage;
 });
 
 
 
 
-
+// METTERE APPOSTO USERNAME
 // prende l'username dal form ?? gestire lato server?? INSERIRE CONTROLLI LATO SERVER
 usernameForm.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -155,16 +171,3 @@ usernameForm.addEventListener("submit", (event) => {
     bootstrapUsernameToast.show();
 
 });
-
-// Gestisce l'evento "playersConnected" emesso dal server
-// in pratica tolgo la schermata principale e avvio schermata con tabellone
-socket.on("playersConnected", () => {
-    
-    document.getElementById('usernameForm').style.display = 'none';
-    document.getElementById('basicButton').style.display = 'none';
-    //vado a schermata di gioco
-    document.getElementById('gameLink').href = 'goose.html';
-});
-
-
-

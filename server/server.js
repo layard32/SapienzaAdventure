@@ -56,13 +56,14 @@ server.listen(PORT, () => {
 });
 
 
-// da qui in poi parte la gestione socket
+// GESTIONE SOCKET
 // dizionario che rappresenta le stanze. ha chiave codice della stanza e valore vuoto
 const rooms = {};
 
 // funzione per generare il numero randomico della stanza
 function generateRandomNumber() {
-  return Math.floor(Math.random() * 900) + 100;
+  const randomNumber = Math.floor(Math.random() * 900) + 100;
+  return randomNumber.toString();
 }
 
 // io.on è quando un client si connette al server
@@ -77,22 +78,30 @@ io.on('connection', (socket) => {
     // entro nella stanza
     socket.join(roomId);
     // passo il codice creato al client
-    socket.emit ('newGame', roomId);
+    socket.emit('newGame', roomId);
     });
 
   // quando gli arriva il segnale 'joinRoom'
   socket.on('joinRoom', (data) => {
-    if(rooms[data]!=null ){
-
+    const myroom = io.sockets.adapter.rooms.get(data);
+    // se la stanza è piena manda il segnale 'fullRoom' al client
+    if (rooms[data] == null) console.log("room inesistente");
+    else if (io.sockets.adapter.rooms.get(data).size > 1) socket.emit('fullRoom');
+    else {
       socket.join(data);
-      socket.to(data).emit("playersConnected", {});
-      socket.emit("playersConnected");
+      // invia l'evento a tutti i client nella stanza tranne a quello che ha premuto join
+      socket.to(data).emit("playersConnected", data);
+      // invia l'evento a chi ha premuto
+      socket.emit("playersConnected", data);
+      console.log("quarcuno se connesso")
     }
   });
-
-
-
 });
+
+
+
+
+
 
 // per l'export su vercel
 export default app;

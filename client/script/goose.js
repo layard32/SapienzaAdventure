@@ -2,12 +2,6 @@ const canvas = document.getElementById('canvas');
 const button = document.getElementById('button');
 const c = canvas.getContext('2d'); // in questo modo canvas verrà renderizzato in 2d
 
-// n = 0 per il primo giocatore, n = 1 per il secondo!
-// questa costante viene gestita dal server
-const n = 1;
-// anche questa costante viene gestita dal server, se è pari a true significa
-// che il player attuale può lanciare il dado
-const turn = true;
 
 // la classe per un player
 class Player {
@@ -18,8 +12,8 @@ class Player {
         this.cell = 1;
 
         const image = new Image();
-        if (n == 0) image.src = '../images/rook.png';
-        if (n == 1) image.src = '../images/queen.png';
+        if (n) image.src = '../images/rook.png';
+        if (!n) image.src = '../images/queen.png';
 
         // aspettiamo che l'immagine si carichi
         image.onload = () => {
@@ -27,11 +21,11 @@ class Player {
             this.image = image;
             this.width = image.width * SCALE;
             this.height = image.height * SCALE;
-            if (n == 0) {
+            if (n) {
                 this.position = {x: 75, y: 75};
                 this.targetPosition = {x: 75, y: 75};
             }
-            if (n == 1) { 
+            if (!n) { 
                 this.position = {x: 150, y: 75};
                 this.targetPosition = {x: 150, y: 75};
             }
@@ -135,9 +129,33 @@ class Player {
     }
 };
 
+// GESTIONE SOCKET
+// prendiamo il parametro roomId dall'url per riconnettersi alla stanza
+// i websocket (come socket.io) non sono persistenti tra pagine html diverse
+// usiamo questo trucco per mantenere la connessione tra diverse pagine
+const urlParams = new URLSearchParams(window.location.search);
+const roomId = urlParams.get('room');
+const socket = io.connect('http://localhost:3000');
+
+// i due player si uniscono alla stanza
+socket.emit('joinRoom', roomId);
+
+socket.on('connection', (socket) => {
+    alert('benvenuto')
+})
+
+
+
+
+
+
+const n = true;
+
+
 // inizializziamo i due player e facciamo partire il loop di animazione
 const primaryPlayer = new Player(n);
-const secondaryPlayer = new Player(1 - n);
+const secondaryPlayer = new Player(!n);
+
 function animate() {
     requestAnimationFrame(animate);    
     c.clearRect(0, 0, canvas.width, canvas.height);
@@ -146,20 +164,22 @@ function animate() {
 };
 animate();
 
+
+
+const turn = true;
+
+
 // gestione del lancio del dado
 button.addEventListener('click', () => {
-    if (turn && primaryPlayer.isMoving == false) {
-        dice = Math.floor(Math.random() * 6) + 1;
-        primaryPlayer.moveByCells(dice);
-    };
+    if (turn) {
+        if (primaryPlayer.isMoving == false) {
+            dice = Math.floor(Math.random() * 6) + 1;
+            primaryPlayer.moveByCells(dice);
+        }
+    }
 });
 
 
 
-// const socket = io('http://localhost:3000');
 
-// socket.on('serverToClient', (data) => {
-//     alert(data)
-// })
 
-// socket.emit('clientToServer', "CIao server!!");
