@@ -3,25 +3,18 @@ const button = document.getElementById('button');
 const c = canvas.getContext('2d'); // in questo modo canvas verrà renderizzato in 2d
 
 
-
-// n = 0 per il primo giocatore, n = 1 per il secondo!
-// questa costante viene gestita dal server
-const n = 1;
-// anche questa costante viene gestita dal server, se è pari a true significa
-// che il player attuale può lanciare il dado
-const turn = true;
-
 // la classe per un player
 class Player {
     constructor(n) {
+        this.turn = n;
         this.velocity = {x: 5, y: 5};
         this.isMoving = false;
         this.direction = 'x';
         this.cell = 1;
 
         const image = new Image();
-        if (n == 0) image.src = '../images/rook.png';
-        if (n == 1) image.src = '../images/queen.png';
+        if (n) image.src = '../images/rook.png';
+        if (!n) image.src = '../images/queen.png';
 
         // aspettiamo che l'immagine si carichi
         image.onload = () => {
@@ -29,11 +22,11 @@ class Player {
             this.image = image;
             this.width = image.width * SCALE;
             this.height = image.height * SCALE;
-            if (n == 0) {
+            if (n) {
                 this.position = {x: 75, y: 75};
                 this.targetPosition = {x: 75, y: 75};
             }
-            if (n == 1) { 
+            if (!n) { 
                 this.position = {x: 150, y: 75};
                 this.targetPosition = {x: 150, y: 75};
             }
@@ -77,7 +70,6 @@ class Player {
     moveByCells (number) {
         this.iMoving = true;
         const targetCell = this.cell + number;
-        console.log(targetCell)
         // ogni 500ms facciamo un 'passo'
         this.moveByCellsRecursively (targetCell);
     };
@@ -153,31 +145,60 @@ class Player {
     }
 };
 
-// inizializziamo i due player e facciamo partire il loop di animazione
-const primaryPlayer = new Player(n);
-const secondaryPlayer = new Player(1 - n);
+// GESTIONE SOCKET
+// prendiamo il parametro roomId dall'url per riconnettersi alla stanza
+// i websocket (come socket.io) non sono persistenti tra pagine html diverse
+// usiamo questo trucco per mantenere la connessione tra diverse pagine
+const urlParams = new URLSearchParams(window.location.search);
+const roomId = urlParams.get('room');
+const socket = io.connect('http://localhost:3000');
+
+// i due player si uniscono alla stanza
+socket.emit('joinExistingRoom', roomId);
+let turn;
+let primaryPlayer = {};
+let secondaryPlayer = {};
+socket.on('yourTurn', (data) => {
+    turn = data;
+    primaryPlayer = new Player(turn);
+    secondaryPlayer = new Player(!turn);
+})
+
+// gestione delle animazioni
 function animate() {
     requestAnimationFrame(animate);    
     c.clearRect(0, 0, canvas.width, canvas.height);
-    primaryPlayer.update();
-    secondaryPlayer.update();
+    if (primaryPlayer instanceof Player) {
+        primaryPlayer.update();
+    }
+    if (secondaryPlayer instanceof Player) {
+        secondaryPlayer.update();
+    }
 };
 animate();
 
 // gestione del lancio del dado
-button.addEventListener('click', () => {
-    if (turn && primaryPlayer.isMoving == false) {
-        dice = Math.floor(Math.random() * 6) + 1;
-        primaryPlayer.moveByCells(dice);
-    };
-});
+button.addEventListener('click', () => movePlayer(primaryPlayer));
 
+// funzione per lo spostamento
+function movePlayer(player) {
+    if (turn) {
+        if (!player.isMoving) {
+            dice = Math.floor(Math.random() * 6) + 1;
+            player.moveByCells(dice);
+            socket.emit('requestMoveSecondaryPlayer', { dice: dice, roomId: roomId });
+            socket.emit('requestChangeTurn', roomId);
+            turn = false;
+        }
+    }
+};
 
-
-const socket = io('http://localhost:3000');
-
-socket.on('serverToClient', (data) => {
-    alert(data)
+// gestione spostamento dell'altro giocatore
+socket.on('moveSecondaryPlayer', (data) => {
+    secondaryPlayer.moveByCells(data);
 })
 
-socket.emit('clientToServer', "CIao server!!");
+// gestione assegnazione dei turni
+socket.on('changeTurn', () => {
+    turn = true;
+});

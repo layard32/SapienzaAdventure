@@ -207,8 +207,10 @@ body {
   flex-shrink: 1;
 }
 
-#usernameToast {
+#my-toast {
   top: 10%;
-  font-size: 110%;
-  box-shadow: 4px 4px 2.5px rgba(0, 0, 0, 0.3);
+}
+
+#usernameToast, #roomFullToast {
+  font-size: 125%;
 }

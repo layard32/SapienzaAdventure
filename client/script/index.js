@@ -1,8 +1,3 @@
-// funzione per generare un numero randomico
-function generateRandomNumber() {
-    return Math.floor(Math.random() * 900) + 100;
-}
-
 // prendo gli elementi dal dom HTML
 const rect = document.querySelector(".rect");
 const basicButton = rect.querySelector("#basicButton");
@@ -57,13 +52,13 @@ roomCodeNumber.id = "randomNumber";
 loader.classList.add("loader", "text");
 joinContainer.id = "joinContainer";
 insertCodeInput.classList.add("text", "inputCode");
-insertCodeInput.id = "inputCodeInput";
+insertCodeInput.id = "codeInput";
 insertCodeInput.setAttribute("pattern", "[0-9]+");
 insertCodeInput.setAttribute("title", "Puoi inserire solamente numeri.");
 insertCodeInput.setAttribute("maxlength", "4");
 insertCodeLabel.classList.add("text");
 insertCodeLabel.id = "roomJoinLabel";
-insertCodeLabel.setAttribute("for", "inputCodeInput");
+insertCodeLabel.setAttribute("for", "codeInput");
 confirmJoinButton.setAttribute("type", "submit");
 confirmJoinButton.setAttribute("value", "Unisciti")
 insertCodeForm.id = "codeForm";
@@ -96,19 +91,10 @@ const addElements = function (elems, parent) {
     }
 };
 
-// event listener dei bottoni
-startGameButton.addEventListener("click", () => {
-    removeElements ([basicButton, usernameForm]);
-    roomCodeNumber.textContent = generateRandomNumber(); // genera randomicamente il numero della stanza
-    setTimeout(function() {
-        addElements([roomCode, loader, goBackButton1], rect);
-    }, 500);
-});
-
 joinGameButton.addEventListener("click", () => {
-    removeElements ([basicButton, usernameForm]);
-    setTimeout(() => {
-        addElements([insertCodeForm], rect);
+     removeElements ([basicButton, usernameForm]);
+     setTimeout(() => {
+         addElements([insertCodeForm], rect);
     }, 500);
 });
 
@@ -127,17 +113,61 @@ goBackButton2.addEventListener("click", () => {
 });
 
 
+// DA QUI IN POI CONNESSIONE BACK-END
+// inizializziamo socket
+let roomId = null;
+const socket = io.connect('http://localhost:3000');
 
-// gestione toast
-const toastElem = document.querySelector('#usernameToast');
-const toast = new bootstrap.Toast(toastElem, {
-    delay: 1800
+// il pulsante 'crea la nuova stanza' manda al server il comando 'createRoom'
+startGameButton.addEventListener("click", () => {
+    socket.emit('createRoom');
 });
 
+// attesa del segnale 'newGame' dal server
+socket.on('newGame', (data) => {
+    roomId = data;
+    removeElements ([basicButton, usernameForm]);
+    roomCodeNumber.textContent = roomId;
+    setTimeout(function() {
+        addElements([roomCode, loader, goBackButton1], rect);
+    }, 500);
+});
+
+// il pulsante 'unisciti alla stanza' manda al server il comando 'joinRoom'
+insertCodeForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    roomId = insertCodeInput.value;
+    socket.emit('joinRoom', roomId);
+});
+
+// attesa del segnale 'fullRoom' dal server
+socket.on('fullRoom', () => {
+    const roomFullToast = document.getElementById('roomFullToast');
+    const bootstrapRoomFullToast = new bootstrap.Toast(roomFullToast, {
+        delay: 1000
+    });
+    bootstrapRoomFullToast.show();
+});
+
+// quando entra in una stanza, il client riceve il segnale 'playerConnected' che lo fa passare al gioco
+socket.on('playersConnected', (data) => {
+    const nextPage = `/goose?room=${data}`
+    window.location.href = nextPage;
+});
+
+
+
+
+// METTERE APPOSTO USERNAME
 // prende l'username dal form ?? gestire lato server?? INSERIRE CONTROLLI LATO SERVER
 usernameForm.addEventListener("submit", (event) => {
     event.preventDefault();
     username = usernameFormInput.value;
-    toast.show();
-});
 
+    const usernameToast = document.getElementById('usernameToast');
+    const bootstrapUsernameToast = new bootstrap.Toast(usernameToast, {
+        delay: 1000
+    });
+    bootstrapUsernameToast.show();
+
+});
