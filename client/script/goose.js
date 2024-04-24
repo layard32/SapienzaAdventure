@@ -6,6 +6,7 @@ const c = canvas.getContext('2d'); // in questo modo canvas verrà renderizzato 
 // la classe per un player
 class Player {
     constructor(n) {
+        this.turn = n;
         this.velocity = {x: 5, y: 5};
         this.isMoving = false;
         this.direction = 'x';
@@ -69,7 +70,6 @@ class Player {
     moveByCells (number) {
         this.iMoving = true;
         const targetCell = this.cell + number;
-        console.log(targetCell)
         // ogni 500ms facciamo un 'passo'
         this.moveByCellsRecursively (targetCell);
     };
@@ -138,48 +138,51 @@ const roomId = urlParams.get('room');
 const socket = io.connect('http://localhost:3000');
 
 // i due player si uniscono alla stanza
-socket.emit('joinRoom', roomId);
-
-socket.on('connection', (socket) => {
-    alert('benvenuto')
+socket.emit('joinExistingRoom', roomId);
+let turn;
+let primaryPlayer = {};
+let secondaryPlayer = {};
+socket.on('yourTurn', (data) => {
+    turn = data;
+    primaryPlayer = new Player(turn);
+    secondaryPlayer = new Player(!turn);
 })
 
-
-
-
-
-
-const n = true;
-
-
-// inizializziamo i due player e facciamo partire il loop di animazione
-const primaryPlayer = new Player(n);
-const secondaryPlayer = new Player(!n);
-
+// gestione delle animazioni
 function animate() {
     requestAnimationFrame(animate);    
     c.clearRect(0, 0, canvas.width, canvas.height);
-    primaryPlayer.update();
-    secondaryPlayer.update();
+    if (primaryPlayer instanceof Player) {
+        primaryPlayer.update();
+    }
+    if (secondaryPlayer instanceof Player) {
+        secondaryPlayer.update();
+    }
 };
 animate();
 
-
-
-const turn = true;
-
-
 // gestione del lancio del dado
-button.addEventListener('click', () => {
+button.addEventListener('click', () => movePlayer(primaryPlayer));
+
+// funzione per lo spostamento
+function movePlayer(player) {
     if (turn) {
-        if (primaryPlayer.isMoving == false) {
+        if (!player.isMoving) {
             dice = Math.floor(Math.random() * 6) + 1;
-            primaryPlayer.moveByCells(dice);
+            player.moveByCells(dice);
+            socket.emit('requestMoveSecondaryPlayer', { dice: dice, roomId: roomId });
+            socket.emit('requestChangeTurn', roomId);
+            turn = false;
         }
     }
+};
+
+// gestione spostamento dell'altro giocatore
+socket.on('moveSecondaryPlayer', (data) => {
+    secondaryPlayer.moveByCells(data);
+})
+
+// gestione assegnazione dei turni
+socket.on('changeTurn', () => {
+    turn = true;
 });
-
-
-
-
-

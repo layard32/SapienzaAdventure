@@ -83,7 +83,6 @@ io.on('connection', (socket) => {
 
   // quando gli arriva il segnale 'joinRoom'
   socket.on('joinRoom', (data) => {
-    const myroom = io.sockets.adapter.rooms.get(data);
     // se la stanza è piena manda il segnale 'fullRoom' al client
     if (rooms[data] == null) console.log("room inesistente");
     else if (io.sockets.adapter.rooms.get(data).size > 1) socket.emit('fullRoom');
@@ -96,10 +95,28 @@ io.on('connection', (socket) => {
       console.log("quarcuno se connesso")
     }
   });
+
+  socket.on('joinExistingRoom', (data) => {
+    socket.join(data);
+    // assegna i turni
+    setTimeout(() => {
+      // prendi gli id dei clients nella stanza
+      const clientIDs = Array.from(io.sockets.adapter.rooms.get(data)).map(socketId => io.sockets.sockets.get(socketId).id);
+      io.to(clientIDs[0]).emit('yourTurn', true);
+      io.to(clientIDs[1]).emit('yourTurn', false);
+    });
+  });
+
+  // per lo spostamento del player secondario
+  socket.on('requestMoveSecondaryPlayer', (data) => {
+    socket.to(data.roomId).emit('moveSecondaryPlayer', data.dice);
+  });
+
+  socket.on('requestChangeTurn', (data) => {
+    socket.to(data).emit('changeTurn');
+  });
+
 });
-
-
-
 
 
 
