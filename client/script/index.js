@@ -158,6 +158,15 @@ usernameForm.addEventListener("submit", (event) => {
     toast.show();
 });
 
+// Gestisce l'evento "playersConnected" emesso dal server
+// in pratica tolgo la schermata principale e avvio schermata con tabellone
+socket.on("playersConnected", () => {
+    
+    document.getElementById('usernameForm').style.display = 'none';
+    document.getElementById('basicButton').style.display = 'none';
+    //vado a schermata di gioco
+    document.getElementById('gameLink').href = 'goose.html';
+});
 
 
 

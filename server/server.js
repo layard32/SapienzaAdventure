@@ -82,7 +82,12 @@ io.on('connection', (socket) => {
 
   // quando gli arriva il segnale 'joinRoom'
   socket.on('joinRoom', (data) => {
-    
+    if(rooms[data]!=null && io.sockets.adapter.rooms.get(data).size == 1){
+      
+      socket.join(data);
+      socket.to(data).emit("playersConnected", {});
+      socket.emit("playersConnected");
+    }
   });
 
 
