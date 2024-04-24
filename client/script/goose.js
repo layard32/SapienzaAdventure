@@ -2,6 +2,8 @@ const canvas = document.getElementById('canvas');
 const button = document.getElementById('button');
 const c = canvas.getContext('2d'); // in questo modo canvas verrà renderizzato in 2d
 
+
+
 // n = 0 per il primo giocatore, n = 1 per il secondo!
 // questa costante viene gestita dal server
 const n = 1;
@@ -85,20 +87,24 @@ class Player {
         const CELLHEIGHT = 100;
         const OFFSET = 90;
         this.isMoving = true;
+        const cardminerva = document.querySelector('.flip-card-minerva');
+
 
         // caso base: siamo arrivati alla cella finale
         if (this.cell == targetCell) {
             this.isMoving = false;
-            if(this.cell== 3 || this.cell == 26 || this.cell == 36){
-                alert("Che fortuna hai ricevuto un bonus");
+            if(this.cell == 30 ){
+                cardminerva.style.visibility='visible';
             }
-            else if(this.cell== 9 || this.cell==30 || this.cell==38){
+            else{
+                cardminerva.style.visibility='hidden';
+            }
+            if(this.cell== 9 ||  this.cell==38){
                 alert("oh no c'è stato un imprevisto")
             }
             return;
         }
-        
-        
+        cardminerva.style.visibility='hidden';
 
 
         if (this.cell >= 0 && this.cell < 9) {
