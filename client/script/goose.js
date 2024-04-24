@@ -68,7 +68,7 @@ class Player {
         }
     };
     moveByCells (number) {
-        this.iMoving = true;
+        this.isMoving = true;
         const targetCell = this.cell + number;
         // ogni 500ms facciamo un 'passo'
         this.moveByCellsRecursively (targetCell);
@@ -82,7 +82,6 @@ class Player {
         const flipcard = document.querySelector('.flip-card');
         const flipcardfront=document.querySelector('.flip-card-front');
         const flipcardback=document.querySelector('.flip-card-back');
-
 
         // caso base: siamo arrivati alla cella finale
         if (this.cell == targetCell) {
