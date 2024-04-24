@@ -139,23 +139,21 @@ insertCodeForm.addEventListener('submit', (event) => {
     socket.emit('joinRoom', roomId);
 });
 
-// gestione toast per 
 
-// gestione toast
-const toastElem = document.querySelector('#my-toast');
-const toastContent = document.querySelector('.toast-body');
 
-toastContent.textContent = "ciao";
 
-const toast = new bootstrap.Toast(toastElem, {
-    delay: 1800
-});
 
 // prende l'username dal form ?? gestire lato server?? INSERIRE CONTROLLI LATO SERVER
 usernameForm.addEventListener("submit", (event) => {
     event.preventDefault();
     username = usernameFormInput.value;
-    toast.show();
+
+    const usernameToast = document.getElementById('usernameToast');
+    const bootstrapUsernameToast = new bootstrap.Toast(usernameToast, {
+        delay: 1000
+    });
+    bootstrapUsernameToast.show();
+
 });
 
 

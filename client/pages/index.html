@@ -44,15 +44,18 @@
   </div>
 
 
-
-
-  <div class="toast text-white secondary border-0 position-fixed start-50 translate-middle text" id="my- toast">
-    <div class="toast-body">
-    </div>
-    <div class="toast text-white secondary border-0 position-fixed start-50 translate-middle text" id="my- toast">
+  <div class="toast-container position-fixed border-0 start-50 translate-middle text" id="my-toast">
+    <div class="toast text-white secondary border-0" id="usernameToast">
       <div class="toast-body">
+        Hai scelto correttamente un username!
       </div>
-</div>
+    </div>
+    <div class="toast text-white primary border-0" id="roomFullToast">
+      <div class="toast-body">
+        La stanza a cui hai provato a connetterti è già piena!
+      </div>
+    </div>
+  </div>
 
 <script src="https://cdn.socket.io/4.7.5/socket.io.min.js" integrity="sha384-2huaZvOR9iDzHqslqwpR87isEmrfxqyWOF7hr7BY6KG0+hVKLoEXMPUJw3ynWuhO" crossorigin="anonymous"></script>
 <script src="../script/index.js"> </script>
