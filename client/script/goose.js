@@ -87,24 +87,35 @@ class Player {
         const CELLHEIGHT = 100;
         const OFFSET = 90;
         this.isMoving = true;
-        const cardminerva = document.querySelector('.flip-card-minerva');
+        const flipcard = document.querySelector('.flip-card');
+        const flipcardfront=document.querySelector('.flip-card-front');
+        const flipcardback=document.querySelector('.flip-card-back');
 
 
         // caso base: siamo arrivati alla cella finale
         if (this.cell == targetCell) {
             this.isMoving = false;
             if(this.cell == 30 ){
-                cardminerva.style.visibility='visible';
+                flipcard.style.visibility='visible';
+                flipcardfront.style.backgroundImage="url('../images/minerva.png')";
+                flipcardback.innerHTML = "<h1 style='font-family: Impact, Haettenschweiler, \"Arial Narrow Bold\", sans-serif;'>IMPREVISTO</h1><p style='font-family: Impact, Haettenschweiler, \"Arial Narrow Bold\", sans-serif;'>Oh no, c'è stato un imprevisto!  Hai guardato la minerva negli occhi, devi saltare un turno.</p>";
+            }
+            else if(this.cell== 9){
+                flipcard.style.visibility='visible';
+                flipcardfront.style.backgroundImage="url('../images/fisica.png')";
+                flipcardback.innerHTML = "<h1 style='font-family: Impact, Haettenschweiler, \"Arial Narrow Bold\", sans-serif;'>IMPREVISTO</h1><p style='font-family: Impact, Haettenschweiler, \"Arial Narrow Bold\", sans-serif;'>Oh no, c'è stato un imprevisto! Non hai passato l'esame di fisica, devi saltare un turno e tornare al prossimo appello.</p>";
+            }
+            else if(this.cell== 38){
+                flipcard.style.visibility='visible';
+                flipcardfront.style.backgroundImage="url('../images/tesi.png')";
+                flipcardback.innerHTML = "<h1 style='font-family: Impact, Haettenschweiler, \"Arial Narrow Bold\", sans-serif;'>IMPREVISTO</h1><p style='font-family: Impact, Haettenschweiler, \"Arial Narrow Bold\", sans-serif;'>Oh no, c'è stato un imprevisto! Devi scrivere la tesi, salta un turno.</p>";
             }
             else{
-                cardminerva.style.visibility='hidden';
-            }
-            if(this.cell== 9 ||  this.cell==38){
-                alert("oh no c'è stato un imprevisto")
+                flipcard.style.visibility='hidden';
             }
             return;
         }
-        cardminerva.style.visibility='hidden';
+        flipcard.style.visibility='hidden';
 
 
         if (this.cell >= 0 && this.cell < 9) {
