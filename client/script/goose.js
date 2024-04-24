@@ -89,8 +89,17 @@ class Player {
         // caso base: siamo arrivati alla cella finale
         if (this.cell == targetCell) {
             this.isMoving = false;
+            if(this.cell== 3 || this.cell == 26 || this.cell == 36){
+                alert("Che fortuna hai ricevuto un bonus");
+            }
+            else if(this.cell== 9 || this.cell==30 || this.cell==38){
+                alert("oh no c'è stato un imprevisto")
+            }
             return;
         }
+        
+        
+
 
         if (this.cell >= 0 && this.cell < 9) {
             this.direction = 'x';
@@ -120,6 +129,7 @@ class Player {
             this.direction = 'x';
             this.targetPosition.x -= CELLWIDTH;
         }
+        
 
         this.cell++;
 
@@ -129,6 +139,8 @@ class Player {
             this.moveByCellsRecursively(targetCell);
         }, 500);
     }
+
+    
 
     win() {
         alert("VINCERE E VINCEREMO");

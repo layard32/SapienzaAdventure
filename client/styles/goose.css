@@ -47,3 +47,63 @@ body {
     transform: translate(-50%, -50%);
 }
 
+/* The flip card container - set the width and height to whatever you want. We have added the border property to demonstrate that the flip itself goes out of the box on hover (remove perspective if you don't want the 3D effect */
+.flip-card-minerva {
+    background-color: transparent;
+    width: 220px;
+    height: 300px;
+    perspective: 1000px; /* Remove this if you don't want the 3D effect */
+    position: relative;
+   /* top: 50%;
+    left: 50%;*/
+    transform: translate(270%, 70%);
+   
+  }
+  
+  /* This container is needed to position the front and back side */
+  .flip-card-minerva-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.8s;
+    transform-style: preserve-3d;
+  }
+  
+  /* Do an horizontal flip when you move the mouse over the flip box container */
+  .flip-card-minerva:hover .flip-card-minerva-inner {
+    transform: rotateY(180deg);
+  }
+  
+  /* Position the front and back side */
+  .flip-card-minerva-front, .flip-card-minerva-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden; /* Safari */
+    backface-visibility: hidden;
+  }
+  
+  /* Style the front side (fallback if image is missing) */
+  .flip-card-minerva-front {
+    background-color: #F2EFE9;
+    border:0.5vw solid #002c53;
+    border-radius: 15px;
+    color:#002c53;
+    background-image: url(../images/minerva.png);
+    background-size: center;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size:80%;
+
+  }
+  
+  /* Style the back side */
+  .flip-card-minerva-back {
+    background-color: #F2EFE9;
+    color:#002c53;
+    border-radius: 15px;
+    border: 0.5vw solid #002c53;
+    transform: rotateY(180deg);
+  }
+  
