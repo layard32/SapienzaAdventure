@@ -116,6 +116,14 @@ io.on('connection', (socket) => {
     socket.to(data).emit('changeTurn');
   });
 
+  socket.on('requestForcedDisconnect', (data) => {
+    socket.to(data).emit('forcedDisconnect');
+  }); 
+
+  socket.on('requestLooser', (data) => {
+    socket.to(data).emit('looser');
+  });
+
 });
 
 

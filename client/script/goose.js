@@ -138,10 +138,10 @@ class Player {
         }, 500);
     }
 
-    
 
     win() {
-        alert("VINCERE E VINCEREMO");
+        // TODO gestione vittoria (da fare: toast modale etc)
+        alert('viva un dittatore a piacimento');
     }
 };
 
@@ -187,8 +187,14 @@ function movePlayer(player) {
             dice = Math.floor(Math.random() * 6) + 1;
             player.moveByCells(dice);
             socket.emit('requestMoveSecondaryPlayer', { dice: dice, roomId: roomId });
-            socket.emit('requestChangeTurn', roomId);
+
             turn = false;
+            const checkIsMoving = setInterval(() => {
+                if (!player.isMoving) {
+                    clearInterval(checkIsMoving);
+                    socket.emit('requestChangeTurn', roomId);
+                }
+            }, 100);
         }
     }
 };
@@ -202,3 +208,6 @@ socket.on('moveSecondaryPlayer', (data) => {
 socket.on('changeTurn', () => {
     turn = true;
 });
+
+
+// TODO gestione vittoria, sconfitta e disconnessione forzata
