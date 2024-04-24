@@ -168,3 +168,10 @@ button.addEventListener('click', () => {
 
 
 
+const socket = io('http://localhost:3000');
+
+socket.on('serverToClient', (data) => {
+    alert(data)
+})
+
+socket.emit('clientToServer', "CIao server!!");
