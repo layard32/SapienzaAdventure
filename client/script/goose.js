@@ -242,3 +242,17 @@ socket.on('changeTurn', () => {
 
 
 // TODO gestione vittoria, sconfitta e disconnessione forzata
+
+//gestione disconnessione forzata 
+window.addEventListener('beforeunload',()=>{
+    socket.emit('requestForcedDisconnect', roomId);
+})
+
+socket.on('oppenentDisconnect',()=>{
+    alert('hai vinto a tavolino')
+    setInterval(() => {
+        const nextPage = '/index';
+        window.location.href = nextPage;
+    }, 1000);
+    
+})
