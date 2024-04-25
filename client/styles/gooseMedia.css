@@ -70,6 +70,8 @@
     }
 }
 
+
+
 @media screen and (max-width: 720px) {
     #background {
         zoom: 0.45;
@@ -112,9 +114,9 @@
         transform: translate(-32%, -140%) rotate(90deg);
     }
 
-    /* #yourTurn.text {
+    #yourTurn.text {
         transform: translate(-50%, -50%) rotate(90deg)
-    } */
+    }
 
     .flip-card.text {
         transform: translate(-50%, -50%) rotate(90deg)
