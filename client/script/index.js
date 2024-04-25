@@ -101,24 +101,6 @@ const addElements = function (elems, parent) {
     }
 };
 
-usernameForm.addEventListener("submit", (event) => {
-    event.preventDefault();
-    username = usernameFormInput.value;
-    // TODO: invia l'username al server tramite evento
-    usernameName.textContent = `Benvenuto ${username}!`;
-    const usernameToast = document.getElementById('usernameToast');
-    const bootstrapUsernameToast = new bootstrap.Toast(usernameToast, {
-        delay: 1000
-    });
-    bootstrapUsernameToast.show();
-
-    // prossima schermata
-    removeElements([usernameForm]);
-    setTimeout(() => {
-        addElements([basicButtonContainer], rect);
-   }, 500);
-});
-
 joinGameButton.addEventListener("click", () => {
      removeElements ([basicButtonContainer]);
      setTimeout(() => {
@@ -149,6 +131,24 @@ const socket = io.connect('http://localhost:3000');
 // il pulsante 'crea la nuova stanza' manda al server il comando 'createRoom'
 startGameButton.addEventListener("click", () => {
     socket.emit('createRoom');
+});
+
+// gestione form
+usernameForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    username = usernameFormInput.value;
+    socket.emit('giveUsername', username);
+    usernameName.textContent = `Benvenuto ${username}!`;
+    const usernameToast = document.getElementById('usernameToast');
+    const bootstrapUsernameToast = new bootstrap.Toast(usernameToast, {
+        delay: 1000
+    });
+    bootstrapUsernameToast.show();
+
+    removeElements([usernameForm]);
+    setTimeout(() => {
+        addElements([basicButtonContainer], rect);
+   }, 500);
 });
 
 // attesa del segnale 'newGame' dal server
