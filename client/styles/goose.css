@@ -2,7 +2,7 @@
 
 body {
     margin: 0; padding: 0;
-    background-color: #8C4A4A;
+    background-color: #8C4A4A !important;
 }
 
 #background {
@@ -14,6 +14,14 @@ body {
     background: url(../images/sfondo1.png);
     background-size: 100% 100%;
     background-repeat: no-repeat;
+}
+
+#canvas-container {
+    position: inherit;
+    width: inherit;
+    height: inherit;
+    top: inherit;
+    left: inherit;
 }
 
 #button {
@@ -43,7 +51,7 @@ body {
 #canvas {
     background-image: url(../images/sfondo2.png);
     background-size: 100% 100%;
-    position: relative;
+    position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
