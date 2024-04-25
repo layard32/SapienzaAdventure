@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
+
 body {
     margin: 0; padding: 0;
     background-color: #8C4A4A;
@@ -58,35 +60,34 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
     visibility: hidden;
-   
-  }
-  
-  /* This container is needed to position the front and back side */
-  .flip-card-inner {
+}
+
+/* This container is needed to position the front and back side */
+.flip-card-inner {
     position: relative;
     width: 100%;
     height: 100%;
     text-align: center;
     transition: transform 0.8s;
     transform-style: preserve-3d;
-  }
-  
-  /* Do an horizontal flip when you move the mouse over the flip box container */
-  .flip-card:hover .flip-card-inner {
+}
+
+/* Do an horizontal flip when you move the mouse over the flip box container */
+.flip-card:hover .flip-card-inner {
     transform: rotateY(180deg);
-  }
-  
-  /* Position the front and back side */
-  .flip-card-front, .flip-card-back {
+}
+
+/* Position the front and back side */
+.flip-card-front, .flip-card-back {
     position: absolute;
     width: 100%;
     height: 100%;
     -webkit-backface-visibility: hidden; /* Safari */
     backface-visibility: hidden;
-  }
-  
-  /* Style the front side (fallback if image is missing) */
-  .flip-card-front {
+}
+
+/* Style the front side (fallback if image is missing) */
+.flip-card-front {
     background-color: #F2EFE9;
     border:0.5vw solid #002c53;
     border-radius: 15px;
@@ -97,14 +98,33 @@ body {
     background-position: center;
     background-size:80%;
 
-  }
-  
-  /* Style the back side */
-  .flip-card-back {
+}
+
+/* Style the back side */
+.flip-card-back {
     background-color: #F2EFE9;
     color:#002c53;
     border-radius: 15px;
     border: 0.5vw solid #002c53;
     transform: rotateY(180deg);
-  }
-  
+}
+
+
+#yourTurn {
+  font-size: calc(3.5vh + 3.5vw);
+  font-family: Roboto Mono;
+  text-align: center;
+
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60%;
+
+  background-color: rgba(140, 74, 74, 0.7);
+  border-radius: 20px;
+
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.7s;
+}

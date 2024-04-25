@@ -191,6 +191,8 @@ let primaryPlayer = {};
 let secondaryPlayer = {};
 socket.on('yourTurn', (data) => {
     turn = data;
+    // compare la scritta 'è il tuo turno'
+    if (turn) appearTurn();
     primaryPlayer = new Player(turn);
     secondaryPlayer = new Player(!turn);
 })
@@ -238,7 +240,29 @@ socket.on('moveSecondaryPlayer', (data) => {
 // gestione assegnazione dei turni
 socket.on('changeTurn', () => {
     turn = true;
+
+    // compare scritta 'è il turno'
+    appearTurn();
 });
+
+
+// funzione che fa apparire la scritta con il proprio turno
+function appearTurn() {
+    const yourTurnDiv = document.getElementById('yourTurn');
+    yourTurnDiv.style.visibility = 'visible';
+    setTimeout(() => {
+        yourTurnDiv.style.opacity = '1';
+    }, 200);
+
+    setTimeout(() => {
+        yourTurnDiv.style.opacity = '0';
+    }, 1300);
+
+    setTimeout(() => {
+        yourTurnDiv.style.visibility = 'hidden';
+    }, 2000);
+}
+
 
 
 // TODO gestione vittoria, sconfitta e disconnessione forzata
