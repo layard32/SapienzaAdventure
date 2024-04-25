@@ -156,8 +156,8 @@ class Player {
 
     win() {
         // TODO gestione vittoria (da fare: toast modale etc)
-        alert('viva un dittatore a piacimento');
-        socket.emit('gameWon',roomId);
+        //alert('viva un dittatore a piacimento');
+        socket.emit('gameEnd',roomId);
 
     }
 };
@@ -279,18 +279,31 @@ socket.on('forcedDisconnect',()=>{
     }, 3000);
 })
 
-socket.on('gameEnd',()=>{
+
+socket.on('gameWon', () => {
     const winToast = new bootstrap.Toast(document.getElementById('customWinToast'));
     winToast.show();
 
     setTimeout(() => {
         winToast.hide();
     }, 3000);
-    
+
     setTimeout(() => {
-        window.location.href = '/'; 
-    }, 3000);
-})
+        window.location.href = '/';
+    }, 4000);
+});
+
+socket.on('gameLost', () => {
+    alert("Hai perso!");
+    setTimeout(() => {
+        window.location.href = '/';
+    }, 1000);
+});
+
+
+
+
+
 function showFlipCard(imageUrl, title, description) {
     const flipcard = document.querySelector('.flip-card');
     const flipcardfront = document.querySelector('.flip-card-front');

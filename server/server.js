@@ -134,16 +134,27 @@ io.on('connection', (socket) => {
 
     //notifico l'altro player(quello in partita)
     socket.to(disconnectedPlayerID).emit('forcedDisconnect');
-    console.log("aooooo ti sei arreso looser");
+    //console.log("aooooo ti sei arreso looser");
 
   })
 
-  socket.on('gameWon',(data)=>{
-    io.to(data).emit('gameEnd');
-  })
+  
+  socket.on('gameEnd', (data) => {
+    sendGameResult(data, socket.id);
+  });
+
 });
 
+function sendGameResult(roomId, winnerId) {
+    const clientIDs = Array.from(io.sockets.adapter.rooms.get(roomId)).map(socketId => io.sockets.sockets.get(socketId).id);
+    const loserId = clientIDs.find(id => id !== winnerId);
 
+    // Invia un messaggio di vittoria al vincitore
+    io.to(winnerId).emit('gameWon');
+
+    // Invia un messaggio di sconfitta al perdente
+    io.to(loserId).emit('gameLost');
+}
 
 // per l'export su vercel
 export default app;
