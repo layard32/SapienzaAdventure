@@ -11,16 +11,59 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </head>
 <body>
-    <div id="background">
-        <div id="canvas-container"> 
-            <canvas id="canvas" width="1485" height="810"> </canvas> 
-        </div>
+    <div id="background"> 
+        <canvas id="canvas" width="1485" height="810"></canvas>
     </div>
 
-    <button id="button" class="text"> Lancia i dadi </button>
-    <div id="playerName" class="text"> Giocatore 1 </div>
+    <button id="button"> Lancia i dadi </button>
 
-    <div class="toast-container position-fixed top-50 start-50 translate-middle p-3 text">
+    <div id="dice" class="dice">
+        <div id="dice-side-one" class="side one">
+            <div class="dot one-1"></div>
+        </div>
+
+        <div id="dice-side-two" class="side two">
+            <div class="dot two-1"></div>
+            <div class="dot two-2"></div>
+        </div>
+
+        <div id="dice-side-three" class="side three">
+            <div class="dot three-1"></div>
+            <div class="dot three-2"></div>
+            <div class="dot three-3"></div>
+        </div>
+
+        <div id="dice-side-four" class="side four">
+            <div class="dot four-1"></div>
+            <div class="dot four-2"></div>
+            <div class="dot four-3"></div>
+            <div class="dot four-4"></div>
+        </div>
+
+        <div id="dice-side-five" class="side five">
+            <div class="dot five-1"></div>
+            <div class="dot five-2"></div>
+            <div class="dot five-3"></div>
+            <div class="dot five-4"></div>
+            <div class="dot five-5"></div>
+        </div>
+
+        <div id="dice-side-six" class="side six">
+            <div class="dot six-1"></div>
+            <div class="dot six-2"></div>
+            <div class="dot six-3"></div>
+            <div class="dot six-4"></div>
+            <div class="dot six-5"></div>
+            <div class="dot six-6"></div>
+        </div>
+
+
+    </div>
+
+
+    <div id="playerName"> Giocatore 1 </div>
+
+    <div class="toast-container position-fixed top-50 start-50 translate-middle p-3">
         <div class="toast bg-success text-black" id="winToast" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="toast-body">
                 Hai vinto a tavolino!
@@ -35,7 +78,7 @@
 
     <div class="text" id="yourTurn"> È il tuo turno </div>
 
-    <div class="flip-card text">
+    <div class="flip-card">
         <div class="flip-card-inner">
           <div class="flip-card-front"></div>
           <div class="flip-card-back"></div>
