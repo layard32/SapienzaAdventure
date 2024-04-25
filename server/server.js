@@ -125,22 +125,21 @@ io.on('connection', (socket) => {
 
   //disconnessione forzata caso di refresh o chiusura 
   socket.on('requestForcedDisconnect',(data)=>{
-
     //trovo gli id dei clients 
     const clientIDs = Array.from(io.sockets.adapter.rooms.get(data)).map(socketId => io.sockets.sockets.get(socketId).id);
-
     //identifico il player che si sta disconnettendo 
     const disconnectedPlayerID = clientIDs.find(id => id !== data);
-
     //notifico l'altro player(quello in partita)
     socket.to(disconnectedPlayerID).emit('forcedDisconnect');
     console.log("aooooo ti sei arreso looser");
-
-  })
+  });
 
   socket.on('gameWon',(data)=>{
     io.to(data).emit('gameEnd');
-  })
+  });
+
+  // gestione 
+
 });
 
 
