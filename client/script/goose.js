@@ -208,6 +208,25 @@ function animate() {
 };
 animate();
 
+var dado=document.getElementById("dice");
+
+button.onclick=function(){rollDice();}
+
+function rollDice(){
+    var dadofun= Math.floor(Math.random() * 6) + 1;
+    console.log(dadofun);
+
+    for(var i=1; i<=6; i++){
+        dado.classList.remove('show-'+ i);
+        if(dadofun===i){
+            dado.classList.add('show-'+ i)
+        }
+    }
+
+    setTimeout(rollDice(), 1000);
+
+}
+
 // gestione del lancio del dado
 button.addEventListener('click', () => movePlayer(primaryPlayer));
 
