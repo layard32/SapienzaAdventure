@@ -249,10 +249,17 @@ window.addEventListener('beforeunload',()=>{
 })
 
 socket.on('oppenentDisconnect',()=>{
-    alert('hai vinto a tavolino')
+    const message = "Hai vinto a tavolino!";
+    alert(message);
+    setTimeout(() => {
+        if (document.querySelector('.alert')) {
+            document.querySelector('.alert').remove();
+        }
+    }, 3000);
+    
     setInterval(() => {
         const nextPage = '/';
         window.location.href = nextPage;
-    }, 1000);
+    }, 5000);
     
 })
