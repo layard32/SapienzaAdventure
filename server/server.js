@@ -92,7 +92,6 @@ io.on('connection', (socket) => {
       socket.to(data).emit("playersConnected", data);
       // invia l'evento a chi ha premuto
       socket.emit("playersConnected", data);
-      console.log("quarcuno se connesso")
     }
   });
 
@@ -100,11 +99,11 @@ io.on('connection', (socket) => {
     socket.join(data);
     // assegna i turni
     setTimeout(() => {
-      // prendi gli id dei clients nella stanza
-      const clientIDs = Array.from(io.sockets.adapter.rooms.get(data)).map(socketId => io.sockets.sockets.get(socketId).id);
-      io.to(clientIDs[0]).emit('yourTurn', true);
-      io.to(clientIDs[1]).emit('yourTurn', false);
-    });
+        // prendi gli id dei clients nella stanza
+        const clientIDs = Array.from(io.sockets.adapter.rooms.get(data)).map(socketId => io.sockets.sockets.get(socketId).id);
+        io.to(clientIDs[0]).emit('yourTurn', true);
+        io.to(clientIDs[1]).emit('yourTurn', false);
+    }, 500);
   });
 
   // per lo spostamento del player secondario

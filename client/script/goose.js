@@ -251,7 +251,7 @@ window.addEventListener('beforeunload',()=>{
 socket.on('oppenentDisconnect',()=>{
     alert('hai vinto a tavolino')
     setInterval(() => {
-        const nextPage = '/index';
+        const nextPage = '/';
         window.location.href = nextPage;
     }, 1000);
     
