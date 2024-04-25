@@ -262,9 +262,16 @@ socket.on('changeTurn', () => {
 // TODO gestione vittoria, sconfitta e disconnessione forzata
 
 //gestione disconnessione forzata 
+
+//caso di refresh della pagina
 window.addEventListener('beforeunload',()=>{
     socket.emit('requestForcedDisconnect', roomId);
 })
+
+//caso di chiusura della pagina
+window.addEventListener('unload', function(event) {
+    socket.emit('requestForcedDisconnect', roomId);
+});
 
 socket.on('forcedDisconnect',()=>{
     
