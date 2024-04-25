@@ -59,6 +59,8 @@ server.listen(PORT, () => {
 // GESTIONE SOCKET
 // dizionario che rappresenta le stanze. ha chiave codice della stanza e valore vuoto
 const rooms = {};
+// mappa per ricordare gli username
+const usernames = new Map();
 
 // funzione per generare il numero randomico della stanza
 function generateRandomNumber() {
@@ -97,10 +99,18 @@ io.on('connection', (socket) => {
 
   socket.on('joinExistingRoom', (data) => {
     socket.join(data);
+    // assegna ai client i relativi username
+        // Get the username of the client
+        const username = usernames.get(socket.id);
+
+        // Emit the 'giveBackUsername' event with the username
+        socket.emit('giveBackUsername', username);
+    
     // assegna i turni
     setTimeout(() => {
         // prendi gli id dei clients nella stanza
-        const clientIDs = Array.from(io.sockets.adapter.rooms.get(data)).map(socketId => io.sockets.sockets.get(socketId).id);
+        const room = io.sockets.adapter.rooms.get(data);
+        const clientIDs = room ? Array.from(room).map(socketId => io.sockets.sockets.get(socketId).id) : [];
         io.to(clientIDs[0]).emit('yourTurn', true);
         io.to(clientIDs[1]).emit('yourTurn', false);
     }, 500);
@@ -115,10 +125,8 @@ io.on('connection', (socket) => {
     socket.to(data).emit('changeTurn');
   });
 
-  //cambio pagina in memory
+  // TODO: cambio pagina in memory
   //socket.on();
-
-
 
   socket.on('requestLooser', (data) => {
     socket.to(data).emit('looser');
@@ -141,7 +149,7 @@ io.on('connection', (socket) => {
     sendGameResult(data, socket.id);
   });
 
-});
+}); 
 
 function sendGameResult(roomId, winnerId) {
     const clientIDs = Array.from(io.sockets.adapter.rooms.get(roomId)).map(socketId => io.sockets.sockets.get(socketId).id);

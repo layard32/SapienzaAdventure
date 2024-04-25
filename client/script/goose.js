@@ -186,7 +186,6 @@ function movePlayer(player) {
         if (!player.isMoving) {
             dice = Math.floor(Math.random() * 6) + 1;
 
-
             player.moveByCells(dice);
             socket.emit('requestMoveSecondaryPlayer', { dice: dice, roomId: roomId });
 
@@ -211,8 +210,9 @@ socket.on('changeTurn', () => {
     turn = true;
 
     // compare scritta 'è il turno'
-    appearTurn();
+    if (primaryPlayer.cell != 39 && secondaryPlayer.cell != 39) appearTurn();
 });
+
 
 
 // funzione che fa apparire la scritta con il proprio turno
