@@ -126,7 +126,9 @@ class Player {
         
 
         this.cell++;
-
+        // con ogni spostamento controlla chi è primo
+        setFirst();
+        
         setTimeout(() => {
             // altro caso base: la cella a cui siamo arrivati è la 39: vittoria
             if (this.cell == 39) this.win();
@@ -227,7 +229,6 @@ function movePlayer(player) {
             }, 100);
         }
     }
-    setFirst(); // questa funzione imposta il leader alla fine di ogni spostamento
 };
 
 // gestione spostamento dell'altro giocatore
