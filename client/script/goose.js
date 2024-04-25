@@ -173,6 +173,8 @@ let primaryPlayer = {};
 let secondaryPlayer = {};
 socket.on('yourTurn', (data) => {
     turn = data;
+    // compare la scritta 'è il tuo turno'
+    if (turn) appearTurn();
     primaryPlayer = new Player(turn);
     secondaryPlayer = new Player(!turn);
 })
@@ -220,30 +222,57 @@ socket.on('moveSecondaryPlayer', (data) => {
 // gestione assegnazione dei turni
 socket.on('changeTurn', () => {
     turn = true;
+
+    // compare scritta 'è il turno'
+    appearTurn();
 });
+
+
+// funzione che fa apparire la scritta con il proprio turno
+function appearTurn() {
+    const yourTurnDiv = document.getElementById('yourTurn');
+    yourTurnDiv.style.visibility = 'visible';
+    setTimeout(() => {
+        yourTurnDiv.style.opacity = '1';
+    }, 200);
+
+    setTimeout(() => {
+        yourTurnDiv.style.opacity = '0';
+    }, 1300);
+
+    setTimeout(() => {
+        yourTurnDiv.style.visibility = 'hidden';
+    }, 2000);
+}
+
 
 
 // TODO gestione vittoria, sconfitta e disconnessione forzata
 
 //gestione disconnessione forzata 
+
+//caso di refresh della pagina
 window.addEventListener('beforeunload',()=>{
     socket.emit('requestForcedDisconnect', roomId);
 })
 
-socket.on('oppenentDisconnect',()=>{
-    const message = "Hai vinto a tavolino!";
-    alert(message);
+//caso di chiusura della pagina
+window.addEventListener('unload', function(event) {
+    socket.emit('requestForcedDisconnect', roomId);
+});
+
+socket.on('forcedDisconnect',()=>{
+    
+    const winToast = new bootstrap.Toast(document.getElementById('winToast'));
+    winToast.show();
     setTimeout(() => {
-        if (document.querySelector('.alert')) {
-            document.querySelector('.alert').remove();
-        }
+        winToast.hide();
     }, 3000);
-    
-    setInterval(() => {
-        const nextPage = '/';
-        window.location.href = nextPage;
-    }, 5000);
-    
+
+    setTimeout(() => {
+        winToast.hide();
+        window.location.href = '/'; 
+    }, 3000);
 })
 
 function showFlipCard(imageUrl, title, description) {
