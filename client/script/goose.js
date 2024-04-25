@@ -88,27 +88,7 @@ class Player {
         // caso base: siamo arrivati alla cella finale
         if (this.cell == targetCell) {
             this.isMoving = false;
-            if(this.cell == 30 ){
-                showFlipCard('../images/minerva.png', 'IMPREVISTO', "Oh no, c'è stato un imprevisto!  Hai guardato la minerva negli occhi, devi saltare un turno.");
-            }
-            else if(this.cell== 9){
-                showFlipCard('../images/fisica.png', 'IMPREVISTO', "Oh no, c'è stato un imprevisto! Non hai passato l'esame di fisica, devi saltare un turno e tornare al prossimo appello.");
-            }
-            else if(this.cell== 38){
-                showFlipCard('../images/tesi.png', 'IMPREVISTO', "Oh no, c'è stato un imprevisto! Devi scrivere la tesi, salta un turno.");
-            }
-            else if(this.cell== 3){
-                showFlipCard('../images/esonero.png', 'BONUS', "Bravo! Hai superato un esonero, tira il dado 2 volte.");
-            }
-            else if(this.cell== 36){
-                showFlipCard('../images/esonero.png', 'BONUS', "Bravo! Hai superato un esonero, tira il dado 2 volte.");
-            }
-            else if(this.cell== 26){
-                showFlipCard('../images/relatore.png', 'BONUS', "Bravo! Sei riuscito a trovare un relatore per la tesi, tira il dado 2 volte.");
-            }
-            else{
-                flipcard.style.visibility='hidden';
-            }
+            showFlipCard(this.cell);
             return;
         }
         flipcard.style.visibility='hidden';
@@ -250,6 +230,76 @@ function appearTurn() {
 }
 
 
+function showFlipCard(cell) {
+    const flipcard = document.querySelector('.flip-card');
+    const flipcardfront = document.querySelector('.flip-card-front');
+    const flipcardback = document.querySelector('.flip-card-back');
+    if(cell == 30 ){
+        flipcard.style.visibility = 'visible';
+        flipcardfront.style.backgroundImage = `url('../images/minerva.png')`;
+        flipcardfront.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>IMPREVISTO</h1>`;
+        flipcardback.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>IMPREVISTO</h1><p style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>Oh no, c'è stato un imprevisto!  Hai guardato la minerva negli occhi, devi saltare un turno.</p>`;
+    
+        setTimeout(() => {
+            flipcard.style.visibility = 'hidden';
+        }, 45000);
+    }
+    else if(cell== 9){
+        flipcard.style.visibility = 'visible';
+        flipcardfront.style.backgroundImage = `url('../images/fisica.png')`;
+        flipcardfront.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>IMPREVISTO</h1>`;
+        flipcardback.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>IMPREVISTO</h1><p style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>Oh no, c'è stato un imprevisto! Non hai passato l'esame di fisica, devi saltare un turno e tornare al prossimo appello.</p>`;
+    
+        setTimeout(() => {
+            flipcard.style.visibility = 'hidden';
+        }, 45000);
+    }
+    else if(cell== 38){
+        flipcard.style.visibility = 'visible';
+        flipcardfront.style.backgroundImage = `url('../images/tesi.png')`;
+        flipcardfront.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>IMPREVISTO</h1>`;
+        flipcardback.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>IMPREVISTO</h1><p style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>Oh no, c'è stato un imprevisto! Devi scrivere la tesi, salta un turno.</p>`;
+    
+        setTimeout(() => {
+            flipcard.style.visibility = 'hidden';
+        }, 45000);
+    }
+    else if(cell== 3){
+        flipcard.style.visibility = 'visible';
+        flipcardfront.style.backgroundImage = `url('../images/esonero.png')`;
+        flipcardfront.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>BONUS</h1>`;
+        flipcardback.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>BONUS</h1><p style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>Bravo! Hai superato un esonero, tira il dado 2 volte.</p>`;
+    
+        setTimeout(() => {
+            flipcard.style.visibility = 'hidden';
+        }, 45000);
+    }
+    else if(cell== 36){
+        flipcard.style.visibility = 'visible';
+        flipcardfront.style.backgroundImage = `url('../images/esonero.png')`;
+        flipcardfront.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>BONUS</h1>`;
+        flipcardback.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>BONUS</h1><p style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>Bravo! Hai superato un esonero, tira il dado 2 volte.</p>`;
+    
+        setTimeout(() => {
+            flipcard.style.visibility = 'hidden';
+        }, 45000);
+    }
+    else if(cell== 26){
+        flipcard.style.visibility = 'visible';
+        flipcardfront.style.backgroundImage = `url('../images/relatore.png')`;
+        flipcardfront.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>BONUS</h1>`;
+        flipcardback.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>BONUS</h1><p style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>Bravo! Sei riuscito a trovare un relatore per la tesi, tira il dado 2 volte.</p>`;
+    
+        setTimeout(() => {
+            flipcard.style.visibility = 'hidden';
+        }, 45000);
+    }
+    else{
+        flipcard.style.visibility='hidden';
+    }
+    
+}
+
 
 // TODO gestione vittoria, sconfitta e disconnessione forzata
 
@@ -291,17 +341,6 @@ socket.on('gameEnd',()=>{
         window.location.href = '/'; 
     }, 3000);
 })
-function showFlipCard(imageUrl, title, description) {
-    const flipcard = document.querySelector('.flip-card');
-    const flipcardfront = document.querySelector('.flip-card-front');
-    const flipcardback = document.querySelector('.flip-card-back');
 
-    flipcard.style.visibility = 'visible';
-    flipcardfront.style.backgroundImage = `url('${imageUrl}')`;
-    flipcardfront.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>${title}</h1>`;
-    flipcardback.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>${title}</h1><p style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>${description}</p>`;
-    
-    setTimeout(() => {
-        flipcard.style.visibility = 'hidden';
-    }, 45000);
-}
+
+
