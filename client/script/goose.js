@@ -128,7 +128,7 @@ class Player {
         this.cell++;
         // con ogni spostamento controlla chi è primo
         setFirst();
-        
+
         setTimeout(() => {
             // altro caso base: la cella a cui siamo arrivati è la 39: vittoria
             if (this.cell == 39) this.win();
@@ -159,13 +159,11 @@ nameDiv.textContent = 'Pareggio';
 // funziona che controlla chi è primo
 function setFirst() {
     if (primaryPlayer.cell > secondaryPlayer.cell) {
-        console.log(username);
         nameDiv.textContent = username;
     } else if (primaryPlayer.cell < secondaryPlayer.cell) {
         socket.emit('requestOtherUsername', roomId);
         socket.on('otherUsername', (data) => {
             nameDiv.textContent = data;
-            console.log(data);
     });
     } else nameDiv.textContent = 'Pareggio';
 };
@@ -208,24 +206,32 @@ function animate() {
 };
 animate();
 
-var dado=document.getElementById("dice");
+// gestione del dado
+const dado = document.getElementById("dice");
+const dadoContainer = document.querySelector(".diceCont");
+let isRolling = false;
+function rollDice() {
+    if (isRolling) return;
+    isRolling = true;
+    // comparsa del dado
+    dadoContainer.style.opacity = '1';
 
-button.onclick=function(){rollDice();}
+    let dadoNumber = Math.floor(Math.random() * 6) + 1;
 
-function rollDice(){
-    var dadofun= Math.floor(Math.random() * 6) + 1;
-    console.log(dadofun);
+    for (let i = 1; i <= 6; i++) dado.classList.remove('show-' + i);
+    requestAnimationFrame(() => {
+        dado.classList.add('show-' + dadoNumber);
+    });
 
-    for(var i=1; i<=6; i++){
-        dado.classList.remove('show-'+ i);
-        if(dadofun===i){
-            dado.classList.add('show-'+ i)
-        }
-    }
+    setTimeout(() => {
+        isRolling = false;
+        // scomparsa del dado
+        setTimeout(() => { dadoContainer.style.opacity = '0'; }, 500);
+    }, 1500); 
 
-    setTimeout(rollDice(), 1000);
-
+    return dadoNumber;
 }
+
 
 // gestione del lancio del dado
 button.addEventListener('click', () => movePlayer(primaryPlayer));
@@ -234,7 +240,7 @@ button.addEventListener('click', () => movePlayer(primaryPlayer));
 function movePlayer(player) {
     if (turn) { 
         if (!player.isMoving) {
-            dice = Math.floor(Math.random() * 6) + 1;
+            dice = rollDice();
 
             player.moveByCells(dice);
             socket.emit('requestMoveSecondaryPlayer', { dice: dice, roomId: roomId });
