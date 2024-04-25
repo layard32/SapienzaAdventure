@@ -19,13 +19,10 @@
     <div class="body">
       <div class="rect">
         <form class="username text" id="usernameForm">
-          <input type="text" pattern="[a-zA-Z0-9\s]+" title="Non usare caratteri speciali." class="inputCode text" id="usernameFormInput" required autocomplete="off">
+          <input type="text" pattern="[a-zA-Z0-9\s]{1,10}" title="Non usare caratteri speciali e inserisci al massimo 6 caratteri." class="inputCode text" id="usernameFormInput" required autocomplete="off">
           <button class="my-btn text primary" type="submit"> Scegli nome utente </button>
         </form>
-        <div id="basicButton"> 
-          <button class="my-btn start-game text primary"> Crea la stanza </button>
-          <button class="my-btn join-game text primary"> Unisciti ad una stanza </button>
-        </div>
+        </form>
       </div>
     </div>
 

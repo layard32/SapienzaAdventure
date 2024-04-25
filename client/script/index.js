@@ -1,8 +1,6 @@
 // prendo gli elementi dal dom HTML
 const rect = document.querySelector(".rect");
 const basicButton = rect.querySelector("#basicButton");
-const startGameButton = rect.querySelector(".start-game");
-const joinGameButton = rect.querySelector(".join-game");
 const usernameForm = rect.querySelector("#usernameForm");
 const usernameFormInput = document.querySelector("#usernameFormInput");
 const submitButton = document.querySelector(".my-btn.text");
@@ -18,12 +16,19 @@ const goBackButton1 = document.createElement("button"); // tasto per tornare ind
 goBackButton1.textContent = "Torna indietro";
 const goBackButton2 = document.createElement("button"); // tasto per tornare indietro (da joinGame)
 goBackButton2.textContent = "Torna indietro";
+const basicButtonContainer = document.createElement("div"); // container for basic buttons
+const startGameButton = document.createElement("button"); // start game button
+startGameButton.textContent = "Crea la stanza";
+const joinGameButton = document.createElement("button"); // join game button
+joinGameButton.textContent = "Unisciti ad una stanza";
+const usernameName = document.createElement("div"); // div for username name
+basicButtonContainer.appendChild(usernameName);
+basicButtonContainer.appendChild(startGameButton);
+basicButtonContainer.appendChild(joinGameButton);
 
 const roomCode = document.createElement("div"); // codice della stanza
 roomCode.textContent = "Il codice della tua stanza è:";
-
 const loader = document.createElement("div");
-
 const roomCodeNumber = document.createElement("span"); // span contenente numero randomico, che aggiungo come figlio a roomCode
 roomCode.appendChild(roomCodeNumber);
 
@@ -41,6 +46,11 @@ insertCodeForm.appendChild(insertCodeLabel);
 insertCodeForm.appendChild(joinContainer);
 
 // setto le classi, gli id ed eventuali attributi degli elementi creati
+basicButtonContainer.id = "basicButton";
+usernameName.classList.add("text");
+usernameName.id = 'usernameName';
+startGameButton.classList.add("my-btn", "start-game", "text", "primary");
+joinGameButton.classList.add("my-btn", "join-game", "text", "primary");
 goBackButton1.classList.add("my-btn", "text", "primary");
 goBackButton2.classList.add("my-btn", "text", "primary");
 goBackButton2.setAttribute("type", "button");
@@ -68,12 +78,12 @@ insertCodeForm.id = "codeForm";
 const removeElements =  function (elems) {
     for (const elem of elems) {
         // transizione a scomparsa 
-        elem.style.transition = "opacity 0.5s";
+        elem.style.transition = "opacity 0.3s";
         elem.style.opacity = 0;
         // rimozione effettiva dal DOM
         setTimeout( () => {
             elem.remove();
-        }, 500);
+        }, 400);
     }
 };
 
@@ -81,18 +91,36 @@ const removeElements =  function (elems) {
 const addElements = function (elems, parent) {
     for (const elem of elems) {
         // li aggiungo effettivamente ma con opacità a zero
-        elem.style.transition = "opacity 0.5s";
+        elem.style.transition = "opacity 0.3s";
         elem.style.opacity = 0;
         parent.appendChild(elem);
         // transizione a comparsa
         setTimeout( () => {
             elem.style.opacity = 1;
-        }, 500);
+        }, 400);
     }
 };
 
+usernameForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    username = usernameFormInput.value;
+    // TODO: invia l'username al server tramite evento
+    usernameName.textContent = `Benvenuto ${username}!`;
+    const usernameToast = document.getElementById('usernameToast');
+    const bootstrapUsernameToast = new bootstrap.Toast(usernameToast, {
+        delay: 1000
+    });
+    bootstrapUsernameToast.show();
+
+    // prossima schermata
+    removeElements([usernameForm]);
+    setTimeout(() => {
+        addElements([basicButtonContainer], rect);
+   }, 500);
+});
+
 joinGameButton.addEventListener("click", () => {
-     removeElements ([basicButton, usernameForm]);
+     removeElements ([basicButtonContainer]);
      setTimeout(() => {
          addElements([insertCodeForm], rect);
     }, 500);
@@ -101,14 +129,14 @@ joinGameButton.addEventListener("click", () => {
 goBackButton1.addEventListener("click", () => {
     removeElements ([roomCode, loader, goBackButton1]);
     setTimeout(() => {
-        addElements([usernameForm, basicButton], rect);
+        addElements([basicButtonContainer], rect);
     }, 500);
 });
 
 goBackButton2.addEventListener("click", () => {
     removeElements ([insertCodeForm]);
     setTimeout(() => {
-        addElements([usernameForm, basicButton], rect);
+        addElements([basicButtonContainer], rect);
     }, 500);
 });
 
@@ -126,7 +154,7 @@ startGameButton.addEventListener("click", () => {
 // attesa del segnale 'newGame' dal server
 socket.on('newGame', (data) => {
     roomId = data;
-    removeElements ([basicButton, usernameForm]);
+    removeElements ([basicButtonContainer]);
     roomCodeNumber.textContent = roomId;
     setTimeout(function() {
         addElements([roomCode, loader, goBackButton1], rect);
@@ -158,16 +186,3 @@ socket.on('playersConnected', (data) => {
 
 
 
-// METTERE APPOSTO USERNAME
-// prende l'username dal form ?? gestire lato server?? INSERIRE CONTROLLI LATO SERVER
-usernameForm.addEventListener("submit", (event) => {
-    event.preventDefault();
-    username = usernameFormInput.value;
-
-    const usernameToast = document.getElementById('usernameToast');
-    const bootstrapUsernameToast = new bootstrap.Toast(usernameToast, {
-        delay: 1000
-    });
-    bootstrapUsernameToast.show();
-
-});
