@@ -182,16 +182,9 @@ button.addEventListener('click', () => movePlayer(primaryPlayer));
 // funzione per lo spostamento
 function movePlayer(player) {
     if (turn) {
-        const posizioneAttuale=0;
+        
         if (!player.isMoving) {
             dice = Math.floor(Math.random() * 6) + 1;
-            posizioneAttuale+=dice;
-            // Verifica se il giocatore è sulla casella 6 o 11
-            if (posizioneAttuale === 6) {
-                socket.emit('moveToMemory',roomId); 
-            } else if (posizioneAttuale === 11) {
-                socket.emit('moveToCfs',roomId);
-            }
 
 
             player.moveByCells(dice);
