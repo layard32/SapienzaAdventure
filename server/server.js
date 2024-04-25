@@ -116,9 +116,9 @@ io.on('connection', (socket) => {
     socket.to(data).emit('changeTurn');
   });
 
-  socket.on('requestForcedDisconnect', (data) => {
+  /*socket.on('requestForcedDisconnect', (data) => {
     socket.to(data).emit('forcedDisconnect');
-  }); 
+  }); */
 
   socket.on('requestLooser', (data) => {
     socket.to(data).emit('looser');
@@ -134,7 +134,8 @@ io.on('connection', (socket) => {
     const disconnectedPlayerID = clientIDs.find(id => id !== data);
 
     //notifico l'altro player(quello in partita)
-    socket.to(disconnectedPlayerID).emit('oppenentDisconnect');
+    socket.to(disconnectedPlayerID).emit('forcedDisconnect');
+    console.log("aooooo ti sei arreso looser");
 
   })
 });

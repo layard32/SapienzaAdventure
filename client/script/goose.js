@@ -248,18 +248,16 @@ window.addEventListener('beforeunload',()=>{
     socket.emit('requestForcedDisconnect', roomId);
 })
 
-socket.on('oppenentDisconnect',()=>{
-    const message = "Hai vinto a tavolino!";
-    alert(message);
+socket.on('forcedDisconnect',()=>{
+    
+    const winToast = new bootstrap.Toast(document.getElementById('winToast'));
+    winToast.show();
     setTimeout(() => {
-        if (document.querySelector('.alert')) {
-            document.querySelector('.alert').remove();
-        }
+        winToast.hide();
     }, 3000);
-    
-    setInterval(() => {
-        const nextPage = '/';
-        window.location.href = nextPage;
-    }, 5000);
-    
+
+    setTimeout(() => {
+        winToast.hide();
+        window.location.href = '/'; 
+    }, 3000);
 })
