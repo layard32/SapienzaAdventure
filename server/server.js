@@ -126,8 +126,9 @@ io.on('connection', (socket) => {
 
   //disconnessione forzata caso di refresh o chiusura 
   socket.on('requestForcedDisconnect',(data)=>{
-    //trovo gli id dei clients 
-    const clientIDs = Array.from(io.sockets.adapter.rooms.get(data)).map(socketId => io.sockets.sockets.get(socketId).id);
+    //trovo gli id dei clients
+    const room = io.sockets.adapter.rooms.get(data);
+    const clientIDs = room ? Array.from(room).map(socketId => io.sockets.sockets.get(socketId).id) : [];
     //identifico il player che si sta disconnettendo 
     const disconnectedPlayerID = clientIDs.find(id => id !== data);
     //notifico l'altro player(quello in partita)
