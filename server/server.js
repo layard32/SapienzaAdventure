@@ -3,6 +3,8 @@ import path from "path"; // per la gestione delle path
 import bodyParser from "body-parser"; // per il parsing delle chiamate http
 import { Server } from 'socket.io'; // per la comunicazione bidirezionale
 import { createServer } from 'node:http'; // per le chiamate HTTP
+import cookieParser from 'cookie-parser'; // per la gestione dei cookie 
+import cookie from 'cookie';
 
 // importiamo le seguenti librerie
 
@@ -11,6 +13,7 @@ const PORT = 3000;
 
 // avvio un server con express
 const app = express();
+app.use(cookieParser());
 // preparo il server HTTP 
 const server = createServer(app);
 // preparo server con il socket per la comunicazione bidirezionale
@@ -97,10 +100,14 @@ io.on('connection', (socket) => {
 
   socket.on('joinExistingRoom', (data) => {
     socket.join(data);
+    // assegna ai client i relativi username
+
+    
     // assegna i turni
     setTimeout(() => {
         // prendi gli id dei clients nella stanza
-        const clientIDs = Array.from(io.sockets.adapter.rooms.get(data)).map(socketId => io.sockets.sockets.get(socketId).id);
+        const room = io.sockets.adapter.rooms.get(data);
+        const clientIDs = room ? Array.from(room).map(socketId => io.sockets.sockets.get(socketId).id) : [];
         io.to(clientIDs[0]).emit('yourTurn', true);
         io.to(clientIDs[1]).emit('yourTurn', false);
     }, 500);
@@ -115,10 +122,8 @@ io.on('connection', (socket) => {
     socket.to(data).emit('changeTurn');
   });
 
-  //cambio pagina in memory
+  // TODO: cambio pagina in memory
   //socket.on();
-
-
 
   socket.on('requestLooser', (data) => {
     socket.to(data).emit('looser');
@@ -141,7 +146,22 @@ io.on('connection', (socket) => {
     sendGameResult(data, socket.id);
   });
 
-});
+  socket.on('requestOtherUsername', (data) => {
+    // prende l'id dell'altro client connesso alla stanza (non quello che ha mandato il sengale)
+    const room = io.sockets.adapter.rooms.get(data);
+    const otherSocketId = room ? Array.from(room).find(id => id !== socket.id) : undefined;
+    const otherSocket = io.sockets.sockets.get(otherSocketId);
+    if (!otherSocket) return;
+
+    // processa i cookie relativo all'username
+    const cookies = cookie.parse(otherSocket.handshake.headers.cookie);
+    const otherUsername = decodeURIComponent(cookies.username);
+
+    // manda il segnale con l'altro username
+    socket.emit('otherUsername', otherUsername);
+  });
+
+}); 
 
 function sendGameResult(roomId, winnerId) {
     const clientIDs = Array.from(io.sockets.adapter.rooms.get(roomId)).map(socketId => io.sockets.sockets.get(socketId).id);

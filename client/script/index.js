@@ -137,7 +137,8 @@ startGameButton.addEventListener("click", () => {
 usernameForm.addEventListener("submit", (event) => {
     event.preventDefault();
     username = usernameFormInput.value;
-    socket.emit('giveUsername', username);
+    // creo un cookie contenente l'username
+    document.cookie = `username=${username}; path=/`;
     usernameName.textContent = `Benvenuto ${username}!`;
     const usernameToast = document.getElementById('usernameToast');
     const bootstrapUsernameToast = new bootstrap.Toast(usernameToast, {
@@ -182,7 +183,4 @@ socket.on('playersConnected', (data) => {
     const nextPage = `/goose?room=${data}`
     window.location.href = nextPage;
 });
-
-
-
 

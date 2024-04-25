@@ -1,6 +1,7 @@
 const canvas = document.getElementById('canvas');
 const button = document.getElementById('button');
 const c = canvas.getContext('2d'); // in questo modo canvas verrà renderizzato in 2d
+const nameDiv = document.getElementById('playerName');
 
 let gameWon = false;//serve per gestire disconnessione da vittoria 
 
@@ -142,6 +143,33 @@ class Player {
     }
 };
 
+// GESTIONE USERNAME
+let username = ''; 
+// ogni client prende l'username dai cookie
+window.addEventListener('DOMContentLoaded', () => {
+    const usernameCookie = document.cookie.split('; ').find((cookie) => cookie.startsWith('username='));
+    username = usernameCookie ? usernameCookie.split('=')[1] : 'Utente';
+});
+// all'inizio il div viene settato a 'pareggio'
+// ad ogni passaggio di turno si controlla chi è il player più vicino alla fine
+nameDiv.textContent = 'Pareggio';
+
+// funziona che controlla chi è primo
+function setFirst() {
+    if (primaryPlayer.cell > secondaryPlayer.cell) {
+        console.log(username);
+        nameDiv.textContent = username;
+    } else if (primaryPlayer.cell < secondaryPlayer.cell) {
+        socket.emit('requestOtherUsername', roomId);
+        socket.on('otherUsername', (data) => {
+            nameDiv.textContent = data;
+            console.log(data);
+    });
+    } else nameDiv.textContent = 'Pareggio';
+};
+
+
+
 // GESTIONE SOCKET
 // prendiamo il parametro roomId dall'url per riconnettersi alla stanza
 // i websocket (come socket.io) non sono persistenti tra pagine html diverse
@@ -162,6 +190,8 @@ socket.on('yourTurn', (data) => {
     primaryPlayer = new Player(turn);
     secondaryPlayer = new Player(!turn);
 })
+
+
 
 // gestione delle animazioni
 function animate() {
@@ -200,13 +230,9 @@ button.addEventListener('click', () => movePlayer(primaryPlayer));
 
 // funzione per lo spostamento
 function movePlayer(player) {
-    if (turn) {
-        
+    if (turn) { 
         if (!player.isMoving) {
             dice = Math.floor(Math.random() * 6) + 1;
-
-           
-
 
             player.moveByCells(dice);
             socket.emit('requestMoveSecondaryPlayer', { dice: dice, roomId: roomId });
@@ -220,6 +246,7 @@ function movePlayer(player) {
             }, 100);
         }
     }
+    setFirst(); // questa funzione imposta il leader alla fine di ogni spostamento
 };
 
 // gestione spostamento dell'altro giocatore
@@ -232,8 +259,9 @@ socket.on('changeTurn', () => {
     turn = true;
 
     // compare scritta 'è il turno'
-    appearTurn();
+    if (primaryPlayer.cell != 39 && secondaryPlayer.cell != 39) appearTurn();
 });
+
 
 
 // funzione che fa apparire la scritta con il proprio turno
@@ -373,11 +401,5 @@ socket.on('gameLost', () => {
         window.location.href = '/';
     }, 1000);
 });
-
-
-
-
-
-
 
 
