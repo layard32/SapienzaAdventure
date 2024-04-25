@@ -3,6 +3,8 @@ import path from "path"; // per la gestione delle path
 import bodyParser from "body-parser"; // per il parsing delle chiamate http
 import { Server } from 'socket.io'; // per la comunicazione bidirezionale
 import { createServer } from 'node:http'; // per le chiamate HTTP
+import cookieParser from 'cookie-parser'; // per la gestione dei cookie 
+import cookie from 'cookie';
 
 // importiamo le seguenti librerie
 
@@ -11,6 +13,7 @@ const PORT = 3000;
 
 // avvio un server con express
 const app = express();
+app.use(cookieParser());
 // preparo il server HTTP 
 const server = createServer(app);
 // preparo server con il socket per la comunicazione bidirezionale
@@ -59,8 +62,6 @@ server.listen(PORT, () => {
 // GESTIONE SOCKET
 // dizionario che rappresenta le stanze. ha chiave codice della stanza e valore vuoto
 const rooms = {};
-// mappa per ricordare gli username
-const usernames = new Map();
 
 // funzione per generare il numero randomico della stanza
 function generateRandomNumber() {
@@ -100,11 +101,7 @@ io.on('connection', (socket) => {
   socket.on('joinExistingRoom', (data) => {
     socket.join(data);
     // assegna ai client i relativi username
-        // Get the username of the client
-        const username = usernames.get(socket.id);
 
-        // Emit the 'giveBackUsername' event with the username
-        socket.emit('giveBackUsername', username);
     
     // assegna i turni
     setTimeout(() => {
@@ -147,6 +144,21 @@ io.on('connection', (socket) => {
 
   socket.on('gameEnd', (data) => {
     sendGameResult(data, socket.id);
+  });
+
+  socket.on('requestOtherUsername', (data) => {
+    // prende l'id dell'altro client connesso alla stanza (non quello che ha mandato il sengale)
+    const room = io.sockets.adapter.rooms.get(data);
+    const otherSocketId = room ? Array.from(room).find(id => id !== socket.id) : undefined;
+    const otherSocket = io.sockets.sockets.get(otherSocketId);
+    if (!otherSocket) return;
+
+    // processa i cookie relativo all'username
+    const cookies = cookie.parse(otherSocket.handshake.headers.cookie);
+    const otherUsername = decodeURIComponent(cookies.username);
+
+    // manda il segnale con l'altro username
+    socket.emit('otherUsername', otherUsername);
   });
 
 }); 
