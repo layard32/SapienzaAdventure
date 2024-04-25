@@ -123,7 +123,7 @@ io.on('connection', (socket) => {
     socket.to(data).emit('looser');
   });
 
-  //disconnessione forzata
+  //disconnessione forzata caso di refresh o chiusura 
   socket.on('requestForcedDisconnect',(data)=>{
 
     //trovo gli id dei clients 
@@ -136,6 +136,10 @@ io.on('connection', (socket) => {
     socket.to(disconnectedPlayerID).emit('forcedDisconnect');
     console.log("aooooo ti sei arreso looser");
 
+  })
+
+  socket.on('gameWon',(data)=>{
+    io.to(data).emit('gameEnd');
   })
 });
 

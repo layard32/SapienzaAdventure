@@ -2,6 +2,8 @@ const canvas = document.getElementById('canvas');
 const button = document.getElementById('button');
 const c = canvas.getContext('2d'); // in questo modo canvas verrà renderizzato in 2d
 
+let gameWon = false;//serve per gestire disconnessione da vittoria 
+
 
 // la classe per un player
 class Player {
@@ -191,6 +193,8 @@ class Player {
     win() {
         // TODO gestione vittoria (da fare: toast modale etc)
         alert('viva un dittatore a piacimento');
+        socket.emit('gameWon',roomId);
+
     }
 };
 
@@ -283,6 +287,19 @@ socket.on('forcedDisconnect',()=>{
 
     setTimeout(() => {
         winToast.hide();
+        window.location.href = '/'; 
+    }, 3000);
+})
+
+socket.on('gameEnd',()=>{
+    const winToast = new bootstrap.Toast(document.getElementById('customWinToast'));
+    winToast.show();
+
+    setTimeout(() => {
+        winToast.hide();
+    }, 3000);
+    
+    setTimeout(() => {
         window.location.href = '/'; 
     }, 3000);
 })
