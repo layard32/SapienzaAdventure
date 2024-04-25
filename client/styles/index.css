@@ -85,14 +85,22 @@ body {
 .footer > * { font-weight: 500; font-size: 100% !important;}
 
 #usernameFormInput {
-  width: 50%;
+  width: 60%;
   font-size: 150%;
+  height: 15%;
 }
 
-#usernameForm { width: 100%; }
+#usernameForm { 
+  width: 100%; 
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  justify-content: center;
+}
 
 #usernameForm > my-btn {
-  margin-top: 5px;
   width: 30%;
   font-size: 120%;
   height: 80px;
@@ -103,6 +111,16 @@ body {
   justify-content: center;
   gap: 16px;
   width: 100%;
+  flex-wrap: wrap;
+}
+
+#usernameName {
+  width: 100%;
+  font-size: 250%;
+  font-weight: 800;
+  text-overflow: ellipsis;
+
+  margin-bottom: 30px;
 }
 
 .primary {
@@ -183,7 +201,6 @@ body {
 
 #roomJoinLabel {
   color: black;
-  text-align: center;
   font-size: 160%;
 }
 
@@ -214,3 +231,5 @@ body {
 #usernameToast, #roomFullToast {
   font-size: 125%;
 }
+
+
