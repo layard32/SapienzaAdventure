@@ -260,3 +260,24 @@ socket.on('changeTurn', () => {
 
 
 // TODO gestione vittoria, sconfitta e disconnessione forzata
+
+//gestione disconnessione forzata 
+window.addEventListener('beforeunload',()=>{
+    socket.emit('requestForcedDisconnect', roomId);
+})
+
+socket.on('oppenentDisconnect',()=>{
+    const message = "Hai vinto a tavolino!";
+    alert(message);
+    setTimeout(() => {
+        if (document.querySelector('.alert')) {
+            document.querySelector('.alert').remove();
+        }
+    }, 3000);
+    
+    setInterval(() => {
+        const nextPage = '/';
+        window.location.href = nextPage;
+    }, 5000);
+    
+})
