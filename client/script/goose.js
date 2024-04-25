@@ -91,36 +91,54 @@ class Player {
                 flipcardfront.style.backgroundImage="url('../images/minerva.png')";
                 flipcardfront.innerHTML = "<h1 style='font-family: Impact, Haettenschweiler, \"Arial Narrow Bold\", sans-serif;'>IMPREVISTO</h1>";
                 flipcardback.innerHTML = "<h1 style='font-family: Impact, Haettenschweiler, \"Arial Narrow Bold\", sans-serif;'>IMPREVISTO</h1><p style='font-family: Impact, Haettenschweiler, \"Arial Narrow Bold\", sans-serif;'>Oh no, c'è stato un imprevisto!  Hai guardato la minerva negli occhi, devi saltare un turno.</p>";
+                setTimeout(() => {
+                    flipcard.style.visibility = 'hidden'; // Nasconde le flipcard dopo 45 secondi
+                }, 45000);
             }
             else if(this.cell== 9){
                 flipcard.style.visibility='visible';
                 flipcardfront.style.backgroundImage="url('../images/fisica.png')";
                 flipcardfront.innerHTML = "<h1 style='font-family: Impact, Haettenschweiler, \"Arial Narrow Bold\", sans-serif;'>IMPREVISTO</h1>";
                 flipcardback.innerHTML = "<h1 style='font-family: Impact, Haettenschweiler, \"Arial Narrow Bold\", sans-serif;'>IMPREVISTO</h1><p style='font-family: Impact, Haettenschweiler, \"Arial Narrow Bold\", sans-serif;'>Oh no, c'è stato un imprevisto! Non hai passato l'esame di fisica, devi saltare un turno e tornare al prossimo appello.</p>";
+                setTimeout(() => {
+                    flipcard.style.visibility = 'hidden'; // Nasconde le flipcard dopo 45 secondi
+                }, 45000);
             }
             else if(this.cell== 38){
                 flipcard.style.visibility='visible';
                 flipcardfront.style.backgroundImage="url('../images/tesi.png')";
                 flipcardfront.innerHTML = "<h1 style='font-family: Impact, Haettenschweiler, \"Arial Narrow Bold\", sans-serif;'>IMPREVISTO</h1>";
                 flipcardback.innerHTML = "<h1 style='font-family: Impact, Haettenschweiler, \"Arial Narrow Bold\", sans-serif;'>IMPREVISTO</h1><p style='font-family: Impact, Haettenschweiler, \"Arial Narrow Bold\", sans-serif;'>Oh no, c'è stato un imprevisto! Devi scrivere la tesi, salta un turno.</p>";
+                setTimeout(() => {
+                    flipcard.style.visibility = 'hidden'; // Nasconde le flipcard dopo 45 secondi
+                }, 45000);
             }
             else if(this.cell== 3){
                 flipcard.style.visibility='visible';
                 flipcardfront.style.backgroundImage="url('../images/esonero.png')";
                 flipcardfront.innerHTML = "<h1 style='font-family: Impact, Haettenschweiler, \"Arial Narrow Bold\", sans-serif;'>BONUS</h1>";
                 flipcardback.innerHTML = "<h1 style='font-family: Impact, Haettenschweiler, \"Arial Narrow Bold\", sans-serif;'>BONUS</h1><p style='font-family: Impact, Haettenschweiler, \"Arial Narrow Bold\", sans-serif;'>Bravo! Hai superato un esonero, tira il dado 2 volte.</p>";
+                setTimeout(() => {
+                    flipcard.style.visibility = 'hidden'; // Nasconde le flipcard dopo 45 secondi
+                }, 45000);
             }
             else if(this.cell== 36){
                 flipcard.style.visibility='visible';
                 flipcardfront.style.backgroundImage="url('../images/esonero.png')";
                 flipcardfront.innerHTML = "<h1 style='font-family: Impact, Haettenschweiler, \"Arial Narrow Bold\", sans-serif;'>BONUS</h1>";
                 flipcardback.innerHTML = "<h1 style='font-family: Impact, Haettenschweiler, \"Arial Narrow Bold\", sans-serif;'>BONUS</h1><p style='font-family: Impact, Haettenschweiler, \"Arial Narrow Bold\", sans-serif;'>Bravo! Hai superato un esonero, tira il dado 2 volte.</p>";
+                setTimeout(() => {
+                    flipcard.style.visibility = 'hidden'; // Nasconde le flipcard dopo 45 secondi
+                }, 45000);
             }
             else if(this.cell== 26){
                 flipcard.style.visibility='visible';
                 flipcardfront.style.backgroundImage="url('../images/relatore.png')";
                 flipcardfront.innerHTML = "<h1 style='font-family: Impact, Haettenschweiler, \"Arial Narrow Bold\", sans-serif;'>BONUS</h1>";
                 flipcardback.innerHTML = "<h1 style='font-family: Impact, Haettenschweiler, \"Arial Narrow Bold\", sans-serif;'>BONUS</h1><p style='font-family: Impact, Haettenschweiler, \"Arial Narrow Bold\", sans-serif;'>Bravo! Sei riuscito a trovare un relatore per la tesi, tira il dado 2 volte.</p>";
+                setTimeout(() => {
+                    flipcard.style.visibility = 'hidden'; // Nasconde le flipcard dopo 45 secondi
+                }, 45000);
             }
             else{
                 flipcard.style.visibility='hidden';
@@ -268,22 +286,27 @@ function appearTurn() {
 // TODO gestione vittoria, sconfitta e disconnessione forzata
 
 //gestione disconnessione forzata 
+
+//caso di refresh della pagina
 window.addEventListener('beforeunload',()=>{
     socket.emit('requestForcedDisconnect', roomId);
 })
 
-socket.on('oppenentDisconnect',()=>{
-    const message = "Hai vinto a tavolino!";
-    alert(message);
+//caso di chiusura della pagina
+window.addEventListener('unload', function(event) {
+    socket.emit('requestForcedDisconnect', roomId);
+});
+
+socket.on('forcedDisconnect',()=>{
+    
+    const winToast = new bootstrap.Toast(document.getElementById('winToast'));
+    winToast.show();
     setTimeout(() => {
-        if (document.querySelector('.alert')) {
-            document.querySelector('.alert').remove();
-        }
+        winToast.hide();
     }, 3000);
-    
-    setInterval(() => {
-        const nextPage = '/';
-        window.location.href = nextPage;
-    }, 5000);
-    
+
+    setTimeout(() => {
+        winToast.hide();
+        window.location.href = '/'; 
+    }, 3000);
 })
