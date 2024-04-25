@@ -41,32 +41,34 @@ class Player {
         if (this.image) {
             this.draw();
             if (this.isMoving) {
-                // distanza tra la posizione attuale e la posizione target
+                // distance between the current position and the target position
                 const dx = this.targetPosition.x - this.position.x;
                 const dy = this.targetPosition.y - this.position.y;
                 
-                // controlla la direzione dello spostamento
+                // check the direction of the movement
                 if (this.direction === 'x') {
-                    // se il giocatore è arrivato alla posizione target sull'asse x
-                    if (Math.abs(dx) < Math.abs(this.velocity.x)) {
+                    // if the player has reached or passed the target position on the x-axis
+                    if (dx <= 0) {
                         this.position.x = this.targetPosition.x;
                         this.isMoving = false;
                     } else {
-                        // si sposta gradualmente il giocatore
-                        this.position.x += dx > 0 ? this.velocity.x : -this.velocity.x;
+                        // gradually move the player
+                        this.position.x += this.velocity.x;
                     }
                 } else if (this.direction === 'y') {
-                    // se il giocatore è arrivato alla posizione target sull'asse y
-                    if (Math.abs(dy) < Math.abs(this.velocity.y)) {
+                    // if the player has reached or passed the target position on the y-axis
+                    if (dy <= 0) {
                         this.position.y = this.targetPosition.y;
+                        this.isMoving = false;
                     } else {
-                        // si sposta gradualmente il giocatore
-                        this.position.y += dy > 0 ? this.velocity.y : -this.velocity.y;
+                        // gradually move the player
+                        this.position.y += this.velocity.y;
                     }
                 }
             }
         }
     };
+
     moveByCells (number) {
         this.isMoving = true;
         const targetCell = this.cell + number;
