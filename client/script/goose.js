@@ -182,16 +182,15 @@ button.addEventListener('click', () => movePlayer(primaryPlayer));
 // funzione per lo spostamento
 function movePlayer(player) {
     if (turn) {
+        const posizioneAttuale=0;
         if (!player.isMoving) {
             dice = Math.floor(Math.random() * 6) + 1;
-
+            posizioneAttuale+=dice;
             // Verifica se il giocatore è sulla casella 6 o 11
-            if (player.currentPosition === 6) {
-                window.location.href = "memory.html"; // Reindirizza al gioco Memory
-                return; // Interrompe l'esecuzione della funzione per evitare ulteriori movimenti
-            } else if (player.currentPosition === 11) {
-                window.location.href = "cfs.html"; // Reindirizza al gioco Rock Paper Scissors
-                return; // Interrompe l'esecuzione della funzione per evitare ulteriori movimenti
+            if (posizioneAttuale === 6) {
+                socket.emit('moveToMemory',roomId); 
+            } else if (posizioneAttuale === 11) {
+                socket.emit('moveToCfs',roomId);
             }
 
 
