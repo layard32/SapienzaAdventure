@@ -104,16 +104,8 @@ class Player {
         }
         flipcard.style.visibility='hidden';
 
-        //reindirizza ai giochi 
-        // Se uno dei giocatori arriva sulla casella 6, reindirizza entrambi i giocatori al gioco di Memory
-        if (this.cell == 6) {
-            socket.emit('redirectToGame', { roomId: roomId, game: 'memory' });
-            
-        } else if (this.cell == 11) {
-            // Se uno dei giocatori arriva sulla casella 11, reindirizza entrambi i giocatori al gioco CFS
-            socket.emit('redirectToGame', { roomId: roomId, game: 'cfs' });
-            
-        }
+        handleCellRedirection(this.cell,roomId);
+
 
         if (this.cell >= 0 && this.cell < 9) {
             this.direction = 'x';
@@ -190,6 +182,23 @@ function setFirst() {
     });
     } else nameDiv.textContent = 'Pareggio';
 };
+
+
+// Funzione per gestire il reindirizzamento dei giocatori in base alla cella
+function handleCellRedirection(cell, roomId) {
+    // Definizione delle condizioni per il reindirizzamento
+    const redirectionConditions = {
+        6: 'memory',
+        11: 'cfs'
+    };
+
+    // Controlla se la cella corrente ha una condizione di reindirizzamento definita
+    if (redirectionConditions.hasOwnProperty(cell)) {
+        const game = redirectionConditions[cell];
+        // Emit il segnale a tutti i client nella stanza per reindirizzare al gioco specificato
+        socket.emit('redirectToGame', { game: game });
+    }
+}
 
 
 
@@ -488,13 +497,20 @@ socket.on('gameLost', () => {
 });
 
 socket.on('redirectBothToGame', (game) => {
-    console.log("aooo ci stanno i giochi",game);
-    // Reindirizza entrambi i giocatori al gioco specificato
+    redirectPlayersToGame(game);
+});
+
+
+// Funzione per reindirizzare entrambi i giocatori al gioco specificato
+function redirectPlayersToGame(game) {
     if (game === 'memory') {
         window.location.href = '/memory'; // Reindirizza a Memory
     } else if (game === 'cfs') {
         window.location.href = '/cfs'; // Reindirizza a CFS
     }
-});
+}
+
+
+
 
 

@@ -116,6 +116,7 @@ io.on('connection', (socket) => {
   // per lo spostamento del player secondario
   socket.on('requestMoveSecondaryPlayer', (data) => {
     socket.to(data.roomId).emit('moveSecondaryPlayer', data.dice);
+    
   });
 
   socket.on('requestChangeTurn', (data) => {
@@ -161,14 +162,20 @@ io.on('connection', (socket) => {
     socket.emit('otherUsername', otherUsername);
   });
 
-  socket.on('redirectToGame', ({ roomId, game }) => {
+  socket.on('redirectToGame', ({ game }) => {
     // Invia un segnale a entrambi i giocatori nella stanza per reindirizzare al gioco specificato
-    socket.to(roomId).emit('redirectToBothGame', game);
-    console.log("ao mandami ai giochi");
+    socket.emit('redirectToBothGame', game);
+    console.log("prima volta");
+    console.log("+1");
 
   });
+ 
 
 }); 
+
+
+
+
 
 function sendGameResult(roomId, winnerId) {
     const clientIDs = Array.from(io.sockets.adapter.rooms.get(roomId)).map(socketId => io.sockets.sockets.get(socketId).id);
