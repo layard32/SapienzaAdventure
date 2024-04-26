@@ -273,6 +273,7 @@ socket.on('changeTurn', () => {
 
 // funzione che fa apparire la scritta con il proprio turno
 function appearTurn() {
+    if(gameEnded) return;
     const yourTurnDiv = document.getElementById('yourTurn');
     yourTurnDiv.style.visibility = 'visible';
     setTimeout(() => {
