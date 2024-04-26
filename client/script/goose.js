@@ -105,8 +105,6 @@ class Player {
             
         }
 
-
-
         if (this.cell >= 0 && this.cell < 9) {
             this.direction = 'x';
             this.targetPosition.x += CELLWIDTH;
@@ -141,6 +139,10 @@ class Player {
         // con ogni spostamento controlla chi è primo
         setFirst();
 
+        const moveSound = new Audio('../audios/piece-move.wav');
+        moveSound.volume = 0.5;
+        moveSound.play();
+
         setTimeout(() => {
             // altro caso base: la cella a cui siamo arrivati è la 39: vittoria
             if (this.cell == 39) this.win();
@@ -153,7 +155,6 @@ class Player {
         // TODO gestione vittoria (da fare: toast modale etc)
         //alert('viva un dittatore a piacimento');
         socket.emit('gameEnd',roomId);
-
     }
 };
 
@@ -223,26 +224,34 @@ const dado = document.getElementById("dice");
 const dadoContainer = document.querySelector(".diceCont");
 let isRolling = false;
 function rollDice() {
-    if (isRolling) return;
-    isRolling = true;
-    // comparsa del dado
-    dadoContainer.style.opacity = '1';
+    return new Promise((resolve, reject) => {
+        if (isRolling) reject('Il dado sta già girando');
+        // suono del dado
+        const diceSound = new Audio('../audios/dice-roll.wav');
+        diceSound.volume = 0.7;
+        diceSound.play();
 
-    let dadoNumber = Math.floor(Math.random() * 6) + 1;
+        isRolling = true;
+        // comparsa del dado
+        dadoContainer.style.opacity = '1';
 
-    for (let i = 1; i <= 6; i++) dado.classList.remove('show-' + i);
-    requestAnimationFrame(() => {
-        dado.classList.add('show-' + dadoNumber);
+        let dadoNumber = Math.floor(Math.random() * 6) + 1;
+
+        for (let i = 1; i <= 6; i++) dado.classList.remove('show-' + i);
+        requestAnimationFrame(() => {
+            dado.classList.add('show-' + dadoNumber);
+        });
+
+        setTimeout(() => {
+            isRolling = false;
+            // scomparsa del dado
+            setTimeout(() => { 
+                dadoContainer.style.opacity = '0'; 
+                resolve(dadoNumber); // return the number after the animation is done
+            }, 500);
+        }, 1500); 
     });
-
-    setTimeout(() => {
-        isRolling = false;
-        // scomparsa del dado
-        setTimeout(() => { dadoContainer.style.opacity = '0'; }, 500);
-    }, 1500); 
-
-    return dadoNumber;
-}
+};
 
 
 // gestione del lancio del dado
@@ -252,18 +261,21 @@ button.addEventListener('click', () => movePlayer(primaryPlayer));
 function movePlayer(player) {
     if (turn) { 
         if (!player.isMoving) {
-            dice = rollDice();
+            // utilizziamo uno schema di premessa/then per animare PRIMA il dado e POI restituire il numero
+            rollDice().then(dadoNumber => {
+                player.moveByCells(dadoNumber);
+                socket.emit('requestMoveSecondaryPlayer', { dice: dadoNumber, roomId: roomId });
 
-            player.moveByCells(dice);
-            socket.emit('requestMoveSecondaryPlayer', { dice: dice, roomId: roomId });
-
-            turn = false;
-            const checkIsMoving = setInterval(() => {
-                if (!player.isMoving) {
-                    clearInterval(checkIsMoving);
-                    socket.emit('requestChangeTurn', roomId);
-                }
-            }, 100);
+                turn = false;
+                const checkIsMoving = setInterval(() => {
+                    if (!player.isMoving) {
+                        clearInterval(checkIsMoving);
+                        socket.emit('requestChangeTurn', roomId);
+                    }
+                }, 100);
+            }).catch(error => {
+                console.log('Il dado sta già girando'); 
+            });
         }
     }
 };
