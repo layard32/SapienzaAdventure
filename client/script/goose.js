@@ -93,6 +93,16 @@ class Player {
             return;
         }
         flipcard.style.visibility='hidden';
+        // Se uno dei giocatori arriva sulla casella 6, reindirizza entrambi i giocatori al gioco di Memory
+        if (this.cell == 6) {
+            socket.emit('redirectToGame', { roomId: roomId, game: 'memory' });
+            
+        } else if (this.cell == 11) {
+            // Se uno dei giocatori arriva sulla casella 11, reindirizza entrambi i giocatori al gioco CFS
+            socket.emit('redirectToGame', { roomId: roomId, game: 'cfs' });
+            
+        }
+
 
 
         if (this.cell >= 0 && this.cell < 9) {
@@ -406,7 +416,7 @@ socket.on('gameWon', () => {
 
         setTimeout(() => {
             window.location.href = '/';
-        }, 4000);
+        }, 3000);
     }
 });
 
