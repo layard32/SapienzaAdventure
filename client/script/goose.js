@@ -93,6 +93,8 @@ class Player {
             return;
         }
         flipcard.style.visibility='hidden';
+
+        //reindirizza ai giochi 
         // Se uno dei giocatori arriva sulla casella 6, reindirizza entrambi i giocatori al gioco di Memory
         if (this.cell == 6) {
             socket.emit('redirectToGame', { roomId: roomId, game: 'memory' });
@@ -431,6 +433,16 @@ socket.on('gameLost', () => {
             loseToast.hide();
             window.location.href = '/';
         }, 3000);
+    }
+});
+
+socket.on('redirectBothToGame', (game) => {
+    console.log("aooo ci stanno i giochi",game);
+    // Reindirizza entrambi i giocatori al gioco specificato
+    if (game === 'memory') {
+        window.location.href = '/memory'; // Reindirizza a Memory
+    } else if (game === 'cfs') {
+        window.location.href = '/cfs'; // Reindirizza a CFS
     }
 });
 

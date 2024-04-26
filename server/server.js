@@ -161,6 +161,13 @@ io.on('connection', (socket) => {
     socket.emit('otherUsername', otherUsername);
   });
 
+  socket.on('redirectToGame', ({ roomId, game }) => {
+    // Invia un segnale a entrambi i giocatori nella stanza per reindirizzare al gioco specificato
+    socket.to(roomId).emit('redirectToBothGame', game);
+    console.log("ao mandami ai giochi");
+
+  });
+
 }); 
 
 function sendGameResult(roomId, winnerId) {
