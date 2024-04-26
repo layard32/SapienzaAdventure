@@ -19,11 +19,6 @@ window.addEventListener('load', () => {
     }, 2000);
 });
 
-
-
-
-
-
 // la classe per un player
 class Player {
     constructor(n) {
