@@ -3,7 +3,7 @@ const button = document.getElementById('button');
 const c = canvas.getContext('2d'); // in questo modo canvas verrà renderizzato in 2d
 const nameDiv = document.getElementById('playerName');
 
-let gameWon = false;//serve per gestire disconnessione da vittoria 
+let gameEnded = false;//serve per gestire disconnessione da vittoria 
 
 
 // la classe per un player
@@ -375,38 +375,52 @@ window.addEventListener('unload', function(event) {
 });
 
 socket.on('forcedDisconnect',()=>{
-    
-    const winToast = new bootstrap.Toast(document.getElementById('winToast'));
-    winToast.show();
-    setTimeout(() => {
-        winToast.hide();
-    }, 3000);
+    if (!gameEnded) {
+        // Invia la notifica di vittoria a tavolino solo se il gioco non è ancora terminato
+        const winToast = new bootstrap.Toast(document.getElementById('winToast'));
+        winToast.show();
+        gameEnded = true; //  per evitare notifiche duplicate
 
-    setTimeout(() => {
-        winToast.hide();
-        window.location.href = '/'; 
-    }, 3000);
+        setTimeout(() => {
+            winToast.hide();
+        }, 3000);
+
+        setTimeout(() => {
+            window.location.href = '/';
+        }, 3000);
+    }
 })
 
 
 socket.on('gameWon', () => {
-    const winToast = new bootstrap.Toast(document.getElementById('customWinToast'));
-    winToast.show();
+    if (!gameEnded) {
+        const winToast = new bootstrap.Toast(document.getElementById('customWinToast'));
+        winToast.show();
 
-    setTimeout(() => {
-        winToast.hide();
-    }, 3000);
+        gameEnded = true; // per evitare notifiche duplicate
 
-    setTimeout(() => {
-        window.location.href = '/';
-    }, 4000);
+        setTimeout(() => {
+            winToast.hide();
+        }, 3000);
+
+        setTimeout(() => {
+            window.location.href = '/';
+        }, 4000);
+    }
 });
 
 socket.on('gameLost', () => {
-    alert("Hai perso!");
-    setTimeout(() => {
-        window.location.href = '/';
-    }, 1000);
+    if (!gameEnded) {
+        const loseToast = new bootstrap.Toast(document.getElementById('loseToast'));
+        loseToast.show();
+
+        gameEnded = true; 
+        
+        setTimeout(() => {
+            loseToast.hide();
+            window.location.href = '/';
+        }, 3000);
+    }
 });
 
 
