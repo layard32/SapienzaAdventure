@@ -3,7 +3,25 @@ const button = document.getElementById('button');
 const c = canvas.getContext('2d'); // in questo modo canvas verrà renderizzato in 2d
 const nameDiv = document.getElementById('playerName');
 
-let gameEnded = false;//serve per gestire disconnessione da vittoria 
+let gameEnded = false; //serve per gestire disconnessione da vittoria 
+
+// quando la finestra si carica, parte la musica (col volume basso) e piano piano aumneta
+window.addEventListener('load', () => {
+    const backgroundMusic = document.getElementById("background-music");
+    backgroundMusic.volume = 0.1;
+    backgroundMusic.play();
+    const fadeInterval = setInterval(() => {
+        if (backgroundMusic.volume < 1) {
+            console.log('aumentato')
+            backgroundMusic.volume += 0.06;
+        }
+        if (backgroundMusic.volume >= 0.9) clearInterval(fadeInterval);
+    }, 2000);
+});
+
+
+
+
 
 
 // la classe per un player
