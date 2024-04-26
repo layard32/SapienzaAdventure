@@ -236,7 +236,7 @@ animate();
 const dado = document.getElementById("dice");
 const dadoContainer = document.querySelector(".diceCont");
 let isRolling = false;
-function rollDice() {
+function rollDice(number) {
     return new Promise((resolve, reject) => {
         if (isRolling) reject('Il dado sta già girando');
         // suono del dado
@@ -248,7 +248,8 @@ function rollDice() {
         // comparsa del dado
         dadoContainer.style.opacity = '1';
 
-        let dadoNumber = Math.floor(Math.random() * 6) + 1;
+        let dadoNumber = number;
+        if (!number) dadoNumber = Math.floor(Math.random() * 6) + 1;
 
         for (let i = 1; i <= 6; i++) dado.classList.remove('show-' + i);
         requestAnimationFrame(() => {
@@ -275,7 +276,7 @@ function movePlayer(player) {
     if (turn) { 
         if (!player.isMoving) {
             // utilizziamo uno schema di premessa/then per animare PRIMA il dado e POI restituire il numero
-            rollDice().then(dadoNumber => {
+            rollDice(false).then(dadoNumber => {
                 player.moveByCells(dadoNumber);
                 socket.emit('requestMoveSecondaryPlayer', { dice: dadoNumber, roomId: roomId });
 
@@ -295,6 +296,7 @@ function movePlayer(player) {
 
 // gestione spostamento dell'altro giocatore
 socket.on('moveSecondaryPlayer', (data) => {
+    rollDice(data);
     secondaryPlayer.moveByCells(data);
 })
 
