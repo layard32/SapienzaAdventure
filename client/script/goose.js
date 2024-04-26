@@ -375,7 +375,7 @@ window.addEventListener('unload', function(event) {
 });
 
 socket.on('forcedDisconnect',()=>{
-    if (!gameEnded) {
+    
         // Invia la notifica di vittoria a tavolino solo se il gioco non è ancora terminato
         const winToast = new bootstrap.Toast(document.getElementById('winToast'));
         winToast.show();
@@ -388,7 +388,7 @@ socket.on('forcedDisconnect',()=>{
         setTimeout(() => {
             window.location.href = '/';
         }, 3000);
-    }
+    
 })
 
 
@@ -415,7 +415,7 @@ socket.on('gameLost', () => {
         loseToast.show();
 
         gameEnded = true; 
-        
+
         setTimeout(() => {
             loseToast.hide();
             window.location.href = '/';
