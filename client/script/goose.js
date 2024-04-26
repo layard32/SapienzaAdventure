@@ -6,6 +6,7 @@ const backgroundMusic = document.getElementById("background-music");
 const missionImpossible = document.getElementById("mission-impossible");
 
 let gameEnded = false; //serve per gestire disconnessione da vittoria 
+let playerPosition = 1; //player in posizione 1
 
 // partenza lenta di una musica
 function slowStart (music, increment) {
@@ -193,7 +194,7 @@ function handleCellRedirection(cell, roomId) {
     };
 
     // Controlla se la cella corrente ha una condizione di reindirizzamento definita
-    if (redirectionConditions.hasOwnProperty(cell)) {
+    if (redirectionConditions.hasOwnProperty(cell) && playerPosition === cell) {
         const game = redirectionConditions[cell];
         // Emit il segnale a tutti i client nella stanza per reindirizzare al gioco specificato
         socket.emit('redirectToGame', { game: game });
@@ -291,9 +292,11 @@ function movePlayer(player) {
             player.isMoving = true;
             // utilizziamo uno schema di premessa/then per animare PRIMA il dado e POI restituire il numero
             rollDice(false).then(dadoNumber => {
+                playerPosition += dadoNumber; // Aggiorna la posizione del giocatore
                 changeMusic(primaryPlayer.cell + dadoNumber);
                 player.moveByCells(dadoNumber);
                 socket.emit('requestMoveSecondaryPlayer', { dice: dadoNumber, roomId: roomId });
+
 
                 const checkIsMoving = setInterval(() => {
                     if (!player.isMoving) {
@@ -496,7 +499,7 @@ socket.on('gameLost', () => {
     }
 });
 
-socket.on('redirectBothToGame', (game) => {
+socket.on('redirectToBothGame', (game) => {
     redirectPlayersToGame(game);
 });
 
