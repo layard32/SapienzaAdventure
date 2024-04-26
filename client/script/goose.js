@@ -2,22 +2,23 @@ const canvas = document.getElementById('canvas');
 const button = document.getElementById('button');
 const c = canvas.getContext('2d'); // in questo modo canvas verrà renderizzato in 2d
 const nameDiv = document.getElementById('playerName');
+const backgroundMusic = document.getElementById("background-music");
+const missionImpossible = document.getElementById("mission-impossible");
 
 let gameEnded = false; //serve per gestire disconnessione da vittoria 
 
-// quando la finestra si carica, parte la musica (col volume basso) e piano piano aumneta
-window.addEventListener('load', () => {
-    const backgroundMusic = document.getElementById("background-music");
-    backgroundMusic.volume = 0.1;
-    backgroundMusic.play();
+// partenza lenta di una musica
+function slowStart (music, increment) {
+    music.volume = 0.1;
+    music.play();
     const fadeInterval = setInterval(() => {
-        if (backgroundMusic.volume < 1) {
-            console.log('aumentato')
-            backgroundMusic.volume += 0.06;
-        }
-        if (backgroundMusic.volume >= 0.9) clearInterval(fadeInterval);
+        if (music.volume < 1) music.volume += increment;
+        if (music.volume >= 0.9) clearInterval(fadeInterval);
     }, 2000);
-});
+}
+
+// quando la finestra si carica, parte la musica (col volume basso) e piano piano aumneta
+window.addEventListener('load', () => { slowStart(backgroundMusic, 0.05); });
 
 // la classe per un player
 class Player {
@@ -57,32 +58,28 @@ class Player {
         if (this.image) {
             this.draw();
             if (this.isMoving) {
-                // distanza tra la posizione attuale e la posizione target
                 const dx = this.targetPosition.x - this.position.x;
                 const dy = this.targetPosition.y - this.position.y;
                 
-                // controlla la direzione dello spostamento
                 if (this.direction === 'x') {
-                    // se il giocatore è arrivato alla posizione target sull'asse x
-                    if (Math.abs(dx) < Math.abs(this.velocity.x)) {
+                    if (Math.abs(dx) <= Math.abs(this.velocity.x)) {
                         this.position.x = this.targetPosition.x;
                         this.isMoving = false;
                     } else {
-                        // si sposta gradualmente il giocatore
                         this.position.x += dx > 0 ? this.velocity.x : -this.velocity.x;
                     }
                 } else if (this.direction === 'y') {
-                    // se il giocatore è arrivato alla posizione target sull'asse y
-                    if (Math.abs(dy) < Math.abs(this.velocity.y)) {
+                    if (Math.abs(dy) <= Math.abs(this.velocity.y)) {
                         this.position.y = this.targetPosition.y;
+                        this.isMoving = false;
                     } else {
-                        // si sposta gradualmente il giocatore
                         this.position.y += dy > 0 ? this.velocity.y : -this.velocity.y;
                     }
                 }
             }
         }
     };
+    
     moveByCells (number) {
         this.isMoving = true;
         const targetCell = this.cell + number;
@@ -126,18 +123,19 @@ class Player {
             this.targetPosition.y += CELLHEIGHT;
         } else if (this.cell >= 15 && this.cell < 23) {
             this.direction = 'x';
-            if (this.cell == 15) {
-                this.targetPosition.x -= OFFSET; 
-            }
+            // TODO: cercare di integrare questo offset senza che l'animazione vada a fanculo
+            // if (this.cell == 15) {
+            //     this.targetPosition.x -= OFFSET; 
+            // }
             this.targetPosition.x -= CELLWIDTH;
         } else if (this.cell >= 23 && this.cell < 27) {
             this.direction = 'y';
             this.targetPosition.y -= CELLHEIGHT;
         } else if (this.cell >= 27 && this.cell < 33) {
             this.direction = 'x';
-            if (this.cell == 27) {
-                this.targetPosition.x += OFFSET - 15;
-            }
+            // if (this.cell == 27) {
+            //     this.targetPosition.x += OFFSET - 15;
+            // }
             this.targetPosition.x += CELLWIDTH;
         } else if (this.cell >= 33 && this.cell < 35) {
             this.direction = 'y';
@@ -147,7 +145,6 @@ class Player {
             this.targetPosition.x -= CELLWIDTH;
         }
         
-
         this.cell++;
         // con ogni spostamento controlla chi è primo
         setFirst();
@@ -238,13 +235,17 @@ const dadoContainer = document.querySelector(".diceCont");
 let isRolling = false;
 function rollDice(number) {
     return new Promise((resolve, reject) => {
-        if (isRolling) reject('Il dado sta già girando');
+        if (isRolling) { 
+            reject('Il dado sta già girando');
+            return;
+        }       
+        isRolling = true;
+        turn = false;
         // suono del dado
         const diceSound = new Audio('../audios/dice-roll.wav');
         diceSound.volume = 0.7;
         diceSound.play();
 
-        isRolling = true;
         // comparsa del dado
         dadoContainer.style.opacity = '1';
 
@@ -257,9 +258,9 @@ function rollDice(number) {
         });
 
         setTimeout(() => {
-            isRolling = false;
             // scomparsa del dado
             setTimeout(() => { 
+                isRolling = false;
                 dadoContainer.style.opacity = '0'; 
                 resolve(dadoNumber); // return the number after the animation is done
             }, 500);
@@ -269,18 +270,22 @@ function rollDice(number) {
 
 
 // gestione del lancio del dado
-button.addEventListener('click', () => movePlayer(primaryPlayer));
+button.addEventListener('click', () => { 
+    if (!isRolling && turn) movePlayer(primaryPlayer);
+});
 
-// funzione per lo spostamento
+// funzione per lo spostamento del player principale
 function movePlayer(player) {
-    if (turn) { 
+    if (turn) {
+        turn = false; 
         if (!player.isMoving) {
+            player.isMoving = true;
             // utilizziamo uno schema di premessa/then per animare PRIMA il dado e POI restituire il numero
             rollDice(false).then(dadoNumber => {
+                changeMusic(primaryPlayer.cell + dadoNumber);
                 player.moveByCells(dadoNumber);
                 socket.emit('requestMoveSecondaryPlayer', { dice: dadoNumber, roomId: roomId });
 
-                turn = false;
                 const checkIsMoving = setInterval(() => {
                     if (!player.isMoving) {
                         clearInterval(checkIsMoving);
@@ -288,7 +293,7 @@ function movePlayer(player) {
                     }
                 }, 100);
             }).catch(error => {
-                console.log('Il dado sta già girando'); 
+                console.log(error); 
             });
         }
     }
@@ -296,8 +301,12 @@ function movePlayer(player) {
 
 // gestione spostamento dell'altro giocatore
 socket.on('moveSecondaryPlayer', (data) => {
-    rollDice(data);
-    secondaryPlayer.moveByCells(data);
+    if (!turn && !secondaryPlayer.ismoving) {
+        rollDice(data);
+        setTimeout(() => {
+            secondaryPlayer.moveByCells(data);
+        }, 600);
+    }
 })
 
 // gestione assegnazione dei turni
@@ -307,8 +316,6 @@ socket.on('changeTurn', () => {
     // compare scritta 'è il turno'
     if (primaryPlayer.cell != 39 && secondaryPlayer.cell != 39) appearTurn();
 });
-
-
 
 // funzione che fa apparire la scritta con il proprio turno
 function appearTurn() {
@@ -398,6 +405,23 @@ function showFlipCard(cell) {
     }
     
 }
+
+// cambio musica raggiunta la cella 30
+let change = false;
+function changeMusic(cell) {
+    if (!change && cell >= 27) {
+        backgroundMusic.pause();
+        backgroundMusic.currentTime = 0;
+        slowStart(missionImpossible, 0.1);
+        change = true;
+    } else if (change && cell < 30) {
+        missionImpossible.pause();;
+        missionImpossible.currentTime = 0;
+        slowStart(backgroundMusic, 0.1);
+        change = false;
+    }
+}
+
 
 
 // TODO gestione vittoria, sconfitta e disconnessione forzata
