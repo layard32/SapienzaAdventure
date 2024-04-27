@@ -115,8 +115,7 @@ io.on('connection', (socket) => {
 
   // per lo spostamento del player secondario
   socket.on('requestMoveSecondaryPlayer', (data) => {
-    socket.to(data.roomId).emit('moveSecondaryPlayer', data.dice);
-    
+    socket.to(data.roomId).emit('moveSecondaryPlayer', { number: data.dice, special: data.special } );
   });
 
   socket.on('requestChangeTurn', (data) => {

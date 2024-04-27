@@ -6,7 +6,8 @@ const backgroundMusic = document.getElementById("background-music");
 const missionImpossible = document.getElementById("mission-impossible");
 
 let gameEnded = false; //serve per gestire disconnessione da vittoria 
-let playerPosition = 0; //player in posizione 
+
+let bonusTurn = true;
 
 // partenza lenta di una musica
 function slowStart (music, increment) {
@@ -100,13 +101,11 @@ class Player {
         // caso base: siamo arrivati alla cella finale
         if (this.cell == targetCell) {
             this.isMoving = false;
+            handleCellRedirection(this.cell);
             showFlipCard(this.cell);
             return;
         }
         flipcard.style.visibility='hidden';
-
-        handleCellRedirection(this.cell);
-
 
         if (this.cell >= 0 && this.cell < 9) {
             this.direction = 'x';
@@ -188,16 +187,16 @@ function setFirst() {
 // Funzione per gestire il reindirizzamento dei giocatori in base alla cella
 function handleCellRedirection(cell) {
     console.log("io sono cella",cell);
-    console.log("io sono playerPosition",playerPosition);
  
     // Definizione delle condizioni per il reindirizzamento
     const redirectionConditions = {
-        5: 'memory',
-        10: 'cfs'
+        6: 'memory',
+        11: 'cfs'
     };
+
     console.log("io sono redirection conditions [cell]",redirectionConditions[cell]);
     // Controlla se la cella corrente ha una condizione di reindirizzamento definita
-    if (redirectionConditions.hasOwnProperty(cell) && playerPosition === cell) {
+    if (redirectionConditions.hasOwnProperty(cell)) {
         const game = redirectionConditions[cell];
         // Emit il segnale a tutti i client nella stanza per reindirizzare al gioco specificato
 
@@ -267,7 +266,7 @@ function rollDice(number) {
         dadoContainer.style.opacity = '1';
 
         let dadoNumber = number;
-        if (!number) dadoNumber = 5// Math.floor(Math.random() * 6) + 1;
+        if (!number) dadoNumber = 2; //Math.floor(Math.random() * 6) + 1;
 
         for (let i = 1; i <= 6; i++) dado.classList.remove('show-' + i);
         requestAnimationFrame(() => {
@@ -292,6 +291,7 @@ button.addEventListener('click', () => {
 });
 
 // funzione per lo spostamento del player principale
+// TODO TOGLIERE NUMBER
 function movePlayer(player) {
     if (turn) {
         turn = false; 
@@ -299,21 +299,20 @@ function movePlayer(player) {
             player.isMoving = true;
             // utilizziamo uno schema di premessa/then per animare PRIMA il dado e POI restituire il numero
             rollDice(false).then(dadoNumber => {
-                playerPosition += dadoNumber; // Aggiorna la posizione del giocatore
                 changeMusic(primaryPlayer.cell + dadoNumber);
                 player.moveByCells(dadoNumber);
 
-                //handleCellRedirection(playerPosition);
-
-                socket.emit('requestMoveSecondaryPlayer', { dice: dadoNumber, roomId: roomId });
-
+                socket.emit('requestMoveSecondaryPlayer', { dice: dadoNumber, roomId: roomId, special: false });
 
                 const checkIsMoving = setInterval(() => {
                     if (!player.isMoving) {
                         clearInterval(checkIsMoving);
-                        socket.emit('requestChangeTurn', roomId);
+                        if (bonusTurn) setTimeout(() => {
+                            socket.emit('requestChangeTurn', roomId);
+                        }, 6000);
+                        else socket.emit('requestChangeTurn', roomId);
                     }
-                }, 100);
+                }, 1000);
             }).catch(error => {
                 console.log(error); 
             });
@@ -323,10 +322,13 @@ function movePlayer(player) {
 
 // gestione spostamento dell'altro giocatore
 socket.on('moveSecondaryPlayer', (data) => {
-    if (!turn && !secondaryPlayer.ismoving) {
-        rollDice(data);
+    if (data.special) bonusTurn = false; 
+    if ((!turn && !secondaryPlayer.ismoving) || data.special) {
+        console.log('ora si muove il secondary')
+        console.log(data.special)
+        if (!data.special) rollDice(data.number);
         setTimeout(() => {
-            secondaryPlayer.moveByCells(data);
+            secondaryPlayer.moveByCells(data.number);
         }, 600);
     }
 })
@@ -370,9 +372,9 @@ function showFlipCard(cell) {
     
         setTimeout(() => {
             flipcard.style.visibility = 'hidden';
-        }, 20000);
+        }, 6000);
     }
-    else if(cell== 9){
+    else if(cell == 9){
         flipcard.style.visibility = 'visible';
         flipcardfront.style.backgroundImage = `url('../images/fisica.png')`;
         flipcardfront.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>IMPREVISTO</h1>`;
@@ -380,9 +382,9 @@ function showFlipCard(cell) {
     
         setTimeout(() => {
             flipcard.style.visibility = 'hidden';
-        }, 20000);
+        }, 6000);
     }
-    else if(cell== 38){
+    else if(cell == 38){
         flipcard.style.visibility = 'visible';
         flipcardfront.style.backgroundImage = `url('../images/tesi.png')`;
         flipcardfront.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>IMPREVISTO</h1>`;
@@ -390,9 +392,9 @@ function showFlipCard(cell) {
     
         setTimeout(() => {
             flipcard.style.visibility = 'hidden';
-        }, 20000);
+        }, 6000);
     }
-    else if(cell== 3){
+    else if(cell == 3){
         flipcard.style.visibility = 'visible';
         flipcardfront.style.backgroundImage = `url('../images/esonero.png')`;
         flipcardfront.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>BONUS</h1>`;
@@ -400,9 +402,11 @@ function showFlipCard(cell) {
     
         setTimeout(() => {
             flipcard.style.visibility = 'hidden';
-        }, 20000);
+            bonusTurn = true;
+            bonusEvent(2);
+        }, 6000);
     }
-    else if(cell== 36){
+    else if(cell == 36){
         flipcard.style.visibility = 'visible';
         flipcardfront.style.backgroundImage = `url('../images/esonero.png')`;
         flipcardfront.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>BONUS</h1>`;
@@ -410,9 +414,11 @@ function showFlipCard(cell) {
     
         setTimeout(() => {
             flipcard.style.visibility = 'hidden';
-        }, 20000);
+            bonusTurn = true;
+            bonusEvent(2);
+        }, 6000);
     }
-    else if(cell== 26){
+    else if(cell == 26){
         flipcard.style.visibility = 'visible';
         flipcardfront.style.backgroundImage = `url('../images/relatore.png')`;
         flipcardfront.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>BONUS</h1>`;
@@ -420,13 +426,29 @@ function showFlipCard(cell) {
     
         setTimeout(() => {
             flipcard.style.visibility = 'hidden';
-        }, 20000);
+            bonusTurn = true;
+            bonusEvent(2);
+        }, 6000);
     }
     else{
         flipcard.style.visibility='hidden';
     }
     
 }
+
+// gestione evento bonus (o vittoria minigame)
+function bonusEvent(number) {
+    if (!turn && bonusTurn) {
+        console.log('evento time')
+        // dopo un timeout si sposta di number
+        setTimeout(() => {
+            primaryPlayer.moveByCells(number);
+            socket.emit('requestMoveSecondaryPlayer', { dice: number, roomId: roomId, special: true });
+        }, 500);
+    }
+};
+
+
 
 // cambio musica raggiunta la cella 30
 let change = false;
@@ -443,8 +465,6 @@ function changeMusic(cell) {
         change = false;
     }
 }
-
-
 
 // TODO gestione vittoria, sconfitta e disconnessione forzata
 
