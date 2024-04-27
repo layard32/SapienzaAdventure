@@ -305,6 +305,15 @@ const urlParams = new URLSearchParams(window.location.search);
 const roomId = urlParams.get('room');
 const socket = io.connect('http://localhost:3000');
 
-button.addEventListener('click', (roomId) => { 
-    socket.emit('quitGame', roomId); // Invia un segnale al server che il giocatore vuole abbandonare la partita
+
+document.getElementById('quit-button').addEventListener('click', () => {
+    console.log("sto cliccando il pulsante quit");
+    // Invia un segnale al server per gestire il reindirizzamento alla schermata di "gosse"
+    socket.emit('quitGame', roomId);
 });
+
+socket.on('returnToGoose',(data)=>{
+    socket.emit('requestMovePlayerToCell', data);
+    const nextPage = `/goose?room=${data}`;
+    window.location.href = nextPage;
+})

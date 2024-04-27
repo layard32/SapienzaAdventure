@@ -147,7 +147,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('requestOtherUsername', (data) => {
-    // prende l'id dell'altro client connesso alla stanza (non quello che ha mandato il sengale)
+    // prende l'id dell'altro client connesso alla stanza (non quello che ha mandato il segnale)
     const room = io.sockets.adapter.rooms.get(data);
     const otherSocketId = room ? Array.from(room).find(id => id !== socket.id) : undefined;
     const otherSocket = io.sockets.sockets.get(otherSocketId);
@@ -163,12 +163,20 @@ io.on('connection', (socket) => {
 
   socket.on('redirectToGame', ({ game, roomId })=> {
     // Invia un segnale a entrambi i giocatori nella stanza per reindirizzare al gioco specificato
-    //socket.emit('redirectToBothGame', game);
     io.to(roomId).emit('redirectToBothGame', {game,roomId});
-    console.log("prima volta");
-    console.log("+1");
 
   });
+
+  socket.on('quitGame',(data)=>{
+    console.log("sto dentro server quit");
+    socket.emit('returnToGoose',data);
+  })
+
+
+  socket.on('requestMovePlayerToCell',(data)=>{
+    console.log("sto dentro requestMoverPlayer");
+    io.to(data).emit('movePlayerToCell', {cell: 11});
+  })
  
 
 }); 

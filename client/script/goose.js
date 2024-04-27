@@ -266,7 +266,7 @@ function rollDice(number) {
         dadoContainer.style.opacity = '1';
 
         let dadoNumber = number;
-        if (!number) dadoNumber = 2; //Math.floor(Math.random() * 6) + 1;
+        if (!number) dadoNumber = 10; //Math.floor(Math.random() * 6) + 1;
 
         for (let i = 1; i <= 6; i++) dado.classList.remove('show-' + i);
         requestAnimationFrame(() => {
@@ -548,6 +548,12 @@ function redirectPlayersToGame(game,data) {
     }
 }
 
+socket.on('movePlayerToCell', (data) => {
+    console.log("devo muovore player");
+    const cell = data.cell;
+    primaryPlayer.cell = cell;
+    
+});
 
 
 
