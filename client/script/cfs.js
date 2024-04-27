@@ -298,3 +298,10 @@ function endGame() {
         });
     }, 1000);
 }
+
+
+//ROBA SERVER
+
+button.addEventListener('click', () => { 
+    socket.emit('quitGame', roomId); // Invia un segnale al server che il giocatore vuole abbandonare la partita
+});

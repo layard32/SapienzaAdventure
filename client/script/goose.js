@@ -267,7 +267,7 @@ function rollDice(number) {
         dadoContainer.style.opacity = '1';
 
         let dadoNumber = number;
-        if (!number) dadoNumber =  Math.floor(Math.random() * 6) + 1;
+        if (!number) dadoNumber = 5// Math.floor(Math.random() * 6) + 1;
 
         for (let i = 1; i <= 6; i++) dado.classList.remove('show-' + i);
         requestAnimationFrame(() => {
@@ -511,17 +511,20 @@ socket.on('gameLost', () => {
     }
 });
 
-socket.on('redirectToBothGame', (game) => {
-    redirectPlayersToGame(game);
+socket.on('redirectToBothGame', (data) => {
+    
+    redirectPlayersToGame(data.game,data.roomId);
 });
 
 
 // Funzione per reindirizzare entrambi i giocatori al gioco specificato
-function redirectPlayersToGame(game) {
+function redirectPlayersToGame(game,data) {
     if (game === 'memory') {
-        window.location.href = '/memory'; // Reindirizza a Memory
+        const nextPage = `/memory?room=${data}`;
+        window.location.href = nextPage; // Reindirizza a Memory
     } else if (game === 'cfs') {
-        window.location.href = '/cfs'; // Reindirizza a CFS
+        const nextPage = `/cfs?room=${data}`;
+        window.location.href = nextPage; // Reindirizza a CFS
     }
 }
 
