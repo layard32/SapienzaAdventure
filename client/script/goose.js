@@ -84,7 +84,8 @@ class Player {
     
     moveByCells (number) {
         this.isMoving = true;
-        const targetCell = this.cell + number;
+        // targetCell considera se il numero è negativo
+        const targetCell = number > 0 ? this.cell + number : this.cell - Math.abs(number);
         // ogni 500ms facciamo un 'passo'
         this.moveByCellsRecursively (targetCell);
     };
@@ -107,37 +108,61 @@ class Player {
         }
         flipcard.style.visibility='hidden';
 
-        if (this.cell >= 0 && this.cell < 9) {
-            this.direction = 'x';
-            this.targetPosition.x += CELLWIDTH;
-        } else if (this.cell >= 9 && this.cell < 15) {
-            this.direction = 'y';
-            this.targetPosition.y += CELLHEIGHT;
-        } else if (this.cell >= 15 && this.cell < 23) {
-            this.direction = 'x';
-            // TODO: cercare di integrare questo offset senza che l'animazione vada a fanculo
-            // if (this.cell == 15) {
-            //     this.targetPosition.x -= OFFSET; 
-            // }
-            this.targetPosition.x -= CELLWIDTH;
-        } else if (this.cell >= 23 && this.cell < 27) {
-            this.direction = 'y';
-            this.targetPosition.y -= CELLHEIGHT;
-        } else if (this.cell >= 27 && this.cell < 33) {
-            this.direction = 'x';
-            // if (this.cell == 27) {
-            //     this.targetPosition.x += OFFSET - 15;
-            // }
-            this.targetPosition.x += CELLWIDTH;
-        } else if (this.cell >= 33 && this.cell < 35) {
-            this.direction = 'y';
-            this.targetPosition.y += CELLHEIGHT;
-        } else if (this.cell >= 35 && this.cell < 39) {
-            this.direction = 'x';
-            this.targetPosition.x -= CELLWIDTH;
+        // TODO: Semplificare sto casino di if
+        if (this.cell < targetCell) { // movimento in avanti
+            if (this.cell >= 0 && this.cell < 9) {
+                this.direction = 'x';
+                this.targetPosition.x += CELLWIDTH;
+            } else if (this.cell >= 9 && this.cell < 15) {
+                this.direction = 'y';
+                this.targetPosition.y += CELLHEIGHT;
+            } else if (this.cell >= 15 && this.cell < 23) {
+                this.direction = 'x';
+                this.targetPosition.x -= CELLWIDTH;
+            } else if (this.cell >= 23 && this.cell < 27) {
+                this.direction = 'y';
+                this.targetPosition.y -= CELLHEIGHT;
+            } else if (this.cell >= 27 && this.cell < 33) {
+                this.direction = 'x';
+                this.targetPosition.x += CELLWIDTH;
+            } else if (this.cell >= 33 && this.cell < 35) {
+                this.direction = 'y';
+                this.targetPosition.y += CELLHEIGHT;
+            } else if (this.cell >= 35 && this.cell < 39) {
+                this.direction = 'x';
+                this.targetPosition.x -= CELLWIDTH;
+            }
+        } else if (this.cell > targetCell) { // movimento indietro
+            if (this.cell > 0 && this.cell <= 9) {
+                this.direction = 'x';
+                this.targetPosition.x -= CELLWIDTH;
+            } else if (this.cell > 9 && this.cell <= 15) {
+                this.direction = 'y';
+                this.targetPosition.y -= CELLHEIGHT;
+            } else if (this.cell > 15 && this.cell <= 23) {
+                this.direction = 'x';
+                this.targetPosition.x += CELLWIDTH;
+            } else if (this.cell > 23 && this.cell <= 27) {
+                this.direction = 'y';
+                this.targetPosition.y += CELLHEIGHT;
+            } else if (this.cell > 27 && this.cell <= 33) {
+                this.direction = 'x';
+                this.targetPosition.x -= CELLWIDTH;
+            } else if (this.cell > 33 && this.cell <= 35) {
+                this.direction = 'y';
+                this.targetPosition.y -= CELLHEIGHT;
+            } else if (this.cell > 35 && this.cell <= 39) {
+                this.direction = 'x';
+                this.targetPosition.x += CELLWIDTH;
+            }
         }
         
-        this.cell++;
+        // la cella viene aggiornata a seconda che ci siamo mossi in avanti o indietro
+        if (this.cell < targetCell) {
+            this.cell++;
+        } else if (this.cell > targetCell) {
+            this.cell--;
+        }        
         // con ogni spostamento controlla chi è primo
         setFirst();
 
@@ -151,7 +176,6 @@ class Player {
             this.moveByCellsRecursively(targetCell);
         }, 500);
     }
-
 
     win() {
         // TODO gestione vittoria (da fare: toast modale etc)
@@ -266,7 +290,9 @@ function rollDice(number) {
         dadoContainer.style.opacity = '1';
 
         let dadoNumber = number;
-        if (!number) dadoNumber = 10; //Math.floor(Math.random() * 6) + 1;
+        // TODO controllare che il numero sia effettivamente randomico
+        // e non preimpostato per una delle mille prove
+        if (!number) dadoNumber = Math.floor(Math.random() * 6) + 1;
 
         for (let i = 1; i <= 6; i++) dado.classList.remove('show-' + i);
         requestAnimationFrame(() => {
@@ -304,15 +330,15 @@ function movePlayer(player) {
 
                 socket.emit('requestMoveSecondaryPlayer', { dice: dadoNumber, roomId: roomId, special: false });
 
-                const checkIsMoving = setInterval(() => {
-                    if (!player.isMoving) {
-                        clearInterval(checkIsMoving);
-                        if (bonusTurn) setTimeout(() => {
+                // TODO: fixare questo! l'obiettivo è ritardare il turno quando c'è stato un evento bonus / penalità
+                setTimeout(() => {
+                    const checkIsMoving = setInterval(() => {
+                        if (!player.isMoving) {
+                            clearInterval(checkIsMoving);
                             socket.emit('requestChangeTurn', roomId);
-                        }, 6000);
-                        else socket.emit('requestChangeTurn', roomId);
-                    }
-                }, 1000);
+                        }
+                    }, 1000);
+                }, 5000);
             }).catch(error => {
                 console.log(error); 
             });
@@ -372,6 +398,8 @@ function showFlipCard(cell) {
     
         setTimeout(() => {
             flipcard.style.visibility = 'hidden';
+            bonusTurn = true;
+            penaltyEvent(2);
         }, 6000);
     }
     else if(cell == 9){
@@ -382,6 +410,8 @@ function showFlipCard(cell) {
     
         setTimeout(() => {
             flipcard.style.visibility = 'hidden';
+            bonusTurn = true;
+            penaltyEvent(2);
         }, 6000);
     }
     else if(cell == 38){
@@ -392,6 +422,8 @@ function showFlipCard(cell) {
     
         setTimeout(() => {
             flipcard.style.visibility = 'hidden';
+            bonusTurn = true;
+            penaltyEvent(2);
         }, 6000);
     }
     else if(cell == 3){
@@ -439,15 +471,30 @@ function showFlipCard(cell) {
 // gestione evento bonus (o vittoria minigame)
 function bonusEvent(number) {
     if (!turn && bonusTurn) {
-        console.log('evento time')
-        // dopo un timeout si sposta di number
+        primaryPlayer.isMoving = true;
         setTimeout(() => {
             primaryPlayer.moveByCells(number);
             socket.emit('requestMoveSecondaryPlayer', { dice: number, roomId: roomId, special: true });
+            setTimeout(() => {
+                primaryPlayer.isMoving = false;
+            }, 1000);
         }, 500);
     }
 };
 
+// gestione evento imprevisto
+function penaltyEvent(number) {
+    if (!turn && bonusTurn) {
+        primaryPlayer.isMoving = true;
+        setTimeout(() => {
+            primaryPlayer.moveByCells(-number);
+            socket.emit('requestMoveSecondaryPlayer', { dice: -number, roomId: roomId, special: true });
+            setTimeout(() => {
+                primaryPlayer.isMoving = false;
+            }, 1000);
+        }, 500);
+    }
+};
 
 
 // cambio musica raggiunta la cella 30

@@ -164,7 +164,6 @@ io.on('connection', (socket) => {
   socket.on('redirectToGame', ({ game, roomId })=> {
     // Invia un segnale a entrambi i giocatori nella stanza per reindirizzare al gioco specificato
     io.to(roomId).emit('redirectToBothGame', {game,roomId});
-
   });
 
   socket.on('quitGame',(data)=>{
