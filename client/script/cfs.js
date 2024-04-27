@@ -301,7 +301,10 @@ function endGame() {
 
 
 //ROBA SERVER
+const urlParams = new URLSearchParams(window.location.search);
+const roomId = urlParams.get('room');
+const socket = io.connect('http://localhost:3000');
 
-button.addEventListener('click', () => { 
+button.addEventListener('click', (roomId) => { 
     socket.emit('quitGame', roomId); // Invia un segnale al server che il giocatore vuole abbandonare la partita
 });
