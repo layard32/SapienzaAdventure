@@ -162,9 +162,10 @@ io.on('connection', (socket) => {
     socket.emit('otherUsername', otherUsername);
   });
 
-  socket.on('redirectToGame', ({ game }) => {
+  socket.on('redirectToGame', ({ game, roomId })=> {
     // Invia un segnale a entrambi i giocatori nella stanza per reindirizzare al gioco specificato
-    socket.emit('redirectToBothGame', game);
+    //socket.emit('redirectToBothGame', game);
+    io.to(roomId).emit('redirectToBothGame', game);
     console.log("prima volta");
     console.log("+1");
 

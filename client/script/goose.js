@@ -6,7 +6,7 @@ const backgroundMusic = document.getElementById("background-music");
 const missionImpossible = document.getElementById("mission-impossible");
 
 let gameEnded = false; //serve per gestire disconnessione da vittoria 
-let playerPosition = 1; //player in posizione 1
+let playerPosition = 0; //player in posizione 
 
 // partenza lenta di una musica
 function slowStart (music, increment) {
@@ -105,7 +105,7 @@ class Player {
         }
         flipcard.style.visibility='hidden';
 
-        handleCellRedirection(this.cell,roomId);
+        handleCellRedirection(this.cell);
 
 
         if (this.cell >= 0 && this.cell < 9) {
@@ -186,18 +186,25 @@ function setFirst() {
 
 
 // Funzione per gestire il reindirizzamento dei giocatori in base alla cella
-function handleCellRedirection(cell, roomId) {
+function handleCellRedirection(cell) {
+    console.log("io sono cella",cell);
+    console.log("io sono playerPosition",playerPosition);
+ 
     // Definizione delle condizioni per il reindirizzamento
     const redirectionConditions = {
-        6: 'memory',
-        11: 'cfs'
+        5: 'memory',
+        10: 'cfs'
     };
-
+    console.log("io sono redirection conditions [cell]",redirectionConditions[cell]);
     // Controlla se la cella corrente ha una condizione di reindirizzamento definita
     if (redirectionConditions.hasOwnProperty(cell) && playerPosition === cell) {
         const game = redirectionConditions[cell];
         // Emit il segnale a tutti i client nella stanza per reindirizzare al gioco specificato
-        socket.emit('redirectToGame', { game: game });
+
+        //socket.emit('redirectToGame', { game: game });
+
+        socket.emit('redirectToGame',{ game: game, roomId: roomId });
+        console.log("heyyyyy sono dentro if");
     }
 }
 
@@ -295,6 +302,9 @@ function movePlayer(player) {
                 playerPosition += dadoNumber; // Aggiorna la posizione del giocatore
                 changeMusic(primaryPlayer.cell + dadoNumber);
                 player.moveByCells(dadoNumber);
+
+                //handleCellRedirection(playerPosition);
+
                 socket.emit('requestMoveSecondaryPlayer', { dice: dadoNumber, roomId: roomId });
 
 
