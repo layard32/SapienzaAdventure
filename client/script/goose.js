@@ -102,7 +102,7 @@ class Player {
         // caso base: siamo arrivati alla cella finale
         if (this.cell == targetCell) {
             this.isMoving = false;
-            handleCellRedirection(this.cell);
+            //handleCellRedirection(this.cell);
             showFlipCard(this.cell);
             return;
         }
