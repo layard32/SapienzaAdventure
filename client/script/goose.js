@@ -370,7 +370,7 @@ function showFlipCard(cell) {
     
         setTimeout(() => {
             flipcard.style.visibility = 'hidden';
-        }, 45000);
+        }, 20000);
     }
     else if(cell== 9){
         flipcard.style.visibility = 'visible';
@@ -380,7 +380,7 @@ function showFlipCard(cell) {
     
         setTimeout(() => {
             flipcard.style.visibility = 'hidden';
-        }, 45000);
+        }, 20000);
     }
     else if(cell== 38){
         flipcard.style.visibility = 'visible';
@@ -390,7 +390,7 @@ function showFlipCard(cell) {
     
         setTimeout(() => {
             flipcard.style.visibility = 'hidden';
-        }, 45000);
+        }, 20000);
     }
     else if(cell== 3){
         flipcard.style.visibility = 'visible';
@@ -400,7 +400,7 @@ function showFlipCard(cell) {
     
         setTimeout(() => {
             flipcard.style.visibility = 'hidden';
-        }, 45000);
+        }, 20000);
     }
     else if(cell== 36){
         flipcard.style.visibility = 'visible';
@@ -410,7 +410,7 @@ function showFlipCard(cell) {
     
         setTimeout(() => {
             flipcard.style.visibility = 'hidden';
-        }, 45000);
+        }, 20000);
     }
     else if(cell== 26){
         flipcard.style.visibility = 'visible';
@@ -420,7 +420,7 @@ function showFlipCard(cell) {
     
         setTimeout(() => {
             flipcard.style.visibility = 'hidden';
-        }, 45000);
+        }, 20000);
     }
     else{
         flipcard.style.visibility='hidden';
