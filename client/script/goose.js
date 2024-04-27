@@ -267,7 +267,7 @@ function rollDice(number) {
         dadoContainer.style.opacity = '1';
 
         let dadoNumber = number;
-        if (!number) dadoNumber = Math.floor(Math.random() * 6) + 1;
+        if (!number) dadoNumber =  Math.floor(Math.random() * 6) + 1;
 
         for (let i = 1; i <= 6; i++) dado.classList.remove('show-' + i);
         requestAnimationFrame(() => {
@@ -461,7 +461,7 @@ window.addEventListener('unload', function(event) {
 });
 
 socket.on('forcedDisconnect',()=>{
-    
+    if(!gameEnded){
         // Invia la notifica di vittoria a tavolino solo se il gioco non è ancora terminato
         const winToast = new bootstrap.Toast(document.getElementById('winToast'));
         winToast.show();
@@ -474,6 +474,8 @@ socket.on('forcedDisconnect',()=>{
         setTimeout(() => {
             window.location.href = '/';
         }, 3000);
+    }
+        
     
 })
 
