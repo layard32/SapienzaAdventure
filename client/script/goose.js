@@ -58,7 +58,7 @@ class Player {
                 this.targetPosition = {x: 150, y: 75};
                 if (this.cell != 1) {
                     const { x, y } = this.calculatePosition(this.cell);
-                    this.position.x = this.targetPosition.x = x + 75; 
+                    this.position.x = this.targetPosition.x = x; 
                     this.position.y = this.targetPosition.y = y;
                 }
             }
@@ -110,9 +110,6 @@ class Player {
         const flipcardback=document.querySelector('.flip-card-back');
 
         // caso base: siamo arrivati alla cella finale
-        console.log('in questa iterazione!: ')
-        console.log(this.cell)
-        console.log(targetCell)
         if (this.cell == targetCell) {
             this.cell = targetCell; // Make sure this.cell is exactly targetCell
             this.isMoving = false;
@@ -251,22 +248,18 @@ function setFirst() {
 
 
 // Funzione per gestire il reindirizzamento dei giocatori in base alla cella
-function handleCellRedirection(cell) {
-    console.log("io sono cella",cell);
- 
+function handleCellRedirection(cell) { 
     // Definizione delle condizioni per il reindirizzamento
     const redirectionConditions = {
         6: 'memory',
         11: 'cfs'
     };
-
-    console.log("io sono redirection conditions [cell]",redirectionConditions[cell]);
     // Controlla se la cella corrente ha una condizione di reindirizzamento definita
     if (redirectionConditions.hasOwnProperty(cell)) {
         const game = redirectionConditions[cell];
         setTimeout(() => {
             socket.emit('redirectToGame',{ game: game, roomId: roomId });
-        }, 1500); 
+        }, 1100); 
     }
 }
 
@@ -281,7 +274,12 @@ const socket = io.connect('http://localhost:3000');
 // prendiamo eventuali parametri di una chiamata GET
 const urlParams = new URLSearchParams(window.location.search);
 const roomId = urlParams.get('room');
-let turnParam = urlParams.get('turn');
+let turnParam = null;
+if (urlParams.has('turn')) { 
+    turnParam = urlParams.get('turn');
+    if (turnParam == 'true') turnParam = true;
+    if (turnParam == 'false') turnParam = false;
+}
 let winParam = urlParams.get('win'); 
 let posFirstParam = urlParams.get('pos1');
 let posSecondParam = urlParams.get('pos2');
@@ -296,19 +294,31 @@ socket.on('yourTurn', (data) => {
         turn = data;
         primaryPlayer = new Player(turn);
         secondaryPlayer = new Player(!turn);
+        document.cookie = `primary=${turn}; path=/`;
         appearTurn(turn);
     } else {
-        primaryPlayer = new Player(!turnParam, Number(posFirstParam));
-        secondaryPlayer = new Player(turnParam, Number(posSecondParam));
-        appearTurn(turnParam);
+        turn = turnParam;
+        let primaryCookie = document.cookie.split('; ').find((cookie) => cookie.startsWith('primary='));
+        let primary = primaryCookie.split('=')[1];
+        if (primary == 'true') primary = true;
+        else if (primary == 'false') primary = false;
+        primaryPlayer = new Player(primary, Number(posFirstParam));
+        secondaryPlayer = new Player(!primary, Number(posSecondParam));
+        appearTurn(turn);
     }
 })
 
 // se torniamo da un minigame, gestiamo opportunamente i parametri GET ottenuti
+let youAreMySpecial = false;
 setTimeout(() => {
     if (winParam != null && winParam == 'true') {
+        console.log('ODDIO')
+        youAreMySpecial = true;
         bonusTurn = true;
-        bonusEvent(2);
+        bonusEvent(2, false);
+        setTimeout(() => {
+            youAreMySpecial = true;
+        }, 5000)
     }
 }, 500);
 
@@ -407,8 +417,6 @@ function movePlayer(player) {
 socket.on('moveSecondaryPlayer', (data) => {
     if (data.special) bonusTurn = false; 
     if ((!turn && !secondaryPlayer.ismoving) || data.special) {
-        console.log('ora si muove il secondary')
-        console.log(data.special)
         if (!data.special) rollDice(data.number);
         setTimeout(() => {
             secondaryPlayer.moveByCells(data.number);
@@ -513,7 +521,7 @@ function showFlipCard(cell) {
         setTimeout(() => {
             flipcard.style.visibility = 'hidden';
             bonusTurn = true;
-            bonusEvent(2);
+            bonusEvent(2, turn);
         }, 6000);
     }
     else if(cell == 36){
@@ -530,7 +538,7 @@ function showFlipCard(cell) {
         setTimeout(() => {
             flipcard.style.visibility = 'hidden';
             bonusTurn = true;
-            bonusEvent(1);
+            bonusEvent(1, turn);
         }, 6000);
     }
     else if(cell == 26){
@@ -547,7 +555,7 @@ function showFlipCard(cell) {
         setTimeout(() => {
             flipcard.style.visibility = 'hidden';
             bonusTurn = true;
-            bonusEvent(2);
+            bonusEvent(2, turn);
         }, 6000);
     }
     else{
@@ -557,8 +565,9 @@ function showFlipCard(cell) {
 }
 
 // gestione evento bonus (o vittoria minigame)
-function bonusEvent(number) {
-    if (!turn && bonusTurn) {
+function bonusEvent(number, control) {
+    if ((!control && bonusTurn) && youAreMySpecial == true) {
+        console.log('che casino')
         primaryPlayer.isMoving = true;
         setTimeout(() => {
             primaryPlayer.moveByCells(number);
