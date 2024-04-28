@@ -10,8 +10,6 @@ const missionImpossible = document.getElementById("mission-impossible");
 
 let gameEnded = false; //serve per gestire disconnessione da vittoria 
 
-let bonusTurn = true;
-
 // partenza lenta di una musica
 function slowStart (music, increment) {
     music.volume = 0.1;
@@ -35,9 +33,9 @@ class Player {
         this.cell = startingCell;
 
         const image = new Image();
-        if (n) image.src = '../images/rook.png';
-        if (!n) image.src = '../images/queen.png';
-
+        if (n) { image.src = '../images/rook.png'; this.type = 'rook'; }
+        if (!n) { image.src = '../images/queen.png'; this.type = 'queen'; }
+    
         // aspettiamo che l'immagine si carichi
         image.onload = () => {
             const SCALE = 0.15;
@@ -114,7 +112,7 @@ class Player {
             this.cell = targetCell; // Make sure this.cell is exactly targetCell
             this.isMoving = false;
             handleCellRedirection(this.cell);
-            showFlipCard(this.cell);
+            showFlipCard(this.cell, this);
             return;
         }
         flipcard.style.visibility='hidden';
@@ -304,24 +302,21 @@ socket.on('yourTurn', (data) => {
         else if (primary == 'false') primary = false;
         primaryPlayer = new Player(primary, Number(posFirstParam));
         secondaryPlayer = new Player(!primary, Number(posSecondParam));
-        appearTurn(turn);
+
+        turn = !turnParam;
+        if (winParam != null && winParam == 'true')  {
+                bonusEvent(2, primaryPlayer);
+                setTimeout(() => {
+                    turn = turnParam;
+                    appearTurn(turn);
+                }, 10000);
+        } else {
+            setTimeout(() => {
+                turn = turnParam;
+            }, 10000)
+        }
     }
 })
-
-// se torniamo da un minigame, gestiamo opportunamente i parametri GET ottenuti
-let youAreMySpecial = false;
-setTimeout(() => {
-    if (winParam != null && winParam == 'true') {
-        console.log('ODDIO')
-        youAreMySpecial = true;
-        bonusTurn = true;
-        bonusEvent(2, false);
-        setTimeout(() => {
-            youAreMySpecial = true;
-        }, 5000)
-    }
-}, 500);
-
 
 // gestione delle animazioni
 function animate() {
@@ -415,7 +410,6 @@ function movePlayer(player) {
 
 // gestione spostamento dell'altro giocatore
 socket.on('moveSecondaryPlayer', (data) => {
-    if (data.special) bonusTurn = false; 
     if ((!turn && !secondaryPlayer.ismoving) || data.special) {
         if (!data.special) rollDice(data.number);
         setTimeout(() => {
@@ -451,7 +445,7 @@ function appearTurn(turn) {
     }
 }
 
-function showFlipCard(cell) {
+function showFlipCard(cell, player) {
     const flipcard = document.querySelector('.flip-card');
     const flipcardfront = document.querySelector('.flip-card-front');
     const flipcardback = document.querySelector('.flip-card-back');
@@ -466,11 +460,9 @@ function showFlipCard(cell) {
             flipcard.style.opacity = '0';
         }, 5600);
 
-        setTimeout(() => {
-            
+        setTimeout(() => { 
             flipcard.style.visibility = 'hidden';
-            bonusTurn = true;
-            penaltyEvent(2);
+            penaltyEvent(2, player);
         }, 6000);
     }
     else if(cell == 9){
@@ -486,8 +478,7 @@ function showFlipCard(cell) {
 
         setTimeout(() => {
             flipcard.style.visibility = 'hidden';
-            bonusTurn = true;
-            penaltyEvent(2);
+            penaltyEvent(2, player);
         }, 6000);
     }
     else if(cell == 38){
@@ -503,8 +494,7 @@ function showFlipCard(cell) {
 
         setTimeout(() => {
             flipcard.style.visibility = 'hidden';
-            bonusTurn = true;
-            penaltyEvent(3);
+            penaltyEvent(3, player);
         }, 6000);
     }
     else if(cell == 3){
@@ -520,8 +510,7 @@ function showFlipCard(cell) {
 
         setTimeout(() => {
             flipcard.style.visibility = 'hidden';
-            bonusTurn = true;
-            bonusEvent(2, turn);
+            bonusEvent(2, player);
         }, 6000);
     }
     else if(cell == 36){
@@ -537,8 +526,7 @@ function showFlipCard(cell) {
 
         setTimeout(() => {
             flipcard.style.visibility = 'hidden';
-            bonusTurn = true;
-            bonusEvent(1, turn);
+            bonusEvent(1);
         }, 6000);
     }
     else if(cell == 26){
@@ -554,8 +542,7 @@ function showFlipCard(cell) {
 
         setTimeout(() => {
             flipcard.style.visibility = 'hidden';
-            bonusTurn = true;
-            bonusEvent(2, turn);
+            bonusEvent(2);
         }, 6000);
     }
     else{
@@ -565,29 +552,28 @@ function showFlipCard(cell) {
 }
 
 // gestione evento bonus (o vittoria minigame)
-function bonusEvent(number, control) {
-    if ((!control && bonusTurn) && youAreMySpecial == true) {
-        console.log('che casino')
-        primaryPlayer.isMoving = true;
+function bonusEvent(number, player) {
+    if (!turn) {
+        player.isMoving = true;
         setTimeout(() => {
-            primaryPlayer.moveByCells(number);
+            player.moveByCells(number);
             socket.emit('requestMoveSecondaryPlayer', { dice: number, roomId: roomId, special: true });
             setTimeout(() => {
-                primaryPlayer.isMoving = false;
+                player.isMoving = false;
             }, 1000);
         }, 500);
     }
 };
 
 // gestione evento imprevisto
-function penaltyEvent(number) {
-    if (!turn && bonusTurn) {
-        primaryPlayer.isMoving = true;
+function penaltyEvent(number, player) {
+    if (!turn) {
+        player.isMoving = true;
         setTimeout(() => {
-            primaryPlayer.moveByCells(-number);
+            player.moveByCells(-number);
             socket.emit('requestMoveSecondaryPlayer', { dice: -number, roomId: roomId, special: true });
             setTimeout(() => {
-                primaryPlayer.isMoving = false;
+                player.isMoving = false;
             }, 1000);
         }, 500);
     }
@@ -682,8 +668,8 @@ socket.on('redirectToBothGame', (data) => {
 // Funzione per reindirizzare entrambi i giocatori al gioco specificato
 function redirectPlayersToGame(game,data) {
     if (game === 'memory') {
-        const nextPage = `/memory?room=${data}&pos1=${primaryPlayer.cell}&pos2=${secondaryPlayer.cell}&turn=${turn}`;
-        window.location.href = nextPage; // Reindirizza a Memory
+        // const nextPage = `/memory?room=${data}&pos1=${primaryPlayer.cell}&pos2=${secondaryPlayer.cell}&turn=${turn}`;
+        // window.location.href = nextPage; // Reindirizza a Memory
     } else if (game === 'cfs') {
         const nextPage = `/cfs?room=${data}&pos1=${primaryPlayer.cell}&pos2=${secondaryPlayer.cell}&turn=${turn}`;
         window.location.href = nextPage; // Reindirizza a CFS
