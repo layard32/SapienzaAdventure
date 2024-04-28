@@ -24,18 +24,42 @@ body {
     left: inherit;
 }
 
-#button {
+
+.buttonCont{
     position: fixed;
     top: 100%;
     left: 100%;
     transform: translate(-100%, -100%);
-    
+    width: 270px;
+    height: 95px;
+    align-items: center;
+
+}
+
+#button {
+    display: inline-block;
+    padding: 15px 25px;
+    font-size: 37px;
     cursor: pointer;
-    padding: 20px;
-    font-size: 50px;
-    background-color: #007bff;
-    color: #fff;
-    border-radius: 5px;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+    color: #002c53;
+    background-color: #F2EFE9;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 9px #002c53;
+}
+  
+#button:hover {
+    background-color: #F2EFE9;
+    transform: translateY(1px);
+}
+  
+#button:active {
+    background-color: #F2EFE9;
+    box-shadow: 0 5px #001e39;
+    transform: translateY(4px);
 }
 
 #playerName {
