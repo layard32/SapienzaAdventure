@@ -77,7 +77,10 @@ body {
     box-shadow: 0 9px #002c53;
 }
   
-#button:hover {background-color: #F2EFE9}
+#button:hover {
+    background-color: #F2EFE9;
+    transform: translateY(1px);
+}
   
 #button:active {
     background-color: #F2EFE9;
