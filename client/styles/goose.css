@@ -68,7 +68,9 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    visibility: hidden;
+    transition: opacity 1s;
+    opacity: 0;
+    
 }
 
 .flip-card-inner {
@@ -92,6 +94,8 @@ body {
     height: 100%;
     -webkit-backface-visibility: hidden; 
     backface-visibility: hidden;
+    
+    
 }
 
 
@@ -104,6 +108,7 @@ body {
     background-repeat: no-repeat;
     background-position: center;
     background-size:80%;
+    
 
 }
 
