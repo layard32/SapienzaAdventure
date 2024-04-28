@@ -24,7 +24,7 @@ body {
     left: inherit;
 }
 
-#button {
+/*#button {
     position: fixed;
     top: 100%;
     left: 100%;
@@ -33,9 +33,56 @@ body {
     cursor: pointer;
     padding: 20px;
     font-size: 50px;
-    background-color: #007bff;
-    color: #fff;
-    border-radius: 5px;
+    background-color: #F2EFE9;
+    outline: none;
+    color: #002c53;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 9px #999;
+}
+
+#button:hover {
+    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+}
+
+#button:active {
+    background-color: #3e8e41;
+    box-shadow: 0 5px #666;
+    transform: translateY(4px);
+}*/
+
+.buttonCont{
+    position: fixed;
+    top: 100%;
+    left: 100%;
+    transform: translate(-100%, -100%);
+    width: 270px;
+    height: 95px;
+    align-items: center;
+
+}
+
+#button {
+    display: inline-block;
+    padding: 15px 25px;
+    font-size: 37px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+    color: #002c53;
+    background-color: #F2EFE9;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 9px #002c53;
+}
+  
+#button:hover {background-color: #F2EFE9}
+  
+#button:active {
+    background-color: #F2EFE9;
+    box-shadow: 0 5px #001e39;
+    transform: translateY(4px);
 }
 
 #playerName {
