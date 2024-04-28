@@ -20,6 +20,11 @@
             <header>
                 <h1>Rock Paper Scissors</h1> <!-- Intestazione del gioco -->
             </header>
+            
+            <div id="tempo">Timer:</div>
+
+            <div id="timer">03:00</div>
+
             <div class="scoreboard">
                 <h2 class="score-info" id="scoreInfo">Choose your weapon</h2> <!-- Informazioni sul punteggio -->
                 <h3 class="score-message" id="scoreMessage">First to win 2 rounds wins the game</h3> <!-- Messaggio sulle regole del gioco -->
@@ -55,10 +60,6 @@
             <div id="gameOverModal" class="modal">
                 <span class="close" onclick="closeModal()">&times;</span> <!-- Pulsante per chiudere il modale -->
                 <p id="winMessage"></p> <!-- Messaggio di vittoria o sconfitta -->
-                <div class="modal-buttons">
-                    <button class="restart-button" onclick="restartGame()">Restart Game</button> <!-- Pulsante per riavviare il gioco -->
-                    <button class="quit-button" id="quit-button">Quit Game</button> <!-- Pulsante per uscire dal gioco -->
-                </div>
             </div>
             
         </div>

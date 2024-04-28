@@ -102,7 +102,7 @@ class Player {
         // caso base: siamo arrivati alla cella finale
         if (this.cell == targetCell) {
             this.isMoving = false;
-            //handleCellRedirection(this.cell);
+            handleCellRedirection(this.cell);
             showFlipCard(this.cell);
             return;
         }
@@ -292,7 +292,7 @@ function rollDice(number) {
         let dadoNumber = number;
         // TODO controllare che il numero sia effettivamente randomico
         // e non preimpostato per una delle mille prove
-        if (!number) dadoNumber = Math.floor(Math.random() * 6) + 1;
+        if (!number) dadoNumber = 10//Math.floor(Math.random() * 6) + 1;
 
         for (let i = 1; i <= 6; i++) dado.classList.remove('show-' + i);
         requestAnimationFrame(() => {
@@ -618,20 +618,43 @@ socket.on('redirectToBothGame', (data) => {
 // Funzione per reindirizzare entrambi i giocatori al gioco specificato
 function redirectPlayersToGame(game,data) {
     if (game === 'memory') {
-        const nextPage = `/memory?room=${data}`;
+        const nextPage = `/memory?room=${data}&pos=${primaryPlayer.cell}`;
         window.location.href = nextPage; // Reindirizza a Memory
     } else if (game === 'cfs') {
-        const nextPage = `/cfs?room=${data}`;
+        const nextPage = `/cfs?room=${data}&pos=${primaryPlayer.cell}`;
         window.location.href = nextPage; // Reindirizza a CFS
     }
 }
 
-socket.on('movePlayerToCell', (data) => {
+/*socket.on('movePlayerToCell', (data) => {
     console.log("devo muovore player");
     const cell = data.cell;
     primaryPlayer.cell = cell;
     
 });
+
+socket.on('redirect', (data) => {
+    console.log("dovrei stare su goose");
+    // Memorizza l'URL di reindirizzamento e la posizione del player
+    const redirectUrl = data.url;
+    const playerPosition = data.playerPosition;
+
+    // Effettua il reindirizzamento alla nuova pagina
+    window.location.href = redirectUrl;
+
+    // Quando la nuova pagina è stata caricata, posiziona il player sulla posizione desiderata
+    window.addEventListener('load', () => {
+        primaryPlayer.position=playerPosition;
+      
+    });
+});*/
+socket.on('spostaPlayerGoose',(data)=>{
+
+    console.log("dovrei spostare player");
+
+    primaryPlayer.position=data;
+})
+
 
 
 

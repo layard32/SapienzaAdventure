@@ -102,7 +102,7 @@ io.on('connection', (socket) => {
     socket.join(data);
     // assegna ai client i relativi username
 
-    
+    console.log("rientrate in stanza");
     // assegna i turni
     setTimeout(() => {
         // prendi gli id dei clients nella stanza
@@ -168,14 +168,24 @@ io.on('connection', (socket) => {
 
   socket.on('quitGame',(data)=>{
     console.log("sto dentro server quit");
-    socket.emit('returnToGoose',data);
+
+    const nextPage = `/goose?room=${data.roomId}&pos=${data.playerPosition}&win=${data.win}`;
+
+    socket.emit('redirect', nextPage );
+
+    //socket.emit('redirect', { url: nextPage, playerPosition: data.playerPosition })
   })
 
+  socket.on("requestSpostaPlayerGoose",(data)=>{
+    console.log("ti prego sposta");
 
-  socket.on('requestMovePlayerToCell',(data)=>{
+    socket.emit('spostaPlayerGoose',data);
+  })
+
+  /*socket.on('requestMovePlayerToCell',(data)=>{
     console.log("sto dentro requestMoverPlayer");
     io.to(data).emit('movePlayerToCell', {cell: 11});
-  })
+  })*/
  
 
 }); 

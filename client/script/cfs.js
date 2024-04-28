@@ -6,6 +6,9 @@ let playerTwoChoice = ''; // Scelta del giocatore due
 let timer; // Timer per il turno del computer
 let timeout; // Timeout per il turno del computer
 
+
+startGame();
+
 // Funzione per la scelta casuale del computer
 function computerChoice() {
     const choices = ['rock', 'paper', 'scissors']; // Opzioni possibili
@@ -107,10 +110,18 @@ function playGame(choice, playerNum) {
         // Mostra il risultato della partita
         displayResult(result);
 
+
+        var timerDisplay = document.querySelector('#timer');
+        var timerValue = timerDisplay.textContent;
         // Controlla se il gioco è finito
-        if (playerOneScore === 2 || playerTwoScore === 2) {
+        if (timerValue==="00:00") {
+            clearInterval(interval);
             endGame(); // Termina il gioco
         }
+    
+
+
+        
 
         // Resetta le scelte dei giocatori
         playerOneChoice = '';
@@ -194,7 +205,7 @@ function startGame() {
 }
 
 // Aggiunge un event listener al pulsante di avvio del gioco
-document.getElementById('startButton').addEventListener('click', startGame);
+//document.getElementById('startButton').addEventListener('click', startGame);
 
 // Funzione per controllare se il gioco è in corso
 function checkGameStarted() {
@@ -275,6 +286,60 @@ function resetGame() {
     document.getElementById('scoreMessage').textContent = 'First to win 2 rounds wins the game';
 }
 
+
+
+
+
+
+
+
+// Funzione per avviare il timer
+function startTimer(duration, display) {
+    var timer = duration, minutes, seconds;
+    interval = setInterval(function () {
+        minutes = parseInt(timer / 60, 10);
+        seconds = parseInt(timer % 60, 10);
+
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+        display.textContent = minutes + ":" + seconds;
+
+        if (--timer < 0) {
+            clearInterval(interval);
+            endGame(); // Controlla la fine della partita quando il timer arriva a zero
+        }
+    }, 1000);
+}
+
+
+// Funzione per avviare il timer con una durata di 3 minuti (180 secondi)
+function startGameTimer() {
+    var threeMinutes = 5,
+        display = document.querySelector('#timer');
+    startTimer(threeMinutes, display);
+}
+
+// Avvia il timer quando la finestra si carica
+window.onload = function () {
+    startGameTimer();
+};
+
+
+
+
+
+
+//roba server
+
+const urlParams = new URLSearchParams(window.location.search);
+const roomId = urlParams.get('room');
+const position=urlParams.get('pos');
+const socket = io.connect('http://localhost:3000');
+
+socket.emit("joinExistingRoom",roomId);
+
+
 // Funzione per terminare il gioco
 function endGame() {
     // Disabilita tutti i pulsanti delle scelte
@@ -296,24 +361,29 @@ function endGame() {
         document.querySelectorAll('.emoji-buttons button').forEach(button => {
             button.disabled = true;
         });
+
+        setTimeout(()=>{
+            socket.emit('quitGame', { roomId: roomId, playerPosition: position ,win:(playerOneScore>playerTwoScore)});
+        },1000);
     }, 1000);
 }
 
 
 //ROBA SERVER
-const urlParams = new URLSearchParams(window.location.search);
-const roomId = urlParams.get('room');
-const socket = io.connect('http://localhost:3000');
 
 
-document.getElementById('quit-button').addEventListener('click', () => {
-    console.log("sto cliccando il pulsante quit");
-    // Invia un segnale al server per gestire il reindirizzamento alla schermata di "gosse"
-    socket.emit('quitGame', roomId);
+
+/*socket.on('redirect',(data)=>{
+    window.location.href = data;
+})*/
+socket.on('redirect', (data) => {
+    console.log("dovrei stare su goose");
+
+
+
+    // Effettua il reindirizzamento alla nuova pagina
+    window.location.href = data;
+
+ 
+
 });
-
-socket.on('returnToGoose',(data)=>{
-    socket.emit('requestMovePlayerToCell', data);
-    const nextPage = `/goose?room=${data}`;
-    window.location.href = nextPage;
-})
