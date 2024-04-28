@@ -220,3 +220,17 @@ header h1 {
     }
     /* Aggiungi qui altri stili per adattare il layout */
 }
+
+
+#timer{
+    font-size: 40px/*300% /*6vw*/;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    color: #002c53 ;
+}
+
+#tempo{
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    color: #002c53 ;
+    font-size: 40px/*7vw*/;
+
+}
