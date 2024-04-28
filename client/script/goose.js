@@ -1,3 +1,6 @@
+const CELLWIDTH = 150;
+const CELLHEIGHT = 100;
+const OFFSET = 90;
 const canvas = document.getElementById('canvas');
 const button = document.getElementById('button');
 const c = canvas.getContext('2d'); // in questo modo canvas verrà renderizzato in 2d
@@ -24,12 +27,12 @@ window.addEventListener('load', () => { slowStart(backgroundMusic, 0.05); });
 
 // la classe per un player
 class Player {
-    constructor(n) {
+    constructor(n, startingCell = 1) {
         this.turn = n;
         this.velocity = {x: 5, y: 5};
         this.isMoving = false;
         this.direction = 'x';
-        this.cell = 1;
+        this.cell = startingCell;
 
         const image = new Image();
         if (n) image.src = '../images/rook.png';
@@ -44,10 +47,19 @@ class Player {
             if (n) {
                 this.position = {x: 75, y: 75};
                 this.targetPosition = {x: 75, y: 75};
+                // se usicamo da un minigame ed abbiamo una posizione spostata
+                if (this.cell != 1) {
+                    this.position.x = 200;
+                    this.position.y = 200;
+                }
             }
             if (!n) { 
                 this.position = {x: 150, y: 75};
                 this.targetPosition = {x: 150, y: 75};
+                if (this.cell != 1) {
+                    this.position.x = 250;
+                    this.position.y = 250;
+                }
             }
         };
     }
@@ -91,9 +103,6 @@ class Player {
     };
 
     moveByCellsRecursively (targetCell) {
-        const CELLWIDTH = 150;
-        const CELLHEIGHT = 100;
-        const OFFSET = 90;
         this.isMoving = true;
         const flipcard = document.querySelector('.flip-card');
         const flipcardfront=document.querySelector('.flip-card-front');
@@ -222,12 +231,9 @@ function handleCellRedirection(cell) {
     // Controlla se la cella corrente ha una condizione di reindirizzamento definita
     if (redirectionConditions.hasOwnProperty(cell)) {
         const game = redirectionConditions[cell];
-        // Emit il segnale a tutti i client nella stanza per reindirizzare al gioco specificato
-
-        //socket.emit('redirectToGame', { game: game });
-
-        socket.emit('redirectToGame',{ game: game, roomId: roomId });
-        console.log("heyyyyy sono dentro if");
+        setTimeout(() => {
+            socket.emit('redirectToGame',{ game: game, roomId: roomId });
+        }, 1000); 
     }
 }
 
@@ -237,9 +243,14 @@ function handleCellRedirection(cell) {
 // prendiamo il parametro roomId dall'url per riconnettersi alla stanza
 // i websocket (come socket.io) non sono persistenti tra pagine html diverse
 // usiamo questo trucco per mantenere la connessione tra diverse pagine
+const socket = io.connect('http://localhost:3000');
+
+// prendiamo eventuali parametri di una chiamata GET
 const urlParams = new URLSearchParams(window.location.search);
 const roomId = urlParams.get('room');
-const socket = io.connect('http://localhost:3000');
+let turnParam = urlParams.get('turn');
+let winParam = urlParams.get('win'); 
+let posParam = urlParams.get('pos');
 
 // i due player si uniscono alla stanza
 socket.emit('joinExistingRoom', roomId);
@@ -248,12 +259,30 @@ let primaryPlayer = {};
 let secondaryPlayer = {};
 socket.on('yourTurn', (data) => {
     turn = data;
-    // compare la scritta 'è il tuo turno'
+    if (turnParam != null) {
+        if (turnParam == 'true') turn = true;
+        else turn = false;
+    }
     if (turn) appearTurn();
-    primaryPlayer = new Player(turn);
-    secondaryPlayer = new Player(!turn);
+    // compare la scritta 'è il tuo turno'
+    // TODO: il secondary player deve avere una posizione spostata!!!!
+    if (posParam != null) {
+        primaryPlayer = new Player(turn, posParam);
+        secondaryPlayer = new Player(!turn, posParam);
+    }
+    else {
+        primaryPlayer = new Player(turn);
+        secondaryPlayer = new Player(!turn);
+    }
 })
 
+// se torniamo da un minigame, gestiamo opportunamente i parametri GET ottenuti
+setTimeout(() => {
+    if (winParam != null && winParam == 'true') {
+        bonusTurn = true;
+        bonusEvent(2);
+    }
+}, 500);
 
 
 // gestione delle animazioni
@@ -362,7 +391,6 @@ socket.on('moveSecondaryPlayer', (data) => {
 // gestione assegnazione dei turni
 socket.on('changeTurn', () => {
     turn = true;
-
     // compare scritta 'è il turno'
     if (primaryPlayer.cell != 39 && secondaryPlayer.cell != 39) appearTurn();
 });
@@ -384,7 +412,6 @@ function appearTurn() {
         yourTurnDiv.style.visibility = 'hidden';
     }, 2000);
 }
-
 
 function showFlipCard(cell) {
     const flipcard = document.querySelector('.flip-card');
@@ -610,50 +637,20 @@ socket.on('gameLost', () => {
 });
 
 socket.on('redirectToBothGame', (data) => {
-    
     redirectPlayersToGame(data.game,data.roomId);
 });
-
 
 // Funzione per reindirizzare entrambi i giocatori al gioco specificato
 function redirectPlayersToGame(game,data) {
     if (game === 'memory') {
-        const nextPage = `/memory?room=${data}&pos=${primaryPlayer.cell}`;
+        const nextPage = `/memory?room=${data}&pos=${primaryPlayer.cell}&turn=${turn}`;
         window.location.href = nextPage; // Reindirizza a Memory
     } else if (game === 'cfs') {
-        const nextPage = `/cfs?room=${data}&pos=${primaryPlayer.cell}`;
+        const nextPage = `/cfs?room=${data}&pos=${primaryPlayer.cell}&turn=${turn}`;
         window.location.href = nextPage; // Reindirizza a CFS
     }
 }
 
-/*socket.on('movePlayerToCell', (data) => {
-    console.log("devo muovore player");
-    const cell = data.cell;
-    primaryPlayer.cell = cell;
-    
-});
-
-socket.on('redirect', (data) => {
-    console.log("dovrei stare su goose");
-    // Memorizza l'URL di reindirizzamento e la posizione del player
-    const redirectUrl = data.url;
-    const playerPosition = data.playerPosition;
-
-    // Effettua il reindirizzamento alla nuova pagina
-    window.location.href = redirectUrl;
-
-    // Quando la nuova pagina è stata caricata, posiziona il player sulla posizione desiderata
-    window.addEventListener('load', () => {
-        primaryPlayer.position=playerPosition;
-      
-    });
-});*/
-socket.on('spostaPlayerGoose',(data)=>{
-
-    console.log("dovrei spostare player");
-
-    primaryPlayer.position=data;
-})
 
 
 

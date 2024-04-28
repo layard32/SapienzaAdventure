@@ -119,10 +119,6 @@ function playGame(choice, playerNum) {
             endGame(); // Termina il gioco
         }
     
-
-
-        
-
         // Resetta le scelte dei giocatori
         playerOneChoice = '';
         playerTwoChoice = '';
@@ -286,13 +282,6 @@ function resetGame() {
     document.getElementById('scoreMessage').textContent = 'First to win 2 rounds wins the game';
 }
 
-
-
-
-
-
-
-
 // Funzione per avviare il timer
 function startTimer(duration, display) {
     var timer = duration, minutes, seconds;
@@ -326,15 +315,12 @@ window.onload = function () {
 };
 
 
-
-
-
-
-//roba server
-
+//GESTIONE SERVER
 const urlParams = new URLSearchParams(window.location.search);
+// prendo i parametri passati tramite chiamata GET
 const roomId = urlParams.get('room');
-const position=urlParams.get('pos');
+const position = urlParams.get('pos');
+const turn = urlParams.get('turn');
 const socket = io.connect('http://localhost:3000');
 
 socket.emit("joinExistingRoom",roomId);
@@ -363,27 +349,15 @@ function endGame() {
         });
 
         setTimeout(()=>{
-            socket.emit('quitGame', { roomId: roomId, playerPosition: position ,win:(playerOneScore>playerTwoScore)});
-        },1000);
+            socket.emit('quitGame', { roomId: roomId, 
+                                    playerPosition: position,
+                                    win: (playerOneScore>playerTwoScore), 
+                                    turn: turn });
+        }, 1000);
     }, 1000);
 }
 
-
-//ROBA SERVER
-
-
-
-/*socket.on('redirect',(data)=>{
-    window.location.href = data;
-})*/
 socket.on('redirect', (data) => {
-    console.log("dovrei stare su goose");
-
-
-
     // Effettua il reindirizzamento alla nuova pagina
     window.location.href = data;
-
- 
-
 });

@@ -122,9 +122,6 @@ io.on('connection', (socket) => {
     socket.to(data).emit('changeTurn');
   });
 
-  // TODO: cambio pagina in memory
-  //socket.on();
-
   socket.on('requestLooser', (data) => {
     socket.to(data).emit('looser');
   });
@@ -167,28 +164,13 @@ io.on('connection', (socket) => {
   });
 
   socket.on('quitGame',(data)=>{
-    console.log("sto dentro server quit");
-
-    const nextPage = `/goose?room=${data.roomId}&pos=${data.playerPosition}&win=${data.win}`;
-
+    const nextPage = `/goose?room=${data.roomId}&pos=${data.playerPosition}&win=${data.win}&turn=${data.turn}`;
     socket.emit('redirect', nextPage );
-
-    //socket.emit('redirect', { url: nextPage, playerPosition: data.playerPosition })
   })
 
-  socket.on("requestSpostaPlayerGoose",(data)=>{
-    console.log("ti prego sposta");
-
-    socket.emit('spostaPlayerGoose',data);
-  })
-
-  /*socket.on('requestMovePlayerToCell',(data)=>{
-    console.log("sto dentro requestMoverPlayer");
-    io.to(data).emit('movePlayerToCell', {cell: 11});
-  })*/
- 
-
+  
 }); 
+
 
 
 
@@ -200,10 +182,11 @@ function sendGameResult(roomId, winnerId) {
 
     // Invia un messaggio di vittoria al vincitore
     io.to(winnerId).emit('gameWon');
-
     // Invia un messaggio di sconfitta al perdente
     io.to(loserId).emit('gameLost');
 }
+
+
 
 // per l'export su vercel
 export default app;
