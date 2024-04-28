@@ -47,21 +47,22 @@ class Player {
             if (n) {
                 this.position = {x: 75, y: 75};
                 this.targetPosition = {x: 75, y: 75};
-                // se usicamo da un minigame ed abbiamo una posizione spostata
                 if (this.cell != 1) {
-                    this.position.x = 200;
-                    this.position.y = 200;
+                    const { x, y } = this.calculatePosition(this.cell);
+                    this.position.x = this.targetPosition.x = x;
+                    this.position.y = this.targetPosition.y = y;
                 }
             }
             if (!n) { 
                 this.position = {x: 150, y: 75};
                 this.targetPosition = {x: 150, y: 75};
                 if (this.cell != 1) {
-                    this.position.x = 250;
-                    this.position.y = 250;
+                    const { x, y } = this.calculatePosition(this.cell);
+                    this.position.x = this.targetPosition.x = x + 75; 
+                    this.position.y = this.targetPosition.y = y;
                 }
             }
-        };
+        }
     }
 
     draw() {
@@ -109,7 +110,11 @@ class Player {
         const flipcardback=document.querySelector('.flip-card-back');
 
         // caso base: siamo arrivati alla cella finale
+        console.log('in questa iterazione!: ')
+        console.log(this.cell)
+        console.log(targetCell)
         if (this.cell == targetCell) {
+            this.cell = targetCell; // Make sure this.cell is exactly targetCell
             this.isMoving = false;
             handleCellRedirection(this.cell);
             showFlipCard(this.cell);
@@ -191,6 +196,34 @@ class Player {
         //alert('viva un dittatore a piacimento');
         socket.emit('gameEnd',roomId);
     }
+
+    calculatePosition(cell) {
+        let x = this.position.x, y = this.position.y;
+        if (cell >= 0 && cell < 9) {
+            x += (cell - 2) * CELLWIDTH; // subtract 1 from cell count
+        } else if (cell >= 9 && cell < 15) {
+            x += CELLWIDTH * 8;
+            y += (cell - 9) * CELLHEIGHT; // subtract 1 from cell count
+        } else if (cell >= 15 && cell < 23) {
+            x = this.position.x + CELLWIDTH * 8; // reset x to the start of the row
+            y += CELLHEIGHT * 6;
+            x -= (cell - 15) * CELLWIDTH; // subtract 1 from cell count
+        } else if (cell >= 23 && cell < 27) {
+            x = this.position.x; // reset x to the start position
+            y += CELLHEIGHT * 6;
+            y -= (cell - 23) * CELLHEIGHT; // subtract 1 from cell count
+        } else if (cell >= 27 && cell < 33) {
+            y = this.position.y; // reset y to the start position
+            x += (cell - 27) * CELLWIDTH; // subtract 1 from cell count
+        } else if (cell >= 33 && cell < 35) {
+            x = this.position.x + CELLWIDTH * 6; // reset x to the start of the row
+            y += (cell - 33) * CELLHEIGHT; // subtract 1 from cell count
+        } else if (cell >= 35 && cell < 39) {
+            y = this.position.y + CELLHEIGHT * 2; // reset y to the start of the column
+            x -= (cell - 35) * CELLWIDTH; // subtract 1 from cell count
+        }
+        return { x, y };
+    }
 };
 
 // GESTIONE USERNAME
@@ -233,7 +266,7 @@ function handleCellRedirection(cell) {
         const game = redirectionConditions[cell];
         setTimeout(() => {
             socket.emit('redirectToGame',{ game: game, roomId: roomId });
-        }, 1000); 
+        }, 1500); 
     }
 }
 
@@ -250,7 +283,8 @@ const urlParams = new URLSearchParams(window.location.search);
 const roomId = urlParams.get('room');
 let turnParam = urlParams.get('turn');
 let winParam = urlParams.get('win'); 
-let posParam = urlParams.get('pos');
+let posFirstParam = urlParams.get('pos1');
+let posSecondParam = urlParams.get('pos2');
 
 // i due player si uniscono alla stanza
 socket.emit('joinExistingRoom', roomId);
@@ -258,21 +292,15 @@ let turn;
 let primaryPlayer = {};
 let secondaryPlayer = {};
 socket.on('yourTurn', (data) => {
-    turn = data;
-    if (turnParam != null) {
-        if (turnParam == 'true') turn = true;
-        else turn = false;
-    }
-    if (turn) appearTurn();
-    // compare la scritta 'è il tuo turno'
-    // TODO: il secondary player deve avere una posizione spostata!!!!
-    if (posParam != null) {
-        primaryPlayer = new Player(turn, posParam);
-        secondaryPlayer = new Player(!turn, posParam);
-    }
-    else {
+    if (turnParam == null) {
+        turn = data;
         primaryPlayer = new Player(turn);
         secondaryPlayer = new Player(!turn);
+        appearTurn(turn);
+    } else {
+        primaryPlayer = new Player(!turnParam, Number(posFirstParam));
+        secondaryPlayer = new Player(turnParam, Number(posSecondParam));
+        appearTurn(turnParam);
     }
 })
 
@@ -392,25 +420,27 @@ socket.on('moveSecondaryPlayer', (data) => {
 socket.on('changeTurn', () => {
     turn = true;
     // compare scritta 'è il turno'
-    if (primaryPlayer.cell != 39 && secondaryPlayer.cell != 39) appearTurn();
+    if (primaryPlayer.cell != 39 && secondaryPlayer.cell != 39) appearTurn(turn);
 });
 
 // funzione che fa apparire la scritta con il proprio turno
-function appearTurn() {
-    if(gameEnded) return;
-    const yourTurnDiv = document.getElementById('yourTurn');
-    yourTurnDiv.style.visibility = 'visible';
-    setTimeout(() => {
-        yourTurnDiv.style.opacity = '1';
-    }, 200);
-
-    setTimeout(() => {
-        yourTurnDiv.style.opacity = '0';
-    }, 1300);
-
-    setTimeout(() => {
-        yourTurnDiv.style.visibility = 'hidden';
-    }, 2000);
+function appearTurn(turn) {
+    if (gameEnded) return;
+    if (turn) {
+        const yourTurnDiv = document.getElementById('yourTurn');
+        yourTurnDiv.style.visibility = 'visible';
+        setTimeout(() => {
+            yourTurnDiv.style.opacity = '1';
+        }, 200);
+    
+        setTimeout(() => {
+            yourTurnDiv.style.opacity = '0';
+        }, 1300);
+    
+        setTimeout(() => {
+            yourTurnDiv.style.visibility = 'hidden';
+        }, 2000);
+    }
 }
 
 function showFlipCard(cell) {
@@ -643,10 +673,10 @@ socket.on('redirectToBothGame', (data) => {
 // Funzione per reindirizzare entrambi i giocatori al gioco specificato
 function redirectPlayersToGame(game,data) {
     if (game === 'memory') {
-        const nextPage = `/memory?room=${data}&pos=${primaryPlayer.cell}&turn=${turn}`;
+        const nextPage = `/memory?room=${data}&pos1=${primaryPlayer.cell}&pos2=${secondaryPlayer.cell}&turn=${turn}`;
         window.location.href = nextPage; // Reindirizza a Memory
     } else if (game === 'cfs') {
-        const nextPage = `/cfs?room=${data}&pos=${primaryPlayer.cell}&turn=${turn}`;
+        const nextPage = `/cfs?room=${data}&pos1=${primaryPlayer.cell}&pos2=${secondaryPlayer.cell}&turn=${turn}`;
         window.location.href = nextPage; // Reindirizza a CFS
     }
 }

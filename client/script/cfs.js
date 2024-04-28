@@ -319,7 +319,8 @@ window.onload = function () {
 const urlParams = new URLSearchParams(window.location.search);
 // prendo i parametri passati tramite chiamata GET
 const roomId = urlParams.get('room');
-const position = urlParams.get('pos');
+const primaryPosition = urlParams.get('pos1');
+const secondaryPosition = urlParams.get('pos2')
 const turn = urlParams.get('turn');
 const socket = io.connect('http://localhost:3000');
 
@@ -350,7 +351,8 @@ function endGame() {
 
         setTimeout(()=>{
             socket.emit('quitGame', { roomId: roomId, 
-                                    playerPosition: position,
+                                    primaryPlayerPosition: primaryPosition,
+                                    secondaryPlayerPosition: secondaryPosition,
                                     win: (playerOneScore>playerTwoScore), 
                                     turn: turn });
         }, 1000);

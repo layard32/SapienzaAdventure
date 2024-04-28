@@ -100,10 +100,7 @@ io.on('connection', (socket) => {
 
   socket.on('joinExistingRoom', (data) => {
     socket.join(data);
-    // assegna ai client i relativi username
-
-    console.log("rientrate in stanza");
-    // assegna i turni
+    // assegna i turni 
     setTimeout(() => {
         // prendi gli id dei clients nella stanza
         const room = io.sockets.adapter.rooms.get(data);
@@ -164,10 +161,9 @@ io.on('connection', (socket) => {
   });
 
   socket.on('quitGame',(data)=>{
-    const nextPage = `/goose?room=${data.roomId}&pos=${data.playerPosition}&win=${data.win}&turn=${data.turn}`;
+    const nextPage = `/goose?room=${data.roomId}&pos1=${data.primaryPlayerPosition}&pos2=${data.secondaryPlayerPosition}&win=${data.win}&turn=${data.turn}`;
     socket.emit('redirect', nextPage );
   })
-
   
 }); 
 
