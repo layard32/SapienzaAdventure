@@ -9,6 +9,7 @@ const backgroundMusic = document.getElementById("background-music");
 const missionImpossible = document.getElementById("mission-impossible");
 
 let gameEnded = false; //serve per gestire disconnessione da vittoria 
+let flag=false;
 
 // partenza lenta di una musica
 function slowStart (music, increment) {
@@ -611,7 +612,7 @@ window.addEventListener('unload', function(event) {
 });
 
 socket.on('forcedDisconnect',()=>{
-    if(!gameEnded){
+    if(!gameEnded && !flag){
         // Invia la notifica di vittoria a tavolino solo se il gioco non è ancora terminato
         const winToast = new bootstrap.Toast(document.getElementById('winToast'));
         winToast.show();
@@ -671,6 +672,7 @@ function redirectPlayersToGame(game,data) {
         // const nextPage = `/memory?room=${data}&pos1=${primaryPlayer.cell}&pos2=${secondaryPlayer.cell}&turn=${turn}`;
         // window.location.href = nextPage; // Reindirizza a Memory
     } else if (game === 'cfs') {
+        flag=true;
         const nextPage = `/cfs?room=${data}&pos1=${primaryPlayer.cell}&pos2=${secondaryPlayer.cell}&turn=${turn}`;
         window.location.href = nextPage; // Reindirizza a CFS
     }
