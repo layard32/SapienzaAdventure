@@ -82,36 +82,10 @@ body {
 }
 
   
+
 @keyframes progress {
     0% {
       left: -100%;
-    }
-    10% {
-      left: -97%;
-    }
-    20% {
-      left: -92%;
-    }
-    30% {
-      left: -82%;
-    }
-    30% {
-      left: -62%;
-    }
-    40% {
-      left: -38%;
-    }
-    50% {
-      left: -18%;
-    }
-    60% {
-      left: -14%;
-    }
-    80% {
-      left: -7%;
-    }
-    90% {
-      left: -3%;
     }
     100% {
       left: 0%;
@@ -135,7 +109,6 @@ body {
     -ms-user-select: none; 
     user-select: none; 
     
-   
   }
   
 
