@@ -26,12 +26,15 @@ body {
 
 
 .buttonCont{
+    top:93%;
+    left:50%;
+    transform: translate(-50%, -50%);
     position: fixed;
-    top: 100%;
+    /*top: 100%;
     left: 100%;
-    transform: translate(-100%, -100%);
-    width: 58.60vw;
-    height: 11.80vh;
+    transform: translate(-100%, -100%);*/
+    /*width: 58.60vw;
+    height: 11.80vh;*/
     align-items: center;
 
 }
@@ -135,14 +138,19 @@ body {
 
 #playerName {
     position: fixed;
-    top: 100%;
-    transform: translate(0, -100%);
-
+    /*top: 99%;
+    transform: translate(2%, -100%);*/
+    top:8%;
+    left:50%;
+    transform: translate(-50%, -50%);
     font-size: 50px;
-    color:#002c53;
-    background-color:#548DBF;
+    color:#F2EFE9;
+    background-color:#59bb4c;
     /*border:5px solid #F2EFE9;*/
     border-radius: 15px;
+    height: 4.5rem;
+    width: 13rem;
+    text-align: center;
 }
 
 #canvas {
