@@ -26,9 +26,9 @@ body {
 
 
 .buttonCont{
-    top:93%;
+    top:98%;
     left:50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -98%);
     position: fixed;
     /*top: 100%;
     left: 100%;
@@ -140,9 +140,9 @@ body {
     position: fixed;
     /*top: 99%;
     transform: translate(2%, -100%);*/
-    top:8%;
+    top:4%;
     left:50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -4%);
     font-size: 50px;
     color:#F2EFE9;
     background-color:#59bb4c;

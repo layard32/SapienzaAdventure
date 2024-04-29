@@ -7,11 +7,11 @@ const c = canvas.getContext('2d'); // in questo modo canvas verrà renderizzato 
 const nameDiv = document.getElementById('playerName');
 const backgroundMusic = document.getElementById("background-music");
 const missionImpossible = document.getElementById("mission-impossible");
+const bonusCells = [3, 9, 26, 30, 36, 38];
 
 let gameEnded = false; //serve per gestire disconnessione da vittoria 
 let flag = false;
 let bonusTurn = false;
-
 
 // partenza lenta di una musica
 function slowStart (music, increment) {
@@ -107,9 +107,6 @@ class Player {
     moveByCellsRecursively (targetCell) {
         checkFlagForRedirection (targetCell);
         this.isMoving = true;
-        const flipcard = document.querySelector('.flip-card');
-        const flipcardfront=document.querySelector('.flip-card-front');
-        const flipcardback=document.querySelector('.flip-card-back');
 
         // caso base: siamo arrivati alla cella finale
         if (this.cell == targetCell) {
@@ -117,10 +114,10 @@ class Player {
             this.isMoving = false;
             handleCellRedirection(this.cell);
             showFlipCard(this.cell);
-            if (this == primaryPlayer) activeFlipCard(this.cell);
+            if (this == primaryPlayer) activeFlipCard(this.cell); 
             return;
         }
-        flipcard.style.visibility='hidden';
+        //flipcard.style.visibility='hidden';
 
         // TODO: Semplificare sto casino di if
         if (this.cell < targetCell) { // movimento in avanti
@@ -237,7 +234,8 @@ window.addEventListener('DOMContentLoaded', () => {
 // ad ogni passaggio di turno si controlla chi è il player più vicino alla fine
 nameDiv.textContent = 'Pareggio';
 
-// funziona che controlla chi è primo
+
+// gestione turni (insieme ad altre funzioni)
 function setFirst() {
     if (primaryPlayer.cell > secondaryPlayer.cell) {
         nameDiv.textContent = username;
@@ -250,7 +248,7 @@ function setFirst() {
 };
 
 
-// Funzione per gestire il reindirizzamento dei giocatori in base alla cella
+// gestione reindirizzamento 
 function handleCellRedirection(cell) { 
     // Definizione delle condizioni per il reindirizzamento
     const redirectionConditions = {
@@ -265,7 +263,6 @@ function handleCellRedirection(cell) {
         }, 1100); 
     }
 }
-
 
 
 // GESTIONE SOCKET
@@ -321,27 +318,22 @@ window.addEventListener('DOMContentLoaded', () => {
             // caso con vittoria del minigame
             else if (winParam) {
                 setTimeout(() => {
-                    console.log('il giocatore ha vinto')
                     bonusTurn = true;
                     bonusEvent(2);
                 }, 100);
 
                 setTimeout(() => {
                     let actualCell = primaryPlayer.cell;
-                    if (actualCell == 30 || actualCell == 9 || actualCell == 38 || actualCell == 3 || actualCell == 36 || actualCell == 26) {
+                    if (bonusCells.includes(actualCell)) {
                         // caso B in cui la vittoria del minigame fa finire in una cella con un bonus o un imprevisto
                         setTimeout(() => {
                             turn = turnParam;
-                            console.log('B settato turn pari a ')
-                            console.log(turn)
                             appearTurn(turn);
                         }, 7000);
                     } else {
                         // caso C in cui la vittoria del minigame NON fa finire in una cella con un bonus o un imprevisto
                         setTimeout(() => {
                             turn = turnParam;
-                            console.log('C settato turn pari a ')
-                            console.log(turn)
                             appearTurn(turn);
                         }, 500);
                     }
@@ -350,8 +342,6 @@ window.addEventListener('DOMContentLoaded', () => {
                 // caso A senza vittoria di un minigame
                 setTimeout(() => {
                     turn = turnParam;
-                    console.log('A settato turn pari a ')
-                    console.log(turn)
                     appearTurn(turn);
                 }, 500);
             }
@@ -414,24 +404,7 @@ function rollDice(number) {
     });
 };
 
-
-// gestione del lancio del dado
-// button.addEventListener('click', (e) => {
-//     e.preventDefault(); 
-//     if (!isRolling && turn) { 
-//         button.addEventListener('animationend', () => {
-//             console.lo
-//             movePlayer(primaryPlayer);
-//         });
-//     }
-// });
-button.addEventListener('animationend', () => {
-    if (!isRolling && turn) movePlayer (primaryPlayer);
-})
-
-
 // funzione per lo spostamento del player principale
-// TODO TOGLIERE NUMBER
 function movePlayer(player) {
     if (turn) {
         turn = false; 
@@ -460,7 +433,6 @@ function movePlayer(player) {
 // gestione spostamento dell'altro giocatore
 socket.on('moveSecondaryPlayer', (data) => {
     if ((!turn && !secondaryPlayer.ismoving) || data.special) {
-        console.log('muovo il secondo player')
         if (!data.special) rollDice(data.number);
         setTimeout(() => {
             secondaryPlayer.moveByCells(data.number);
@@ -485,7 +457,6 @@ socket.on('changeTurn', () => {
 function appearTurn(turn) {
     if (gameEnded) return;
     if (turn && !flag) {
-        console.log('ora apparirà il turno quindi flag negativa')
         const yourTurnDiv = document.getElementById('yourTurn');
         yourTurnDiv.style.visibility = 'visible';
         setTimeout(() => {
@@ -502,141 +473,158 @@ function appearTurn(turn) {
     }
 }
 
+
+// gestione flip cards (tre funzioni: una per inizializzare, una per mostrarle e una per attivarle)
+function initializeFlipcards() {
+    const flipcard = document.createElement('div');
+    flipcard.classList.add('flip-card', 'text');
+    const flipCardInner = document.createElement('div');
+    flipCardInner.classList.add('flip-card-inner');
+    const flipcardfront = document.createElement('div');
+    flipcardfront.classList.add('flip-card-front');
+    const flipcardback = document.createElement('div');
+    flipcardback.classList.add('flip-card-back');
+    flipCardInner.appendChild(flipcardfront);
+    flipCardInner.appendChild(flipcardback);
+    flipcard.appendChild(flipCardInner);
+    document.body.appendChild(flipcard);
+
+    flipcard.style.visibility = 'hidden';
+
+    return {flipcard, flipcardfront, flipcardback};
+}
+
 function showFlipCard(cell) {
-    const flipcard = document.querySelector('.flip-card');
-    const flipcardfront = document.querySelector('.flip-card-front');
-    const flipcardback = document.querySelector('.flip-card-back');
-    if(cell == 30 ){
-        flipcard.style.visibility = 'visible';
-        flipcard.style.opacity=1;
-        flipcardfront.style.backgroundImage = `url('../images/minerva.png')`;
-        flipcardfront.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>IMPREVISTO</h1>`;
-        flipcardback.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>IMPREVISTO</h1><p style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>Oh no, c'è stato un imprevisto!  Hai guardato la minerva negli occhi, vai indietro di 2 caselle.</p>`;
-    
-        setTimeout(() => {
-            flipcard.style.opacity = '0';
-        }, 3600);
+    if (bonusCells.includes(cell)) {
+        bonusTurn = true; 
+        const {flipcard, flipcardfront, flipcardback } = initializeFlipcards();
 
-        setTimeout(() => { 
-            flipcard.style.visibility = 'hidden';
-        }, 4000);
+        if (cell == 30 ) {
+            flipcard.style.visibility = 'visible';
+            flipcard.style.opacity=1;
+            flipcardfront.style.backgroundImage = `url('../images/minerva.png')`;
+            flipcardfront.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>IMPREVISTO</h1>`;
+            flipcardback.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>IMPREVISTO</h1><p style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>Oh no, c'è stato un imprevisto!  Hai guardato la minerva negli occhi, vai indietro di 2 caselle.</p>`;   
+            setTimeout(() => {
+                flipcard.style.opacity = '0';
+            }, 3600);
+            setTimeout(() => { 
+                flipcard.style.visibility = 'hidden';
+                setTimeout(() => {
+                    flipcard.remove();
+                }, 5000);
+            }, 4600);
+        }
+        else if (cell == 9) {
+            flipcard.style.visibility = 'visible';
+            flipcard.style.opacity=1;
+            flipcardfront.style.backgroundImage = `url('../images/fisica.png')`;
+            flipcardfront.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>IMPREVISTO</h1>`;
+            flipcardback.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>IMPREVISTO</h1><p style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>Oh no, c'è stato un imprevisto! Non hai passato l'esame di fisica, vai indietro di 2 caselle.</p>`; 
+            setTimeout(() => {
+                flipcard.style.opacity = '0';
+            }, 3600);
+            setTimeout(() => {
+                flipcard.style.visibility = 'hidden';
+                setTimeout(() => {
+                    flipcard.remove();
+                }, 5000);
+            }, 4600);
+        }
+        else if (cell == 38) {
+            flipcard.style.visibility = 'visible';
+            flipcard.style.opacity=1;
+            flipcardfront.style.backgroundImage = `url('../images/tesi.png')`;
+            flipcardfront.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>IMPREVISTO</h1>`;
+            flipcardback.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>IMPREVISTO</h1><p style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>Oh no, c'è stato un imprevisto! Devi scrivere la tesi, vai indietro di 3 caselle.</p>`;   
+            setTimeout(() => {
+                flipcard.style.opacity = '0';
+            }, 3600);
+            setTimeout(() => {
+                flipcard.style.visibility = 'hidden';
+                setTimeout(() => {
+                    flipcard.remove();
+                }, 5000);
+            }, 4600);
+        }
+        else if (cell == 3) {
+            flipcard.style.visibility = 'visible';
+            flipcard.style.opacity = 1;
+            flipcardfront.style.backgroundImage = `url('../images/esonero.png')`;
+            flipcardfront.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>BONUS</h1>`;
+            flipcardback.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>BONUS</h1><p style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>Bravo! Hai superato un esonero, vai avanti di 2 caselle.</p>`;   
+            setTimeout(() => {
+                flipcard.style.opacity = '0';
+            }, 3600);
+            setTimeout(() => {
+                flipcard.style.visibility = 'hidden';
+                setTimeout(() => {
+                    flipcard.remove();
+                }, 5000);
+            }, 4600);
+        }
+        else if (cell == 36) {
+            flipcard.style.visibility = 'visible';
+            flipcard.style.opacity=1;
+            flipcardfront.style.backgroundImage = `url('../images/esonero.png')`;
+            flipcardfront.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>BONUS</h1>`;
+            flipcardback.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>BONUS</h1><p style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>Bravo! Hai superato l'ultimo esame, vai avanti di 1 casella.</p>`;
+            setTimeout(() => {
+                flipcard.style.opacity = '0';
+            }, 3600);
+            setTimeout(() => {
+                flipcard.style.visibility = 'hidden';
+                setTimeout(() => {
+                    flipcard.remove();
+                }, 5000);
+            }, 4600);
+        }
+        else if (cell == 26) {
+            flipcard.style.visibility = 'visible';
+            flipcard.style.opacity=1;
+            flipcardfront.style.backgroundImage = `url('../images/relatore.png')`;
+            flipcardfront.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>BONUS</h1>`;
+            flipcardback.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>BONUS</h1><p style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>Bravo! Sei riuscito a trovare un relatore per la tesi, vai avanti di 2 caselle.</p>`;
+            setTimeout(() => {
+                flipcard.style.opacity = '0';
+            }, 3600);
+            setTimeout(() => {
+                flipcard.style.visibility = 'hidden';
+                setTimeout(() => {
+                    flipcard.remove();
+                }, 5000);
+            }, 4600);
+        }
     }
-    else if(cell == 9){
-        flipcard.style.visibility = 'visible';
-        flipcard.style.opacity=1;
-        flipcardfront.style.backgroundImage = `url('../images/fisica.png')`;
-        flipcardfront.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>IMPREVISTO</h1>`;
-        flipcardback.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>IMPREVISTO</h1><p style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>Oh no, c'è stato un imprevisto! Non hai passato l'esame di fisica, vai indietro di 2 caselle.</p>`;
- 
-        setTimeout(() => {
-            flipcard.style.opacity = '0';
-        }, 3600);
-
-        setTimeout(() => {
-            flipcard.style.visibility = 'hidden';
-        }, 4000);
-    }
-    else if(cell == 38){
-        flipcard.style.visibility = 'visible';
-        flipcard.style.opacity=1;
-        flipcardfront.style.backgroundImage = `url('../images/tesi.png')`;
-        flipcardfront.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>IMPREVISTO</h1>`;
-        flipcardback.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>IMPREVISTO</h1><p style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>Oh no, c'è stato un imprevisto! Devi scrivere la tesi, vai indietro di 3 caselle.</p>`;
-    
-        setTimeout(() => {
-            flipcard.style.opacity = '0';
-        }, 3600);
-
-        setTimeout(() => {
-            flipcard.style.visibility = 'hidden';
-        }, 4000);
-    }
-    else if(cell == 3){
-        flipcard.style.visibility = 'visible';
-        flipcard.style.opacity = 1;
-        flipcardfront.style.backgroundImage = `url('../images/esonero.png')`;
-        flipcardfront.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>BONUS</h1>`;
-        flipcardback.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>BONUS</h1><p style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>Bravo! Hai superato un esonero, vai avanti di 2 caselle.</p>`;
-    
-        setTimeout(() => {
-            flipcard.style.opacity = '0';
-        }, 3600);
-
-        setTimeout(() => {
-            flipcard.style.visibility = 'hidden';
-        }, 4000);
-    }
-    else if(cell == 36){
-        flipcard.style.visibility = 'visible';
-        flipcard.style.opacity=1;
-        flipcardfront.style.backgroundImage = `url('../images/esonero.png')`;
-        flipcardfront.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>BONUS</h1>`;
-        flipcardback.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>BONUS</h1><p style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>Bravo! Hai superato l'ultimo esame, vai avanti di 1 casella.</p>`;
-    
-        setTimeout(() => {
-            flipcard.style.opacity = '0';
-        }, 3600);
-
-        setTimeout(() => {
-            flipcard.style.visibility = 'hidden';
-        }, 4000);
-    }
-    else if(cell == 26){
-        flipcard.style.visibility = 'visible';
-        flipcard.style.opacity=1;
-        flipcardfront.style.backgroundImage = `url('../images/relatore.png')`;
-        flipcardfront.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>BONUS</h1>`;
-        flipcardback.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>BONUS</h1><p style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>Bravo! Sei riuscito a trovare un relatore per la tesi, vai avanti di 2 caselle.</p>`;
-
-        setTimeout(() => {
-            flipcard.style.opacity = '0';
-        }, 3600);
-
-        setTimeout(() => {
-            flipcard.style.visibility = 'hidden';
-        }, 4000);
-    }
-    else{
-        flipcard.style.visibility='hidden';
-    }
-    
 }
 
 function activeFlipCard(cell) {
     if(cell == 30 ) {    
         setTimeout(() => { 
-            bonusTurn = true;
             penaltyEvent(2);
         }, 4000);
     } else if(cell == 9) {
         setTimeout(() => {
-            bonusTurn = true;
             penaltyEvent(2);
         }, 4000);
     } else if(cell == 38) {
         setTimeout(() => {
-            bonusTurn = true;
             penaltyEvent(3);
         }, 4000);
     } else if(cell == 3) {  
         setTimeout(() => {
-            bonusTurn = true;
             bonusEvent(2);
         }, 4000);
     } else if(cell == 36){    
         setTimeout(() => {
-            bonusTurn = true;
             bonusEvent(1);
         }, 4000);
     } else if(cell == 26) {    
         setTimeout(() => {
-            bonusTurn = true;
             bonusEvent(2);
         }, 4000);
     }  
 }
-
-
 
 // gestione evento bonus (o vittoria minigame)
 function bonusEvent(number) {
@@ -646,7 +634,6 @@ function bonusEvent(number) {
         socket.emit('requestSetBonus', roomId);
         setTimeout(() => {
             primaryPlayer.moveByCells(number);
-            console.log('bonus time')
             socket.emit('requestMoveSecondaryPlayer', { dice: number, roomId: roomId, special: true });
             setTimeout(() => {
                 primaryPlayer.isMoving = false;
@@ -687,18 +674,17 @@ function changeMusic(cell) {
     }
 }
 
-
 socket.on('setBonus', () => {
     bonusTurn = false;
 });     
 
-//gestione disconnessione forzata 
+
+//gestione disconnessione / vittoria, etc.
 
 //caso di refresh della pagina
 window.addEventListener('beforeunload',()=>{
     socket.emit('requestForcedDisconnect', roomId);
-})
-
+});
 //caso di chiusura della pagina
 window.addEventListener('unload', function(event) {
     socket.emit('requestForcedDisconnect', roomId);
@@ -719,9 +705,7 @@ socket.on('forcedDisconnect',()=>{
             window.location.href = '/';
         }, 3000);
     }
-        
-    
-})
+});
 
 socket.on('gameWon', () => {
     if (!gameEnded) {
@@ -761,17 +745,23 @@ socket.on('redirectToBothGame', (data) => {
 // Funzione per reindirizzare entrambi i giocatori al gioco specificato
 function redirectPlayersToGame(game,data) {
     if (game === 'memory') {
-        // const nextPage = `/memory?room=${data}&pos1=${primaryPlayer.cell}&pos2=${secondaryPlayer.cell}&turn=${turn}`;
-        // window.location.href = nextPage; // Reindirizza a Memory
+        const nextPage = `/memory?room=${data}&pos1=${primaryPlayer.cell}&pos2=${secondaryPlayer.cell}&turn=${turn}`;
+        window.location.href = nextPage; // Reindirizza a Memory
     } else if (game === 'cfs') {
         const nextPage = `/cfs?room=${data}&pos1=${primaryPlayer.cell}&pos2=${secondaryPlayer.cell}&turn=${turn}`;
         window.location.href = nextPage; // Reindirizza a CFS
     }
-}
+};
 
 function checkFlagForRedirection(cell) {
     if (cell == 6 || cell == 11) flag = true;
-}
+};
+
+
+// gestione pulsante
+button.addEventListener('animationend', () => {
+    if (!isRolling && turn) movePlayer (primaryPlayer);
+})
 
 document.addEventListener("DOMContentLoaded", function() {
     const button = document.getElementById("button");
@@ -794,4 +784,6 @@ document.addEventListener("DOMContentLoaded", function() {
         button.classList.remove("progress"); // Rimuovi la classe aggiuntiva
     });
 });
+
+
 
