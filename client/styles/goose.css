@@ -130,6 +130,11 @@ body {
     position: relative;
     color: #F2EFE9;
     font-size: 37px;
+    -webkit-user-select: none; 
+    -moz-user-select: none; 
+    -ms-user-select: none; 
+    user-select: none; 
+    
    
   }
   
