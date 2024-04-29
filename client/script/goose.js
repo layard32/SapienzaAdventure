@@ -375,11 +375,18 @@ function rollDice(number) {
 
 
 // gestione del lancio del dado
-button.addEventListener('click', () => { 
-    if (!isRolling && turn) movePlayer(primaryPlayer);
-});
-
-
+// button.addEventListener('click', (e) => {
+//     e.preventDefault(); 
+//     if (!isRolling && turn) { 
+//         button.addEventListener('animationend', () => {
+//             console.lo
+//             movePlayer(primaryPlayer);
+//         });
+//     }
+// });
+button.addEventListener('animationend', () => {
+    if (!isRolling && turn) movePlayer (primaryPlayer);
+})
 
 
 // funzione per lo spostamento del player principale
@@ -689,7 +696,7 @@ document.addEventListener("DOMContentLoaded", function() {
         button.classList.add("progress"); // Aggiungi la classe aggiuntiva
         holdInterval = setInterval(function() {
             button.classList.remove("progress");
-        }, 6000); // Tempo dell'animazione in millisecondi
+        }, 2500); // Tempo dell'animazione in millisecondi
     });
 
     button.addEventListener("mouseup", function() {

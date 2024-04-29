@@ -50,18 +50,6 @@ body {
     border-radius: 15px;
     box-shadow: 0 9px #12480b;
     
-}
-
-
-  
-#button:hover {
-    background-color:#378b2c;
-}
-  
-#button:active {
-    background-color: #378b2c;
-    box-shadow: 0 5px #0e3708;
-    transform: translateY(4px);
 }*/
 
 #button {
@@ -90,7 +78,7 @@ body {
 }
   
   #button.progress::before {
-    animation: progress 6s ease-in-out forwards;
+    animation: progress 2.5s ease-in-out forwards;
   }
 
   #button.progress::after {
@@ -106,7 +94,7 @@ body {
 }
 
   
-  @keyframes progress {
+@keyframes progress {
     0% {
       left: -100%;
     }
@@ -140,7 +128,8 @@ body {
     100% {
       left: 0%;
     }
-  }
+}
+
 
   #button .text-icon {
     height: 100%;
