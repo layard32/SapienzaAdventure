@@ -13,18 +13,21 @@ var images=[
     "../images/sicurezza.png"
 ];
 
-var gameBoard=document.getElementById('game-board');
-var cards=[];
-var flippedCards=[];
-var matchedCards=[];
-var gameOver=false;
+let gameBoard=document.getElementById('game-board');
+let cards=[];
+let flippedCards=[];
+let matchedCards=[];
+let gameOver=false;
+let playerOne=0;
+let playerTwo=0;
+
 
 
 
 
 /*vengono create le 18 carte (inserite in un array) a cui viene legato un eventolistener quando viene cliccata*/
-for(var i=0; i<18; i++){
-    var card = document.createElement('div');
+for(let i=0; i<18; i++){
+    let card = document.createElement('div');
     card.className='card';
     card.dataset.image=images[Math.floor(i/2)];
     card.addEventListener('click', flipCard);
@@ -37,15 +40,15 @@ shuffleCards();
 
 /*vengono mescolate le carte */
 function shuffleCards(){
-    for(var i=cards.length -1; i>0; i--){
-        var j = Math.floor(Math.random()*(i+1));
-        var temp =cards[i].dataset.image;
+    for(let i=cards.length -1; i>0; i--){
+        let j = Math.floor(Math.random()*(i+1));
+        let temp =cards[i].dataset.image;
         cards[i].dataset.image=cards[j].dataset.image;
         cards[j].dataset.image=temp;
     }
 }
 
-var canFlip=true;
+let canFlip=true;
 
 function flipCard(){
     if (!canFlip || flippedCards.length >= 2 || matchedCards.includes(this)|| flippedCards.includes(this)|| gameOver) {
@@ -77,8 +80,8 @@ function flipCard(){
 
 
 function checkMatch(){
-    var card1 = flippedCards[0];
-    var card2 = flippedCards[1];
+    let card1 = flippedCards[0];
+    let card2 = flippedCards[1];
 
     
 
@@ -109,42 +112,52 @@ function checkMatch(){
 
 
 
-var interval; // Dichiarazione globale della variabile interval
+let interval; // Dichiarazione globale della variabile interval
 
 // Funzione per mostrare il modale di fine partita
 function showEndGameModal() {
-    var modal = document.getElementById('end-game-modal');
+    let modal = document.getElementById('end-game-modal');
     modal.style.display = 'block';
 }
 
 // Funzione per nascondere il modale di fine partita
 function hideEndGameModal() {
-    var modal = document.getElementById('end-game-modal');
+    let modal = document.getElementById('end-game-modal');
     modal.style.display = 'none';
 }
 
 // Funzione per controllare la fine della partita
 function checkGameEnd() {
-    var timerDisplay = document.querySelector('#timer');
-    var timerValue = timerDisplay.textContent;
-    
+    let timerDisplay = document.querySelector('#timer');
+    let timerValue = timerDisplay.textContent;
         // Se il timer è scaduto o tutte le coppie sono state trovate
-    if (timerValue === "00:00" || matchedCards.length === cards.length) {
+    if (timerValue === "00:00") {
         clearInterval(interval); // Ferma il timer
-    
-            // Mostra il modale della fine della partita
         showEndGameModal();
-    
         // Disabilita la funzionalità di girare le carte
         canFlip = false;
+        playerTwo=1;
+        console.log('ha vinto il computer');
+    }
+    else if(matchedCards.length === cards.length){
+        clearInterval(interval); // Ferma il timer
+        showEndGameModal();
+        // Disabilita la funzionalità di girare le carte
+        canFlip = false;
+        
+        playerOne=1;
+        console.log('ha vinto il giocatore');
+
+
     }
     
-    
+    console.log(playerOne);
+    console.log(playerTwo);
 }
 
 // Gestione del click sull'icona di chiusura del modale
 document.addEventListener('DOMContentLoaded', function() {
-    var closeButton = document.querySelector('.close');
+    let closeButton = document.querySelector('.close');
     if (closeButton) {
         closeButton.addEventListener('click', function() {
             hideEndGameModal(); // Nascondi il modale quando l'utente fa clic sull'icona di chiusura
@@ -154,7 +167,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Funzione per avviare il timer
 function startTimer(duration, display) {
-    var timer = duration, minutes, seconds;
+    let timer = duration, minutes, seconds;
     interval = setInterval(function () {
         minutes = parseInt(timer / 60, 10);
         seconds = parseInt(timer % 60, 10);
@@ -174,9 +187,9 @@ function startTimer(duration, display) {
 
 // Funzione per avviare il timer con una durata di 3 minuti (180 secondi)
 function startGameTimer() {
-    var threeMinutes = 60 * 3,
+    let oneMinutes = 60,
         display = document.querySelector('#timer');
-    startTimer(threeMinutes, display);
+    startTimer(oneMinutes, display);
 }
 
 // Avvia il timer quando la finestra si carica

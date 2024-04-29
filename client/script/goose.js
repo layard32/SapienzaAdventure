@@ -696,7 +696,7 @@ document.addEventListener("DOMContentLoaded", function() {
         button.classList.add("progress"); // Aggiungi la classe aggiuntiva
         holdInterval = setInterval(function() {
             button.classList.remove("progress");
-        }, 2500); // Tempo dell'animazione in millisecondi
+        }, 3000); // Tempo dell'animazione in millisecondi
     });
 
     button.addEventListener("mouseup", function() {
