@@ -9,7 +9,9 @@ const backgroundMusic = document.getElementById("background-music");
 const missionImpossible = document.getElementById("mission-impossible");
 
 let gameEnded = false; //serve per gestire disconnessione da vittoria 
-let flag=false;
+let flag = false;
+let bonusTurn = false;
+
 
 // partenza lenta di una musica
 function slowStart (music, increment) {
@@ -103,6 +105,7 @@ class Player {
     };
 
     moveByCellsRecursively (targetCell) {
+        checkFlagForRedirection (targetCell);
         this.isMoving = true;
         const flipcard = document.querySelector('.flip-card');
         const flipcardfront=document.querySelector('.flip-card-front');
@@ -113,7 +116,8 @@ class Player {
             this.cell = targetCell; // Make sure this.cell is exactly targetCell
             this.isMoving = false;
             handleCellRedirection(this.cell);
-            showFlipCard(this.cell, this);
+            showFlipCard(this.cell);
+            if (this == primaryPlayer) activeFlipCard(this.cell);
             return;
         }
         flipcard.style.visibility='hidden';
@@ -276,10 +280,12 @@ const roomId = urlParams.get('room');
 let turnParam = null;
 if (urlParams.has('turn')) { 
     turnParam = urlParams.get('turn');
-    if (turnParam == 'true') turnParam = true;
-    if (turnParam == 'false') turnParam = false;
+    turnParam = (turnParam === 'true');
 }
-let winParam = urlParams.get('win'); 
+if (urlParams.has('win')) {
+    winParam = urlParams.get('win');
+    winParam = (winParam === 'true');
+} else winParam = null;
 let posFirstParam = urlParams.get('pos1');
 let posSecondParam = urlParams.get('pos2');
 
@@ -296,28 +302,63 @@ socket.on('yourTurn', (data) => {
         document.cookie = `primary=${turn}; path=/`;
         appearTurn(turn);
     } else {
-        turn = turnParam;
+        turn = false;
         let primaryCookie = document.cookie.split('; ').find((cookie) => cookie.startsWith('primary='));
         let primary = primaryCookie.split('=')[1];
-        if (primary == 'true') primary = true;
-        else if (primary == 'false') primary = false;
+        primary = (primary === 'true');
         primaryPlayer = new Player(primary, Number(posFirstParam));
         secondaryPlayer = new Player(!primary, Number(posSecondParam));
-
-        turn = !turnParam;
-        if (winParam != null && winParam == 'true')  {
-                bonusEvent(2, primaryPlayer);
-                setTimeout(() => {
-                    turn = turnParam;
-                    appearTurn(turn);
-                }, 10000);
-        } else {
-            setTimeout(() => {
-                turn = turnParam;
-            }, 10000)
-        }
     }
 })
+
+
+window.addEventListener('DOMContentLoaded', () => {
+    const intervalPlayers = setInterval(() => {
+        if (primaryPlayer != {} && secondaryPlayer != {}) {
+            clearInterval (intervalPlayers);
+            if (winParam == null) return;
+
+            // caso con vittoria del minigame
+            else if (winParam) {
+                setTimeout(() => {
+                    console.log('il giocatore ha vinto')
+                    bonusTurn = true;
+                    bonusEvent(2);
+                }, 100);
+
+                setTimeout(() => {
+                    let actualCell = primaryPlayer.cell;
+                    if (actualCell == 30 || actualCell == 9 || actualCell == 38 || actualCell == 3 || actualCell == 36 || actualCell == 26) {
+                        // caso B in cui la vittoria del minigame fa finire in una cella con un bonus o un imprevisto
+                        setTimeout(() => {
+                            turn = turnParam;
+                            console.log('B settato turn pari a ')
+                            console.log(turn)
+                            appearTurn(turn);
+                        }, 7000);
+                    } else {
+                        // caso C in cui la vittoria del minigame NON fa finire in una cella con un bonus o un imprevisto
+                        setTimeout(() => {
+                            turn = turnParam;
+                            console.log('C settato turn pari a ')
+                            console.log(turn)
+                            appearTurn(turn);
+                        }, 500);
+                    }
+                }, 2000);        
+            } else if (!winParam) {
+                // caso A senza vittoria di un minigame
+                setTimeout(() => {
+                    turn = turnParam;
+                    console.log('A settato turn pari a ')
+                    console.log(turn)
+                    appearTurn(turn);
+                }, 500);
+            }
+        }
+    }, 500);
+})
+
 
 // gestione delle animazioni
 function animate() {
@@ -355,7 +396,7 @@ function rollDice(number) {
         let dadoNumber = number;
         // TODO controllare che il numero sia effettivamente randomico
         // e non preimpostato per una delle mille prove
-        if (!number) dadoNumber = 10//Math.floor(Math.random() * 6) + 1;
+        if (!number) dadoNumber = 10//Math.floor(Math.random() * 4) + 1;;
 
         for (let i = 1; i <= 6; i++) dado.classList.remove('show-' + i);
         requestAnimationFrame(() => {
@@ -375,8 +416,8 @@ function rollDice(number) {
 
 
 // gestione del lancio del dado
-button.addEventListener('click', () => { 
-    if (!isRolling && turn) movePlayer(primaryPlayer);
+button.addEventListener('click', () => {
+    if (!isRolling && turn && !bonusTurn) movePlayer(primaryPlayer);
 });
 
 // funzione per lo spostamento del player principale
@@ -393,15 +434,12 @@ function movePlayer(player) {
 
                 socket.emit('requestMoveSecondaryPlayer', { dice: dadoNumber, roomId: roomId, special: false });
 
-                // TODO: fixare questo! l'obiettivo è ritardare il turno quando c'è stato un evento bonus / penalità
-                setTimeout(() => {
-                    const checkIsMoving = setInterval(() => {
-                        if (!player.isMoving) {
-                            clearInterval(checkIsMoving);
-                            socket.emit('requestChangeTurn', roomId);
-                        }
-                    }, 1000);
-                }, 5000);
+                const checkIsMoving = setInterval(() => {
+                    if (!player.isMoving) {
+                        clearInterval(checkIsMoving);
+                        socket.emit('requestChangeTurn', roomId);
+                    }
+                }, 1000);
             }).catch(error => {
                 console.log(error); 
             });
@@ -412,6 +450,7 @@ function movePlayer(player) {
 // gestione spostamento dell'altro giocatore
 socket.on('moveSecondaryPlayer', (data) => {
     if ((!turn && !secondaryPlayer.ismoving) || data.special) {
+        console.log('muovo il secondo player')
         if (!data.special) rollDice(data.number);
         setTimeout(() => {
             secondaryPlayer.moveByCells(data.number);
@@ -421,15 +460,22 @@ socket.on('moveSecondaryPlayer', (data) => {
 
 // gestione assegnazione dei turni
 socket.on('changeTurn', () => {
-    turn = true;
-    // compare scritta 'è il turno'
-    if (primaryPlayer.cell != 39 && secondaryPlayer.cell != 39) appearTurn(turn);
+    if (primaryPlayer.cell != 39 && secondaryPlayer.cell != 39) {
+        const intervalTurn = setInterval(() => {
+            if (!bonusTurn) {
+                turn = true;
+                appearTurn(turn);
+                clearInterval(intervalTurn);
+            }
+        }, 1000);
+    }
 });
 
 // funzione che fa apparire la scritta con il proprio turno
 function appearTurn(turn) {
     if (gameEnded) return;
-    if (turn) {
+    if (turn && !flag) {
+        console.log('ora apparirà il turno quindi flag negativa')
         const yourTurnDiv = document.getElementById('yourTurn');
         yourTurnDiv.style.visibility = 'visible';
         setTimeout(() => {
@@ -446,7 +492,7 @@ function appearTurn(turn) {
     }
 }
 
-function showFlipCard(cell, player) {
+function showFlipCard(cell) {
     const flipcard = document.querySelector('.flip-card');
     const flipcardfront = document.querySelector('.flip-card-front');
     const flipcardback = document.querySelector('.flip-card-back');
@@ -459,12 +505,11 @@ function showFlipCard(cell, player) {
     
         setTimeout(() => {
             flipcard.style.opacity = '0';
-        }, 5600);
+        }, 3600);
 
         setTimeout(() => { 
             flipcard.style.visibility = 'hidden';
-            penaltyEvent(2, player);
-        }, 6000);
+        }, 4000);
     }
     else if(cell == 9){
         flipcard.style.visibility = 'visible';
@@ -472,15 +517,14 @@ function showFlipCard(cell, player) {
         flipcardfront.style.backgroundImage = `url('../images/fisica.png')`;
         flipcardfront.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>IMPREVISTO</h1>`;
         flipcardback.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>IMPREVISTO</h1><p style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>Oh no, c'è stato un imprevisto! Non hai passato l'esame di fisica, vai indietro di 2 caselle.</p>`;
-    
+ 
         setTimeout(() => {
             flipcard.style.opacity = '0';
-        }, 5600);
+        }, 3600);
 
         setTimeout(() => {
             flipcard.style.visibility = 'hidden';
-            penaltyEvent(2, player);
-        }, 6000);
+        }, 4000);
     }
     else if(cell == 38){
         flipcard.style.visibility = 'visible';
@@ -491,28 +535,26 @@ function showFlipCard(cell, player) {
     
         setTimeout(() => {
             flipcard.style.opacity = '0';
-        }, 5600);
+        }, 3600);
 
         setTimeout(() => {
             flipcard.style.visibility = 'hidden';
-            penaltyEvent(3, player);
-        }, 6000);
+        }, 4000);
     }
     else if(cell == 3){
         flipcard.style.visibility = 'visible';
-        flipcard.style.opacity=1;
+        flipcard.style.opacity = 1;
         flipcardfront.style.backgroundImage = `url('../images/esonero.png')`;
         flipcardfront.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>BONUS</h1>`;
         flipcardback.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>BONUS</h1><p style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>Bravo! Hai superato un esonero, vai avanti di 2 caselle.</p>`;
     
         setTimeout(() => {
             flipcard.style.opacity = '0';
-        }, 5600);
+        }, 3600);
 
         setTimeout(() => {
             flipcard.style.visibility = 'hidden';
-            bonusEvent(2, player);
-        }, 6000);
+        }, 4000);
     }
     else if(cell == 36){
         flipcard.style.visibility = 'visible';
@@ -523,12 +565,11 @@ function showFlipCard(cell, player) {
     
         setTimeout(() => {
             flipcard.style.opacity = '0';
-        }, 5600);
+        }, 3600);
 
         setTimeout(() => {
             flipcard.style.visibility = 'hidden';
-            bonusEvent(1);
-        }, 6000);
+        }, 4000);
     }
     else if(cell == 26){
         flipcard.style.visibility = 'visible';
@@ -536,15 +577,14 @@ function showFlipCard(cell, player) {
         flipcardfront.style.backgroundImage = `url('../images/relatore.png')`;
         flipcardfront.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>BONUS</h1>`;
         flipcardback.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>BONUS</h1><p style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>Bravo! Sei riuscito a trovare un relatore per la tesi, vai avanti di 2 caselle.</p>`;
-    
+
         setTimeout(() => {
             flipcard.style.opacity = '0';
-        }, 5600);
+        }, 3600);
 
         setTimeout(() => {
             flipcard.style.visibility = 'hidden';
-            bonusEvent(2);
-        }, 6000);
+        }, 4000);
     }
     else{
         flipcard.style.visibility='hidden';
@@ -552,34 +592,74 @@ function showFlipCard(cell, player) {
     
 }
 
-// gestione evento bonus (o vittoria minigame)
-function bonusEvent(number, player) {
-    if (!turn) {
-        player.isMoving = true;
+function activeFlipCard(cell) {
+    if(cell == 30 ) {    
+        setTimeout(() => { 
+            bonusTurn = true;
+            penaltyEvent(2);
+        }, 4000);
+    } else if(cell == 9) {
         setTimeout(() => {
-            player.moveByCells(number);
+            bonusTurn = true;
+            penaltyEvent(2);
+        }, 4000);
+    } else if(cell == 38) {
+        setTimeout(() => {
+            bonusTurn = true;
+            penaltyEvent(3);
+        }, 4000);
+    } else if(cell == 3) {  
+        setTimeout(() => {
+            bonusTurn = true;
+            bonusEvent(2);
+        }, 4000);
+    } else if(cell == 36){    
+        setTimeout(() => {
+            bonusTurn = true;
+            bonusEvent(1);
+        }, 4000);
+    } else if(cell == 26) {    
+        setTimeout(() => {
+            bonusTurn = true;
+            bonusEvent(2);
+        }, 4000);
+    }  
+}
+
+
+
+// gestione evento bonus (o vittoria minigame)
+function bonusEvent(number) {
+    if (!turn) {
+        primaryPlayer.isMoving = true;
+        bonusTurn = false;
+        socket.emit('requestSetBonus', roomId);
+        setTimeout(() => {
+            primaryPlayer.moveByCells(number);
+            console.log('bonus time')
             socket.emit('requestMoveSecondaryPlayer', { dice: number, roomId: roomId, special: true });
             setTimeout(() => {
-                player.isMoving = false;
+                primaryPlayer.isMoving = false;
             }, 1000);
         }, 500);
     }
 };
 
 // gestione evento imprevisto
-function penaltyEvent(number, player) {
+function penaltyEvent(number) {
     if (!turn) {
-        player.isMoving = true;
+        primaryPlayer.isMoving = true;
+        bonusTurn = false;
+        socket.emit('requestSetBonus', roomId);
         setTimeout(() => {
-            player.moveByCells(-number);
+            primaryPlayer.moveByCells(-number);
             socket.emit('requestMoveSecondaryPlayer', { dice: -number, roomId: roomId, special: true });
             setTimeout(() => {
-                player.isMoving = false;
+                primaryPlayer.isMoving = false;
             }, 1000);
         }, 500);
     }
 };
-
 
 // cambio musica raggiunta la cella 30
 let change = false;
@@ -597,7 +677,10 @@ function changeMusic(cell) {
     }
 }
 
-// TODO gestione vittoria, sconfitta e disconnessione forzata
+
+socket.on('setBonus', () => {
+    bonusTurn = false;
+});     
 
 //gestione disconnessione forzata 
 
@@ -629,7 +712,6 @@ socket.on('forcedDisconnect',()=>{
         
     
 })
-
 
 socket.on('gameWon', () => {
     if (!gameEnded) {
@@ -672,13 +754,14 @@ function redirectPlayersToGame(game,data) {
         // const nextPage = `/memory?room=${data}&pos1=${primaryPlayer.cell}&pos2=${secondaryPlayer.cell}&turn=${turn}`;
         // window.location.href = nextPage; // Reindirizza a Memory
     } else if (game === 'cfs') {
-        flag=true;
         const nextPage = `/cfs?room=${data}&pos1=${primaryPlayer.cell}&pos2=${secondaryPlayer.cell}&turn=${turn}`;
         window.location.href = nextPage; // Reindirizza a CFS
     }
 }
 
-
+function checkFlagForRedirection(cell) {
+    if (cell == 6 || cell == 11) flag = true;
+}
 
 
 

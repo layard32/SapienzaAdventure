@@ -163,8 +163,12 @@ io.on('connection', (socket) => {
   socket.on('quitGame',(data)=>{
     const nextPage = `/goose?room=${data.roomId}&pos1=${data.primaryPlayerPosition}&pos2=${data.secondaryPlayerPosition}&win=${data.win}&turn=${data.turn}`;
     socket.emit('redirect', nextPage );
-  })
+  });
   
+  socket.on('requestSetBonus', (data) => {
+    socket.to(data).emit('setBonus');
+  });
+
 }); 
 
 

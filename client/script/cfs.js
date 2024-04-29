@@ -11,6 +11,8 @@ startGame();
 
 // Funzione per la scelta casuale del computer
 function computerChoice() {
+    return 'rock';
+
     const choices = ['rock', 'paper', 'scissors']; // Opzioni possibili
     return choices[Math.floor(Math.random() * choices.length)]; // Restituisce una scelta casuale
 }
