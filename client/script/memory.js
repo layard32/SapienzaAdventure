@@ -190,7 +190,6 @@ function startTimer(duration, display) {
 
 // Funzione per avviare il timer con una durata di 3 minuti (180 secondi)
 function startGameTimer() {
-    // TODO: cambiare durata timer
     let oneMinutes = 60,
         display = document.querySelector('#timer');
     startTimer(oneMinutes, display);
