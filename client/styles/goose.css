@@ -26,52 +26,131 @@ body {
 
 
 .buttonCont{
+    top:93%;
+    left:50%;
+    transform: translate(-50%, -50%);
     position: fixed;
-    top: 100%;
+    /*top: 100%;
     left: 100%;
-    transform: translate(-100%, -100%);
-    width: 270px;
-    height: 95px;
+    transform: translate(-100%, -100%);*/
+    /*width: 58.60vw;
+    height: 11.80vh;*/
     align-items: center;
 
 }
 
+
 #button {
-    display: inline-block;
-    padding: 15px 25px;
-    font-size: 37px;
-    cursor: pointer;
-    text-align: center;
-    text-decoration: none;
-    outline: none;
-    color: #002c53;
-    background-color: #F2EFE9;
-    border: none;
+    position: relative;
+    height: 65px;
+    max-width: 300px;
+    width: 100%;
+    background: #59bb4c;
+    color: #F2EFE9;
+    border:none;
     border-radius: 15px;
-    box-shadow: 0 9px #002c53;
+    cursor: pointer;
+    box-shadow: 0 9px #12480b;
+    overflow: hidden;
+  }
+  
+#button::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    height: 100%;
+    width: 100%;
+    background:rgba(0, 0, 0, 0.2);
+    border-radius: 15px;
 }
   
-#button:hover {
-    background-color: #F2EFE9;
-    transform: translateY(1px);
+  #button.progress::before {
+    animation: progress 2.5s ease-in-out forwards;
+  }
+
+  #button.progress::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: var(--progress-width, 0%);
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.2); /* Colore della progress bar */
+    z-index: -1;
+    transition: width 0.1s ease-out; /* Transizione per l'animazione */
 }
+
   
-#button:active {
-    background-color: #F2EFE9;
-    box-shadow: 0 5px #001e39;
-    transform: translateY(4px);
+@keyframes progress {
+    0% {
+      left: -100%;
+    }
+    10% {
+      left: -97%;
+    }
+    20% {
+      left: -92%;
+    }
+    30% {
+      left: -82%;
+    }
+    30% {
+      left: -62%;
+    }
+    40% {
+      left: -38%;
+    }
+    50% {
+      left: -18%;
+    }
+    60% {
+      left: -14%;
+    }
+    80% {
+      left: -7%;
+    }
+    90% {
+      left: -3%;
+    }
+    100% {
+      left: 0%;
+    }
 }
+
+
+  #button .text-icon {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #button .text-icon span {
+    position: relative;
+    color: #F2EFE9;
+    font-size: 37px;
+   
+  }
+  
+
+  
 
 #playerName {
     position: fixed;
-    top: 100%;
-    transform: translate(0, -100%);
-
+    /*top: 99%;
+    transform: translate(2%, -100%);*/
+    top:8%;
+    left:50%;
+    transform: translate(-50%, -50%);
     font-size: 50px;
     color:#F2EFE9;
-    background-color:#002c53;
-    border:5px solid #F2EFE9;
+    background-color:#59bb4c;
+    /*border:5px solid #F2EFE9;*/
     border-radius: 15px;
+    height: 4.5rem;
+    width: 13rem;
+    text-align: center;
 }
 
 #canvas {
@@ -116,10 +195,8 @@ body {
     position: absolute;
     width: 100%;
     height: 100%;
-    -webkit-backface-visibility: hidden; 
-    backface-visibility: hidden;
-    
-    
+    -webkit-backface-visibility:visible; 
+    backface-visibility: hidden;    
 }
 
 
@@ -133,7 +210,6 @@ body {
     background-position: center;
     background-size:80%;
     
-
 }
 
 
@@ -142,6 +218,7 @@ body {
     color:#002c53;
     border-radius: 15px;
     border: 0.5vw solid #002c53;
+    padding: 5%;
     transform: rotateY(180deg);
 }
 

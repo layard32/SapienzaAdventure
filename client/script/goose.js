@@ -396,7 +396,7 @@ function rollDice(number) {
         let dadoNumber = number;
         // TODO controllare che il numero sia effettivamente randomico
         // e non preimpostato per una delle mille prove
-        if (!number) dadoNumber = 10//Math.floor(Math.random() * 4) + 1;;
+        if (!number) dadoNumber = Math.floor(Math.random() * 4) + 1;
 
         for (let i = 1; i <= 6; i++) dado.classList.remove('show-' + i);
         requestAnimationFrame(() => {
@@ -416,9 +416,19 @@ function rollDice(number) {
 
 
 // gestione del lancio del dado
-button.addEventListener('click', () => {
-    if (!isRolling && turn && !bonusTurn) movePlayer(primaryPlayer);
-});
+// button.addEventListener('click', (e) => {
+//     e.preventDefault(); 
+//     if (!isRolling && turn) { 
+//         button.addEventListener('animationend', () => {
+//             console.lo
+//             movePlayer(primaryPlayer);
+//         });
+//     }
+// });
+button.addEventListener('animationend', () => {
+    if (!isRolling && turn) movePlayer (primaryPlayer);
+})
+
 
 // funzione per lo spostamento del player principale
 // TODO TOGLIERE NUMBER
@@ -763,6 +773,25 @@ function checkFlagForRedirection(cell) {
     if (cell == 6 || cell == 11) flag = true;
 }
 
+document.addEventListener("DOMContentLoaded", function() {
+    const button = document.getElementById("button");
+    let holdInterval;
 
+    button.addEventListener("mousedown", function() {
+        button.classList.add("progress"); // Aggiungi la classe aggiuntiva
+        holdInterval = setInterval(function() {
+            button.classList.remove("progress");
+        }, 3000); // Tempo dell'animazione in millisecondi
+    });
 
+    button.addEventListener("mouseup", function() {
+        clearInterval(holdInterval);
+        button.classList.remove("progress"); // Rimuovi la classe aggiuntiva
+    });
+
+    button.addEventListener("mouseleave", function() {
+        clearInterval(holdInterval);
+        button.classList.remove("progress"); // Rimuovi la classe aggiuntiva
+    });
+});
 
