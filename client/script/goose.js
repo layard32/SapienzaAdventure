@@ -355,7 +355,7 @@ function rollDice(number) {
         let dadoNumber = number;
         // TODO controllare che il numero sia effettivamente randomico
         // e non preimpostato per una delle mille prove
-        if (!number) dadoNumber = 10//Math.floor(Math.random() * 6) + 1;
+        if (!number) dadoNumber = Math.floor(Math.random() * 6) + 1;
 
         for (let i = 1; i <= 6; i++) dado.classList.remove('show-' + i);
         requestAnimationFrame(() => {
@@ -378,6 +378,9 @@ function rollDice(number) {
 button.addEventListener('click', () => { 
     if (!isRolling && turn) movePlayer(primaryPlayer);
 });
+
+
+
 
 // funzione per lo spostamento del player principale
 // TODO TOGLIERE NUMBER
@@ -678,8 +681,25 @@ function redirectPlayersToGame(game,data) {
     }
 }
 
+document.addEventListener("DOMContentLoaded", function() {
+    const button = document.getElementById("button");
+    let holdInterval;
 
+    button.addEventListener("mousedown", function() {
+        button.classList.add("progress"); // Aggiungi la classe aggiuntiva
+        holdInterval = setInterval(function() {
+            button.classList.remove("progress");
+        }, 6000); // Tempo dell'animazione in millisecondi
+    });
 
+    button.addEventListener("mouseup", function() {
+        clearInterval(holdInterval);
+        button.classList.remove("progress"); // Rimuovi la classe aggiuntiva
+    });
 
-
+    button.addEventListener("mouseleave", function() {
+        clearInterval(holdInterval);
+        button.classList.remove("progress"); // Rimuovi la classe aggiuntiva
+    });
+});
 
