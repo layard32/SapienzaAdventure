@@ -786,4 +786,25 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 
+// Ottieni il riferimento al pulsante
+const muteButton = document.getElementById('muteButton');
+
+// Aggiungi un gestore di eventi al pulsante
+muteButton.addEventListener('click', function() {
+    // Ottieni il riferimento all'elemento audio
+    const audioElement = document.getElementById('background-music');
+
+    // Controlla lo stato dell'audio
+    if (audioElement.muted) {
+        // Se è già disattivato, attivalo
+        audioElement.muted = false;
+        muteButton.style.backgroundImage="url('../images/speaker_11343708.png')";
+    } else {
+        // Se è attivo, disattivalo
+        audioElement.muted = true;
+        muteButton.style.backgroundImage = "url('../images/mute-button_11343616.png')";
+    }
+});
+
+
 

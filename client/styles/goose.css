@@ -130,6 +130,31 @@ body {
     height: 4.5rem;
     width: 30rem/*13rem*/;
     text-align: center;
+    justify-items: end;
+}
+
+.contButtonMute{
+    top:6%;
+    left: 64%;
+    transform: translate(-64%, -6%);
+    position: fixed;
+    align-items: center;
+    background-color: transparent;
+    border: none;
+    height: 60px;
+    width: 60px;
+
+}
+
+#muteButton{
+    border: none;
+    background-image: url(../images/speaker_11343708.png);
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-size: 80%;
+    height: 60px;
+    width: 60px;
+    
 }
 
 #canvas {
