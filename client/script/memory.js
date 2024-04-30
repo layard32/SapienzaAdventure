@@ -21,6 +21,16 @@ let gameOver=false;
 let playerOne=0;
 let playerTwo=0;
 
+// GESTIONE SERVER
+const urlParams = new URLSearchParams(window.location.search);
+// prendo i parametri passati tramite chiamata GET
+const roomId = urlParams.get('room');
+const primaryPosition = urlParams.get('pos1');
+const secondaryPosition = urlParams.get('pos2')
+const turn = urlParams.get('turn');
+const socket = io.connect('http://localhost:3000');
+
+
 
 
 
@@ -136,6 +146,7 @@ function checkGameEnd() {
         showEndGameModal();
         // Disabilita la funzionalità di girare le carte
         canFlip = false;
+        gameOver=true;
         playerTwo=1;
         console.log('ha vinto il computer');
     }
@@ -144,19 +155,25 @@ function checkGameEnd() {
         showEndGameModal();
         // Disabilita la funzionalità di girare le carte
         canFlip = false;
-        
+        gameOver=true;
         playerOne=1;
         console.log('ha vinto il giocatore');
     }
     
     // a prescindere che il timer è scaduto o tutte le coppie sono state trovate, mando evento al socket
     // per reindirizzamento
-    socket.emit('quitGame', { roomId: roomId, 
-        primaryPlayerPosition: primaryPosition,
-        secondaryPlayerPosition: secondaryPosition,
-        win: (playerOne == 1), 
-        turn: turn });
+    if(gameOver){
+        socket.emit('quitGame', { roomId: roomId, 
+            primaryPlayerPosition: primaryPosition,
+            secondaryPlayerPosition: secondaryPosition,
+            win: (playerOne == 1), 
+            turn: turn 
+        });
+    }
+    
 }
+
+
 
 // Gestione del click sull'icona di chiusura del modale
 document.addEventListener('DOMContentLoaded', function() {
@@ -190,7 +207,7 @@ function startTimer(duration, display) {
 
 // Funzione per avviare il timer con una durata di 3 minuti (180 secondi)
 function startGameTimer() {
-    let oneMinutes = 60,
+    let oneMinutes = 60*2,
         display = document.querySelector('#timer');
     startTimer(oneMinutes, display);
 }
@@ -204,14 +221,6 @@ window.onload = function () {
 
 
 
-// GESTIONE SERVER
-const urlParams = new URLSearchParams(window.location.search);
-// prendo i parametri passati tramite chiamata GET
-const roomId = urlParams.get('room');
-const primaryPosition = urlParams.get('pos1');
-const secondaryPosition = urlParams.get('pos2')
-const turn = urlParams.get('turn');
-const socket = io.connect('http://localhost:3000');
 
 socket.emit("joinExistingRoom",roomId);
 
