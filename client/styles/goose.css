@@ -119,12 +119,16 @@ body {
     left:50%;
     transform: translate(-50%, -4%);
     font-size: 50px;
-    color:#F2EFE9;
-    background-color:#59bb4c;
+    color:#59bb4c;
+    background-color:#F2EFE9;
     /*border:5px solid #F2EFE9;*/
+    background-image: url(../images/chess.png);
+    background-size: 15%;
+    background-repeat: no-repeat;
+    background-position: left;
     border-radius: 15px;
     height: 4.5rem;
-    width: 13rem;
+    width: 30rem/*13rem*/;
     text-align: center;
 }
 
