@@ -112,6 +112,7 @@ body {
   }
 
 #playerName {
+    z-index: -1;
     position: fixed;
     /*top: 99%;
     transform: translate(2%, -100%);*/
@@ -133,7 +134,7 @@ body {
     justify-items: end;
 }
 
-.contButtonMute{
+/* .contButtonMute{
     top:6%;
     left: 64%;
     transform: translate(-64%, -6%);
@@ -143,10 +144,10 @@ body {
     border: none;
     height: 60px;
     width: 60px;
-
-}
+} */
 
 #muteButton{
+    z-index: 1;
     border: none;
     background-image: url(../images/speaker_11343708.png);
     background-color: transparent;
@@ -155,6 +156,10 @@ body {
     height: 60px;
     width: 60px;
     
+    position: fixed;
+    top: 5.5%;
+    left: 90%;
+    transform: translate(-90%, -5.5%);
 }
 
 #canvas {

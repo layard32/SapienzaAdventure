@@ -791,18 +791,26 @@ const muteButton = document.getElementById('muteButton');
 
 // Aggiungi un gestore di eventi al pulsante
 muteButton.addEventListener('click', function() {
-    // Ottieni il riferimento all'elemento audio
-    const audioElement = document.getElementById('background-music');
-
-    // Controlla lo stato dell'audio
-    if (audioElement.muted) {
-        // Se è già disattivato, attivalo
-        audioElement.muted = false;
-        muteButton.style.backgroundImage="url('../images/speaker_11343708.png')";
+    // se la canzone attiva è mission impossible
+    if (change) {
+        // se è mutata la smutiamo
+        if (missionImpossible.muted) {
+            missionImpossible.muted = false;
+            muteButton.style.backgroundImage="url('../images/speaker_11343708.png')";
+        // se è smutata la mutiamo
+        } else {
+            missionImpossible.muted = true;
+            muteButton.style.backgroundImage = "url('../images/mute-button_11343616.png')";
+        }
+    // se la canzone attiva è backgroundMusic
     } else {
-        // Se è attivo, disattivalo
-        audioElement.muted = true;
-        muteButton.style.backgroundImage = "url('../images/mute-button_11343616.png')";
+        if (backgroundMusic.muted) {
+            backgroundMusic.muted = false;
+            muteButton.style.backgroundImage="url('../images/speaker_11343708.png')";
+        } else {
+            backgroundMusic.muted = true;
+            muteButton.style.backgroundImage = "url('../images/mute-button_11343616.png')";
+        }
     }
 });
 
