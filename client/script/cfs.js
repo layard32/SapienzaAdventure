@@ -11,9 +11,7 @@ startGame();
 
 // Funzione per la scelta casuale del computer
 function computerChoice() {
-    return 'rock';
-
-    const choices = ['rock', 'paper', 'scissors']; // Opzioni possibili
+    const choices = ['sasso', 'carta', 'forbice']; // Opzioni possibili
     return choices[Math.floor(Math.random() * choices.length)]; // Restituisce una scelta casuale
 }
 
@@ -24,26 +22,26 @@ function updateChoices(playerSelection, computerSelection) {
 
     // Imposta l'emoji corrispondente alla scelta del giocatore
     switch (playerSelection) {
-        case 'rock':
+        case 'sasso':
             playerSign.textContent = '✊'; // Pugno
             break;
-        case 'paper':
+        case 'carta':
             playerSign.textContent = '✋'; // Mano
             break;
-        case 'scissors':
+        case 'forbice':
             playerSign.textContent = '✌'; // Forbici
             break;
     }
 
     // Imposta l'emoji corrispondente alla scelta del computer
     switch (computerSelection) {
-        case 'rock':
+        case 'sasso':
             computerSign.textContent = '✊'; // Pugno
             break;
-        case 'paper':
+        case 'carta':
             computerSign.textContent = '✋'; // Mano
             break;
-        case 'scissors':
+        case 'forbice':
             computerSign.textContent = '✌'; // Forbici
             break;
     }
@@ -94,14 +92,14 @@ function playGame(choice, playerNum) {
             result = 'TIE'; // Pareggio
         } else {
             switch (playerOneChoice) {
-                case 'rock':
-                    result = (playerTwoChoice === 'scissors') ? 'PLAYER' : 'COMPUTER'; // Vincitore in base alla scelta del giocatore uno
+                case 'sasso':
+                    result = (playerTwoChoice === 'forbice') ? 'PLAYER' : 'COMPUTER'; // Vincitore in base alla scelta del giocatore uno
                     break;
-                case 'paper':
-                    result = (playerTwoChoice === 'rock') ? 'PLAYER' : 'COMPUTER'; // Vincitore in base alla scelta del giocatore uno
+                case 'carta':
+                    result = (playerTwoChoice === 'sasso') ? 'PLAYER' : 'COMPUTER'; // Vincitore in base alla scelta del giocatore uno
                     break;
-                case 'scissors':
-                    result = (playerTwoChoice === 'paper') ? 'PLAYER' : 'COMPUTER'; // Vincitore in base alla scelta del giocatore uno
+                case 'forbice':
+                    result = (playerTwoChoice === 'carta') ? 'PLAYER' : 'COMPUTER'; // Vincitore in base alla scelta del giocatore uno
                     break;
             }
         }
@@ -155,21 +153,21 @@ function displayResult(result) {
     switch (result) {
         case 'TIE':
             scoreInfo.textContent = "It's a tie!"; // Pareggio
-            scoreMessage.textContent = "Both players chose the same weapon."; // Entrambi i giocatori hanno scelto la stessa arma
+            //scoreMessage.textContent = "Both players chose the same weapon."; // Entrambi i giocatori hanno scelto la stessa arma
             break;
         case 'PLAYER':
             scoreInfo.textContent = "You win!"; // Vittoria del giocatore
-            scoreMessage.textContent = getWinningMessage(playerOneChoice, playerTwoChoice); // Messaggio di vittoria
+           // scoreMessage.textContent = getWinningMessage(playerOneChoice, playerTwoChoice); // Messaggio di vittoria
             break;
         case 'COMPUTER':
             scoreInfo.textContent = "You lose..."; // Sconfitta del giocatore
-            scoreMessage.textContent = getWinningMessage(playerTwoChoice, playerOneChoice); // Messaggio di sconfitta
+            //scoreMessage.textContent = getWinningMessage(playerTwoChoice, playerOneChoice); // Messaggio di sconfitta
             break;
     }
 }
 
 // Funzione per ottenere il messaggio di vittoria/sconfitta
-function getWinningMessage(winningChoice, losingChoice) {
+/*function getWinningMessage(winningChoice, losingChoice) {
     // Determina il messaggio in base alle scelte
     switch (winningChoice) {
         case 'rock':
@@ -179,7 +177,7 @@ function getWinningMessage(winningChoice, losingChoice) {
         case 'scissors':
             return (losingChoice === 'paper') ? 'Scissors cuts paper' : 'Rock crushes scissors';
     }
-}
+}*/
 
 // Funzione per avviare il gioco
 function startGame() {
@@ -306,9 +304,15 @@ function startTimer(duration, display) {
 
 // Funzione per avviare il timer con una durata di 3 minuti (180 secondi)
 function startGameTimer() {
-    var threeMinutes = 5,
+    var threeMinutes = 60,
         display = document.querySelector('#timer');
     startTimer(threeMinutes, display);
+    updateTimerBar(threeMinutes);
+}
+// Funzione per aggiornare la barra del timer
+function updateTimerBar(duration) {
+    var timerBar = document.querySelector('#timerBar');
+    timerBar.style.animationDuration = duration + 's'; // Imposta la durata dell'animazione
 }
 
 // Avvia il timer quando la finestra si carica
@@ -338,13 +342,13 @@ function endGame() {
 
     // Mostra il messaggio di vittoria/sconfitta dopo un secondo
     setTimeout(() => {
-        const message = (playerOneScore === 2) ? 'You won!' : 'You lost...';
+       /* const message = (playerOneScore === 2) ? 'You won!' : 'You lost...';
         const winMessage = document.getElementById('winMessage');
         winMessage.textContent = message;
 
         // Mostra il modale di fine gioco
         const gameOverModal = document.getElementById('gameOverModal');
-        gameOverModal.style.display = 'block';
+        gameOverModal.style.display = 'block';*/
 
         // Disabilita tutti i pulsanti delle scelte
         document.querySelectorAll('.emoji-buttons button').forEach(button => {

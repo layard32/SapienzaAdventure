@@ -222,15 +222,45 @@ header h1 {
 }
 
 
-#timer{
-    font-size: 40px/*300% /*6vw*/;
-    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-    color: #002c53 ;
+#timer {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Centra il testo del timer */
+    font-size: 14px; /* Riduci la dimensione del testo */
+    color: #002c53;
 }
+
 
 #tempo{
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
     color: #002c53 ;
     font-size: 40px/*7vw*/;
 
+}
+
+#timerContainer {
+    position: relative;
+    width: 80%; /* Riduci la larghezza del container del timer */
+    height: 20px; /* Riduci l'altezza della barra del timer */
+    margin: 0 auto; /* Centra il container */
+}
+
+#timerBar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%; /* La barra del timer è inizialmente piena */
+    height: 100%;
+    background-color: #59bb4c; /* Colore della barra del timer */
+    animation: fillTimer linear forwards; /* Animazione per riempire la barra del timer */
+}
+
+@keyframes fillTimer {
+    0% {
+        width: 100%; /* La barra del timer è inizialmente piena */
+    }
+    100% {
+        width: 0%; /* La barra del timer è completamente vuota alla fine */
+    }
 }

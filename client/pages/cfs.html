@@ -22,8 +22,10 @@
             </header>
             
             <div id="tempo">Timer:</div>
-
-            <div id="timer">03:00</div>
+            <div id="timerContainer">
+                <div id="timerBar"></div> <!-- La barra del timer -->
+                <div id="timer">01:00</div> <!-- Il display del timer -->
+            </div>
 
             <div class="scoreboard">
                 <h2 class="score-info" id="scoreInfo">Choose your weapon</h2> <!-- Informazioni sul punteggio -->
@@ -45,9 +47,9 @@
             <div class="choices">
                 <div class="emoji-buttons">
                     <!-- Pulsanti per le scelte del giocatore -->
-                    <button onclick="playGame('rock', 1)"><span>&#9994;</span></button> <!-- Pugno -->
-                    <button onclick="playGame('paper', 1)"><span>&#9996;</span></button> <!-- Mano -->
-                    <button onclick="playGame('scissors', 1)"><span>&#9995;</span></button> <!-- Forbici -->
+                    <button onclick="playGame('sasso', 1)"><span>&#9994;</span></button> 
+                    <button onclick="playGame('carta', 1)"><span>&#9995;</span></button> 
+                    <button onclick="playGame('forbice', 1)"><span>&#9996;</span></button> 
                 </div>
             </div>
 
