@@ -384,3 +384,32 @@ body {
     top:50%;
     left:80%;
 }
+
+/* Stile personalizzato per i toast */
+.toast {
+    border-radius: 10px;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    width: 90%; /* Larghezza del toast */
+    max-width: 500px; /* Larghezza massima del toast */
+    margin: auto; /* Centrare il toast */
+}
+
+.toast-body {
+    padding: 20px; /* Padding maggiore */
+    font-size: 20px; /* Dimensione del testo maggiore */
+}
+
+/* Stile per il toast di vittoria a tavolino */
+#winToast {
+    background-color: #5cb85c; /* Colore di sfondo verde */
+}
+
+/* Stile per il toast di vittoria personalizzato */
+#customWinToast {
+    background-color: #007bff; /* Colore di sfondo blu */
+}
+
+/* Stile per il toast di sconfitta */
+#loseToast {
+    background-color: #dc3545; /* Colore di sfondo rosso */
+}

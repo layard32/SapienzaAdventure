@@ -147,20 +147,20 @@ function updateScores(result) {
 function displayResult(result) {
     // Ottiene gli elementi per visualizzare il risultato
     const scoreInfo = document.getElementById("scoreInfo");
-    const scoreMessage = document.getElementById("scoreMessage");
+    //const scoreMessage = document.getElementById("scoreMessage");
 
     // Mostra il messaggio corrispondente al risultato
     switch (result) {
         case 'TIE':
-            scoreInfo.textContent = "It's a tie!"; // Pareggio
+            scoreInfo.textContent = "Pareggio!"; // Pareggio
             //scoreMessage.textContent = "Both players chose the same weapon."; // Entrambi i giocatori hanno scelto la stessa arma
             break;
         case 'PLAYER':
-            scoreInfo.textContent = "You win!"; // Vittoria del giocatore
+            scoreInfo.textContent = "Hai vinto!"; // Vittoria del giocatore
            // scoreMessage.textContent = getWinningMessage(playerOneChoice, playerTwoChoice); // Messaggio di vittoria
             break;
         case 'COMPUTER':
-            scoreInfo.textContent = "You lose..."; // Sconfitta del giocatore
+            scoreInfo.textContent = "Hai perso..."; // Sconfitta del giocatore
             //scoreMessage.textContent = getWinningMessage(playerTwoChoice, playerOneChoice); // Messaggio di sconfitta
             break;
     }
@@ -278,8 +278,8 @@ function resetGame() {
     playerTwoChoice = '';
 
     // Resetta il testo di scelta dei giocatori
-    document.getElementById('scoreInfo').textContent = 'Choose your weapon';
-    document.getElementById('scoreMessage').textContent = 'First to win 2 rounds wins the game';
+    document.getElementById('scoreInfo').textContent = 'Fai la tua scelta';
+    document.getElementById('scoreMessage').textContent = 'Vinci per ottenere punti bonus per la corsa verso la Laurea!';
 }
 
 // Funzione per avviare il timer
@@ -342,14 +342,6 @@ function endGame() {
 
     // Mostra il messaggio di vittoria/sconfitta dopo un secondo
     setTimeout(() => {
-       /* const message = (playerOneScore === 2) ? 'You won!' : 'You lost...';
-        const winMessage = document.getElementById('winMessage');
-        winMessage.textContent = message;
-
-        // Mostra il modale di fine gioco
-        const gameOverModal = document.getElementById('gameOverModal');
-        gameOverModal.style.display = 'block';*/
-
         // Disabilita tutti i pulsanti delle scelte
         document.querySelectorAll('.emoji-buttons button').forEach(button => {
             button.disabled = true;

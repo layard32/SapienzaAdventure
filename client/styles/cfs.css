@@ -30,22 +30,6 @@ body {
     transform: translate(-50%, -50%); /* Centra l'elemento esattamente al centro */
 }
 
-/* Pulsante di avvio */
-#startButton {
-    font-size: 24px; /* Dimensione del carattere */
-    padding: 10px 20px; /* Spaziatura interna */
-    cursor: pointer; /* Mostra il cursore come puntatore */
-    background-color: #8C4A4A; /* Colore di sfondo */
-    color: white; /* Colore del testo */
-    border: none; /* Rimuove il bordo */
-    border-radius: 5px; /* Bordi arrotondati */
-    transition: background-color 0.3s; /* Transizione al passaggio del mouse */
-}
-
-/* Effetto al passaggio del mouse sul pulsante di avvio */
-#startButton:hover {
-    background-color: #5F2C2C; /* Cambia il colore di sfondo al passaggio del mouse */
-}
 
 /* Schermo di gioco */
 #gameScreen {
@@ -107,7 +91,7 @@ header h1 {
 
 /* Contenitore del punteggio */
 .scoreboard{
-    padding-top: 60px; /* Spaziatura superiore */
+    padding-top: 10px; /* Spaziatura superiore */
     padding-bottom: 40px; /* Spaziatura inferiore */
 }
 
@@ -140,78 +124,10 @@ header h1 {
     font-weight: bold; /* Grassetto */
 }
 
-/* Modale di fine gioco */
-.modal {
-    display: none; /* Nasconde il modale */
-    position: fixed; /* Imposta il posizionamento fisso */
-    z-index: 1; /* Posizione rispetto agli altri elementi */
-    left: 50%; /* Sposta l'elemento al 50% della larghezza della finestra */
-    top: 50%; /* Sposta l'elemento al 50% dell'altezza della finestra */
-    width: 90%; /* Larghezza */
-    max-width: 400px; /* Larghezza massima */
-    padding: 30px; /* Spaziatura interna */
-    border-radius: 10px; /* Bordo arrotondato */
-    background-color: #e6f7ff; /* Colore di sfondo */
-    color: #333; /* Colore del testo */
-    text-align: center; /* Allinea il testo al centro */
-    font-size: 24px; /* Dimensione del carattere */
-    transform: translate(-50%, -50%); /* Centra l'elemento esattamente al centro */
-    background: linear-gradient(to right, #e6f7ff 0%, #d9edf7 100%); /* Sfondo a gradiente */
-}
 
-/* Pulsanti del modale */
-.modal-buttons {
-    display: flex; /* Utilizza il layout flessibile */
-    justify-content: space-between; /* Distribuisce uniformemente gli elementi */
-    padding: 0; /* Rimuove il padding */
-}
 
-/* Pulsante per chiudere il modale */
-.close {
-    position: absolute; /* Imposta il posizionamento assoluto */
-    top: 10px; /* Sposta l'elemento 10px dal bordo superiore */
-    right: 10px; /* Sposta l'elemento 10px dal bordo destro */
-    font-size: 24px; /* Dimensione del carattere */
-    cursor: pointer; /* Mostra il cursore come puntatore */
-    color: #333; /* Colore del testo */
-    transition: color 0.3s; /* Transizione al passaggio del mouse */
-}
 
-/* Effetto al passaggio del mouse sul pulsante di chiusura */
-.close:hover,
-.close:focus {
-    color: #000; /* Cambia il colore del testo al passaggio del mouse */
-    text-decoration: none; /* Rimuove la sottolineatura */
-}
 
-/* Messaggio di vittoria */
-#winMessage {
-    color: #8C4A4A; /* Colore del testo */
-    font-size: 28px; /* Dimensione del carattere */
-    font-weight: bold; /* Grassetto */
-    margin-bottom: 20px; /* Margine inferiore */
-}
-
-/* Pulsanti di riavvio e uscita */
-.restart-button,
-.quit-button {
-    font-size: 18px; /* Dimensione del carattere */
-    padding: 12px 25px; /* Spaziatura interna */
-    cursor: pointer; /* Mostra il cursore come puntatore */
-    background-color: #8C4A4A; /* Colore di sfondo */
-    color: white; /* Colore del testo */
-    border: none; /* Rimuove il bordo */
-    border-radius: 5px; /* Bordo arrotondato */
-    transition: background-color 0.3s; /* Transizione al passaggio del mouse */
-}
-
-/* Effetto al passaggio del mouse sui pulsanti di riavvio e uscita */
-.restart-button:hover,
-.quit-button:hover {
-    background-color: #5F2C2C; /* Cambia il colore di sfondo al passaggio del mouse */
-    color: #fff; /* Cambia il colore del testo al passaggio del mouse */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Ombra */
-}
 
 /* Media query per schermi di dimensioni inferiori a 768px */
 @media only screen and (max-width: 768px) {
@@ -231,19 +147,20 @@ header h1 {
     color: #002c53;
 }
 
-
-#tempo{
+#tempo {
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-    color: #002c53 ;
-    font-size: 40px/*7vw*/;
-
+    color: #002c53;
+    font-size: 40px;
+    margin-top: 40px;
 }
 
 #timerContainer {
     position: relative;
-    width: 80%; /* Riduci la larghezza del container del timer */
+    width: 60%; /* Riduci la larghezza del container del timer */
     height: 20px; /* Riduci l'altezza della barra del timer */
     margin: 0 auto; /* Centra il container */
+    border: 1px solid black; /* Aggiungi il bordo nero */
+    overflow: hidden; /* Nascondi il contenuto che va oltre i limiti del container */
 }
 
 #timerBar {
@@ -252,15 +169,21 @@ header h1 {
     left: 0;
     width: 100%; /* La barra del timer è inizialmente piena */
     height: 100%;
-    background-color: #59bb4c; /* Colore della barra del timer */
+    background-color: #59bb4c; /* Colore della barra del timer (verde) quando è piena */
     animation: fillTimer linear forwards; /* Animazione per riempire la barra del timer */
 }
 
+
+/* Cambia il colore della barra del timer a giallo quando è a metà */
 @keyframes fillTimer {
     0% {
-        width: 100%; /* La barra del timer è inizialmente piena */
+        width: 100%;
+    }
+    50% {
+        background-color: yellow; /* Giallo quando è a metà */
     }
     100% {
-        width: 0%; /* La barra del timer è completamente vuota alla fine */
+        width: 0%;
+        background-color: red; /* Rosso quando sta per finire il tempo */
     }
 }
