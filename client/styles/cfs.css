@@ -138,14 +138,6 @@ header h1 {
 }
 
 
-#timer {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%); /* Centra il testo del timer */
-    font-size: 14px; /* Riduci la dimensione del testo */
-    color: #002c53;
-}
 
 #tempo {
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
