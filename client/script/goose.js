@@ -817,6 +817,9 @@ muteButton.addEventListener('click', function() {
 
 //chatbox 
 let uname;
+socket.on('otherPerChat',(data)=>{
+    uname=data;
+})
 
 document.getElementById("open-chat").addEventListener("click", function(){
     const chatScreen = document.querySelector(".chat-screen");
@@ -829,9 +832,6 @@ document.getElementById("open-chat").addEventListener("click", function(){
     }
 });
 
-
-// Questo blocco è relativo all'input del nome utente, che sembra non essere più presente nel codice HTML fornito
-// Se vuoi conservarlo, dovrai aggiungere nuovi elementi HTML e aggiornare questo blocco di codice
 
 document.querySelector(".chat-screen #send-message").addEventListener("click", function(){
     let message = document.querySelector(".chat-screen #message-input").value;

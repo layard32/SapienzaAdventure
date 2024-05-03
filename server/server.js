@@ -153,6 +153,7 @@ io.on('connection', (socket) => {
 
     // manda il segnale con l'altro username
     socket.emit('otherUsername', otherUsername);
+    socket.emit('otherPerChat',otherUsername);
   });
 
   socket.on('redirectToGame', ({ game, roomId })=> {
