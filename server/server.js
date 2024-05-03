@@ -169,6 +169,14 @@ io.on('connection', (socket) => {
     socket.to(data).emit('setBonus');
   });
 
+  //chat 
+  socket.on("newuser",function(username){
+    socket.broadcast.emit("update",username+"joined the conversation");
+  });
+
+  socket.on("chat",function(message){
+    socket.broadcast.emit("chat",message);
+  })
 }); 
 
 

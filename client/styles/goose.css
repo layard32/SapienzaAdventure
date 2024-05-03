@@ -413,3 +413,79 @@ body {
 #loseToast {
     background-color: #dc3545; /* Colore di sfondo rosso */
 }
+
+
+/*chat*/
+
+.open-chat {
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: #59bb4c; /* Colore di sfondo verde */
+    color: #FFF; /* Colore del testo bianco */
+    font-size: 24px;
+    cursor: pointer;
+    outline: none;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 1;
+    border-radius: 50%; /* Bordi arrotondati per rendere il pulsante circolare */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Ombra sottile per effetto tridimensionale */
+    transition: background-color 0.3s, transform 0.2s; /* Effetti di transizione */
+}
+
+.open-chat:hover {
+    background: #4ca746; /* Cambia il colore al passaggio del mouse */
+    transform: scale(1.1); /* Ingrandisce leggermente il pulsante al passaggio del mouse */
+}
+
+.open-chat::before {
+    content: "\1F4AC"; /* Icona del palloncino del fumetto */
+}
+
+.chat-screen {
+    width: 200px; /* Larghezza fissa della schermata della chat */
+    height: 70%; /* Altezza in percentuale rispetto all'altezza della viewport */
+    max-height: calc(100vh - 40px); /* Altezza massima meno l'altezza del pulsante */
+    overflow: auto; /* Aggiungi uno scorrimento se la chat è più grande dello spazio disponibile */
+    background-color: #fff; /* Colore di sfondo della schermata della chat */
+    border-radius: 10px; /* Bordi arrotondati */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Ombra leggera */
+    padding: 20px; /* Padding interno per separare i contenuti dai bordi */
+    display: none; /* La chat è inizialmente nascosta */
+}
+
+.chat-screen.active {
+    display: block; /* Mostra la chat quando è attiva */
+}
+
+.typebox {
+    display: flex;
+    align-items: center;
+}
+
+#message-input {
+    flex: 1; /* Fai espandere l'input per occupare lo spazio rimanente */
+    padding: 6px; /* Padding più piccolo */
+    font-size: 9px; /* Dimensione del testo più piccola */
+    border: 1px solid #ccc; /* Bordo leggero */
+    border-radius: 5px; /* Angoli arrotondati */
+    margin-right: 8px; /* Margine a destra più piccolo */
+}
+
+#send-message {
+    padding: 6px 10px; /* Padding interno più piccolo */
+    font-size: 9px; /* Dimensione del testo più piccola */
+    background-color: #007bff; /* Colore di sfondo */
+    color: #fff; /* Colore del testo */
+    border: none; /* Rimuovi il bordo */
+    border-radius: 5px; /* Angoli arrotondati */
+    cursor: pointer; /* Cambia il cursore al passaggio del mouse */
+}
+
+#send-message:hover {
+    background-color: #0056b3; /* Cambia colore di sfondo al passaggio del mouse */
+}
+
+

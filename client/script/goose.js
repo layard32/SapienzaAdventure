@@ -815,4 +815,74 @@ muteButton.addEventListener('click', function() {
 });
 
 
+//chatbox 
+let uname;
+
+document.getElementById("open-chat").addEventListener("click", function(){
+    const chatScreen = document.querySelector(".chat-screen");
+    if (chatScreen.classList.contains("active")) {
+        // Se la chat è già attiva, la chiudiamo
+        chatScreen.classList.remove("active");
+    } else {
+        // Altrimenti, attiviamo la chat
+        chatScreen.classList.add("active");
+    }
+});
+
+
+// Questo blocco è relativo all'input del nome utente, che sembra non essere più presente nel codice HTML fornito
+// Se vuoi conservarlo, dovrai aggiungere nuovi elementi HTML e aggiornare questo blocco di codice
+
+document.querySelector(".chat-screen #send-message").addEventListener("click", function(){
+    let message = document.querySelector(".chat-screen #message-input").value;
+    if(message.length == 0) return;
+    renderMessage("my", {
+        username: uname,
+        text: message
+    });
+    socket.emit("chat", {
+        username: uname,
+        text: message
+    });
+    document.querySelector(".chat-screen #message-input").value = "";
+});
+
+socket.on("update", function(update){
+    renderMessage("update", update);
+});
+socket.on("chat", function(message){
+    renderMessage("other", message);
+});
+
+function renderMessage(type, message){
+    let messageContainer = document.querySelector(".chat-screen .messages");
+    if(type == "my"){
+        let messageDiv = document.createElement("div");
+        messageDiv.classList.add("message", "my-message");
+        messageDiv.innerHTML = `
+            <div>
+                <div class="name">You</div>
+                <div class="text">${message.text}</div>
+            </div>
+        `;
+        messageContainer.appendChild(messageDiv);
+    } else if(type == "other"){
+        let messageDiv = document.createElement("div");
+        messageDiv.classList.add("message", "other-message");
+        messageDiv.innerHTML = `
+            <div>
+                <div class="name">${message.username}</div>
+                <div class="text">${message.text}</div>
+            </div>
+        `;
+        messageContainer.appendChild(messageDiv);
+    } else if(type == "update"){
+        let updateDiv = document.createElement("div");
+        updateDiv.classList.add("update");
+        updateDiv.innerText = message;
+        messageContainer.appendChild(updateDiv);
+    }
+    messageContainer.scrollTop = messageContainer.scrollHeight - messageContainer.clientHeight;
+}
+
 
