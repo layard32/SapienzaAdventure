@@ -861,7 +861,7 @@ function renderMessage(type, message){
         messageDiv.classList.add("message", "my-message");
         messageDiv.innerHTML = `
             <div>
-                <div class="name">You</div>
+                <div class="name">${username}</div> 
                 <div class="text">${message.text}</div>
             </div>
         `;
@@ -871,7 +871,7 @@ function renderMessage(type, message){
         messageDiv.classList.add("message", "other-message");
         messageDiv.innerHTML = `
             <div>
-                <div class="name">${message.username}</div>
+                <div class="name">${message.username}</div> <!-- Utilizza il nome utente del mittente del messaggio -->
                 <div class="text">${message.text}</div>
             </div>
         `;
@@ -884,5 +884,6 @@ function renderMessage(type, message){
     }
     messageContainer.scrollTop = messageContainer.scrollHeight - messageContainer.clientHeight;
 }
+
 
 
