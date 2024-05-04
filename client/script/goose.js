@@ -784,6 +784,18 @@ document.addEventListener("DOMContentLoaded", function() {
         clearInterval(holdInterval);
         button.classList.remove("progress"); // Rimuovi la classe aggiuntiva
     });
+    button.addEventListener("touchstart", function() {
+        button.classList.add("progress"); // Aggiungi la classe aggiuntiva
+        holdInterval = setInterval(function() {
+            button.classList.remove("progress");
+        }, 3000); // Tempo dell'animazione in millisecondi
+    });
+    button.addEventListener("touchend", function() {
+        clearInterval(holdInterval);
+        button.classList.remove("progress"); // Rimuovi la classe aggiuntiva
+    });
+
+
 });
 
 
