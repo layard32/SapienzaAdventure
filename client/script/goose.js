@@ -838,6 +838,15 @@ document.getElementById("open-chat").addEventListener("click", function(){
     }
 });
 
+document.querySelector(".chat-screen #message-input").addEventListener("keydown", function(event) {
+    // Verifica se il tasto premuto è il tasto "Invio" (codice 13)
+    if (event.keyCode === 13) {
+        // Impedisce il comportamento predefinito del tasto "Invio" (evita di inviare una nuova riga)
+        event.preventDefault();
+        // Simula il click del pulsante "Invia"
+        document.getElementById("send-message").click();
+    }
+});
 
 document.querySelector(".chat-screen #send-message").addEventListener("click", function(){
     let message = document.querySelector(".chat-screen #message-input").value;
