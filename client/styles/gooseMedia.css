@@ -91,6 +91,11 @@
 }
 
 
+@media only screen and (max-width: 600px) {
+    #button {
+      height: 50px;
+    }
+}
 
 /* supporto mobile: cambia lo sfondo (ruotato) e si ruota canvas-container */
 @media screen and (max-width: 500px) {
@@ -109,6 +114,7 @@
         transform: translate(-120%, -50%) rotate(90deg);
         font-size: 40px;
     }
+
  
     .buttonCont.text {
         top: 50%;
@@ -130,7 +136,9 @@
     }
     
     #muteButton{
-        transform: translate(-50%, -50%) rotate(90deg)
+        top:50%;
+        left:120%;
+        transform: translate(-120%, -50%) rotate(90deg) !important;
     }
 
 }
