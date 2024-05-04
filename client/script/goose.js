@@ -822,6 +822,7 @@ socket.emit('requestOtherUsername', roomId);
 
 socket.on('otherUsername', (data) => {
     othername=data;
+    console.log("dentro socket",othername);
 });
 
 console.log(othername);
