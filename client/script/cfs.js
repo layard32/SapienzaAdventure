@@ -166,18 +166,6 @@ function displayResult(result) {
     }
 }
 
-// Funzione per ottenere il messaggio di vittoria/sconfitta
-/*function getWinningMessage(winningChoice, losingChoice) {
-    // Determina il messaggio in base alle scelte
-    switch (winningChoice) {
-        case 'rock':
-            return (losingChoice === 'scissors') ? 'Rock crushes scissors' : 'Paper covers rock';
-        case 'paper':
-            return (losingChoice === 'rock') ? 'Paper covers rock' : 'Scissors cuts paper';
-        case 'scissors':
-            return (losingChoice === 'paper') ? 'Scissors cuts paper' : 'Rock crushes scissors';
-    }
-}*/
 
 // Funzione per avviare il gioco
 function startGame() {
