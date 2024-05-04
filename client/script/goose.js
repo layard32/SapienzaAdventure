@@ -225,6 +225,7 @@ class Player {
 
 // GESTIONE USERNAME
 let username = ''; 
+
 // ogni client prende l'username dai cookie
 window.addEventListener('DOMContentLoaded', () => {
     const usernameCookie = document.cookie.split('; ').find((cookie) => cookie.startsWith('username='));
@@ -816,10 +817,14 @@ muteButton.addEventListener('click', function() {
 
 
 //chatbox 
-let uname;
-socket.on('otherPerChat',(data)=>{
-    uname=data;
-})
+let othername='';
+socket.emit('requestOtherUsername', roomId);
+
+socket.on('otherUsername', (data) => {
+    othername=data;
+});
+
+console.log(othername);
 
 document.getElementById("open-chat").addEventListener("click", function(){
     const chatScreen = document.querySelector(".chat-screen");
@@ -837,11 +842,11 @@ document.querySelector(".chat-screen #send-message").addEventListener("click", f
     let message = document.querySelector(".chat-screen #message-input").value;
     if(message.length == 0) return;
     renderMessage("my", {
-        username: uname,
+        username: othername,
         text: message
     });
     socket.emit("chat", {
-        username: uname,
+        username: othername,
         text: message
     });
     document.querySelector(".chat-screen #message-input").value = "";
@@ -871,7 +876,7 @@ function renderMessage(type, message){
         messageDiv.classList.add("message", "other-message");
         messageDiv.innerHTML = `
             <div>
-                <div class="name">${message.username}</div> <!-- Utilizza il nome utente del mittente del messaggio -->
+                <div class="name">${othername}</div> <!-- Utilizza il nome utente del mittente del messaggio -->
                 <div class="text">${message.text}</div>
             </div>
         `;
