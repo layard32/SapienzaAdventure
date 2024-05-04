@@ -24,7 +24,7 @@ body {
     left: inherit;
 }
 
-
+/*bottone lancio dado*/
 .buttonCont{
     top:98%;
     left:50%;
@@ -65,20 +65,20 @@ body {
     border-radius: 15px;
 }
   
-  #button.progress::before {
+#button.progress::before {
     animation: progress 2.5s ease-in-out forwards;
-  }
+}
 
-  #button.progress::after {
+#button.progress::after {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     width: var(--progress-width, 0%);
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.2); /* Colore della progress bar */
+    background-color: rgba(0, 0, 0, 0.2); 
     z-index: -1;
-    transition: width 0.1s ease-out; /* Transizione per l'animazione */
+    transition: width 0.1s ease-out; 
 }
 
   
@@ -93,14 +93,14 @@ body {
 }
 
 
-  #button .text-icon {
+#button .text-icon {
     height: 100%;
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-  }
-  #button .text-icon span {
+}
+#button .text-icon span {
     position: relative;
     color: #F2EFE9;
     font-size: 37px;
@@ -109,7 +109,7 @@ body {
     -ms-user-select: none; 
     user-select: none; 
     
-  }
+}
 
 #playerName {
     z-index: -1;
