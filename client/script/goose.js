@@ -817,16 +817,20 @@ muteButton.addEventListener('click', function() {
 
 
 //chatbox 
-let othername='';
+let othername = ''; // Variabile per memorizzare il nome utente dell'altro utente della chat
+
+// Emit per richiedere il nome utente al server
 socket.emit('requestOtherUsername', roomId);
 
+// Ascolta l'evento 'otherUsername' dal server e imposta il nome utente ricevuto
 socket.on('otherUsername', (data) => {
-    othername=data;
-    console.log("dentro socket",othername);
+    othername = data; // Imposta il nome utente ricevuto dalla socket
+    console.log("dentro socket", othername); // Stampa il nome utente nella console
 });
 
-console.log(othername);
+console.log(othername); // Stampa il nome utente (potrebbe essere vuoto inizialmente)
 
+// Event listener per il click sul pulsante per aprire o chiudere la chat
 document.getElementById("open-chat").addEventListener("click", function(){
     const chatScreen = document.querySelector(".chat-screen");
     if (chatScreen.classList.contains("active")) {
@@ -838,6 +842,7 @@ document.getElementById("open-chat").addEventListener("click", function(){
     }
 });
 
+// Event listener per la pressione del tasto "Invio" nel campo di input del messaggio
 document.querySelector(".chat-screen #message-input").addEventListener("keydown", function(event) {
     // Verifica se il tasto premuto è il tasto "Invio" (codice 13)
     if (event.keyCode === 13) {
@@ -848,56 +853,63 @@ document.querySelector(".chat-screen #message-input").addEventListener("keydown"
     }
 });
 
+// Event listener per il click sul pulsante "Invia" per inviare un messaggio
 document.querySelector(".chat-screen #send-message").addEventListener("click", function(){
-    let message = document.querySelector(".chat-screen #message-input").value;
-    if(message.length == 0) return;
-    renderMessage("my", {
-        username: othername,
-        text: message
+    let message = document.querySelector(".chat-screen #message-input").value; // Recupera il testo del messaggio
+    if(message.length == 0) return; // Se il messaggio è vuoto, non fare nulla
+
+    renderMessage("my", { // Chiama la funzione renderMessage per renderizzare il messaggio inviato dall'utente
+        username: othername, //in realtà è inutile username:othername (dopo nell'html uso direttamente le due viarabili)
+        text: message 
     });
-    socket.emit("chat", {
-        username: othername,
-        text: message
+
+    socket.emit("chat", { // Emetti un evento "chat" attraverso la socket per inviare il messaggio al server
+        username: othername, // Nome utente dell'altro utente come mittente del messaggio
+        text: message // Testo del messaggio
     });
-    document.querySelector(".chat-screen #message-input").value = "";
+    document.querySelector(".chat-screen #message-input").value = ""; // Svuota il campo di input del messaggio
 });
 
+// Ascolta l'evento "update" dalla socket e chiama la funzione renderMessage per renderizzare l'aggiornamento
 socket.on("update", function(update){
-    renderMessage("update", update);
-});
-socket.on("chat", function(message){
-    renderMessage("other", message);
+    renderMessage("update", update); // Chiama la funzione renderMessage per renderizzare l'aggiornamento
 });
 
+// Ascolta l'evento "chat" dalla socket e chiama la funzione renderMessage per renderizzare il messaggio ricevuto
+socket.on("chat", function(message){
+    renderMessage("other", message); // Chiama la funzione renderMessage per renderizzare il messaggio ricevuto
+});
+
+// Funzione per renderizzare i messaggi nella finestra di chat
 function renderMessage(type, message){
-    let messageContainer = document.querySelector(".chat-screen .messages");
+    let messageContainer = document.querySelector(".chat-screen .messages"); // Contenitore dei messaggi
     if(type == "my"){
-        let messageDiv = document.createElement("div");
-        messageDiv.classList.add("message", "my-message");
+        let messageDiv = document.createElement("div"); // Crea un elemento div per il messaggio inviato dall'utente
+        messageDiv.classList.add("message", "my-message"); // Aggiungi classi per lo stile CSS
         messageDiv.innerHTML = `
             <div>
                 <div class="name">${username}</div> 
                 <div class="text-chat">${message.text}</div>
             </div>
         `;
-        messageContainer.appendChild(messageDiv);
+        messageContainer.appendChild(messageDiv); // Aggiungi il messaggio al contenitore dei messaggi
     } else if(type == "other"){
-        let messageDiv = document.createElement("div");
-        messageDiv.classList.add("message", "other-message");
+        let messageDiv = document.createElement("div"); // Crea un elemento div per il messaggio ricevuto dall'altro utente
+        messageDiv.classList.add("message", "other-message"); 
         messageDiv.innerHTML = `
             <div>
                 <div class="name">${othername}</div> <!-- Utilizza il nome utente del mittente del messaggio -->
                 <div class="text-chat">${message.text}</div>
             </div>
         `;
-        messageContainer.appendChild(messageDiv);
+        messageContainer.appendChild(messageDiv); // Aggiungi il messaggio al contenitore dei messaggi
     } else if(type == "update"){
-        let updateDiv = document.createElement("div");
-        updateDiv.classList.add("update");
-        updateDiv.innerText = message;
-        messageContainer.appendChild(updateDiv);
+        let updateDiv = document.createElement("div"); // Crea un elemento div per l'aggiornamento della chat
+        updateDiv.classList.add("update"); 
+        updateDiv.innerText = message; 
+        messageContainer.appendChild(updateDiv); // Aggiungi l'aggiornamento al contenitore dei messaggi
     }
-    messageContainer.scrollTop = messageContainer.scrollHeight - messageContainer.clientHeight;
+    messageContainer.scrollTop = messageContainer.scrollHeight - messageContainer.clientHeight; // Scrolling automatico verso il basso per mostrare i messaggi più recenti
 }
 
 
