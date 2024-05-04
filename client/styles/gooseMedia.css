@@ -128,5 +128,9 @@
     .toast-container.text {
         transform: translate(-50%, -50%) rotate(90deg) !important;
     }
+    
+    #muteButton{
+        transform: translate(-50%, -50%) rotate(90deg)
+    }
 
 }
