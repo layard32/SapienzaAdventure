@@ -868,7 +868,7 @@ function renderMessage(type, message){
         messageDiv.innerHTML = `
             <div>
                 <div class="name">${username}</div> 
-                <div class="text">${message.text}</div>
+                <div class="text-chat">${message.text}</div>
             </div>
         `;
         messageContainer.appendChild(messageDiv);
@@ -878,7 +878,7 @@ function renderMessage(type, message){
         messageDiv.innerHTML = `
             <div>
                 <div class="name">${othername}</div> <!-- Utilizza il nome utente del mittente del messaggio -->
-                <div class="text">${message.text}</div>
+                <div class="text-chat">${message.text}</div>
             </div>
         `;
         messageContainer.appendChild(messageDiv);

@@ -444,6 +444,13 @@ body {
     content: "\1F4AC"; /* Icona del palloncino del fumetto */
 }
 
+
+
+.logo {
+    font-size: 24px; /* Dimensione del carattere del logo */
+    font-weight: bold; /* Testo in grassetto */
+}
+
 .chat-screen {
     width: 200px; /* Larghezza fissa della schermata della chat */
     height: 70%; /* Altezza in percentuale rispetto all'altezza della viewport */
@@ -477,7 +484,7 @@ body {
 #send-message {
     padding: 6px 10px; /* Padding interno più piccolo */
     font-size: 9px; /* Dimensione del testo più piccola */
-    background-color: #007bff; /* Colore di sfondo */
+    background-color: #ff0000; /* Colore di sfondo */
     color: #fff; /* Colore del testo */
     border: none; /* Rimuovi il bordo */
     border-radius: 5px; /* Angoli arrotondati */
@@ -485,7 +492,69 @@ body {
 }
 
 #send-message:hover {
-    background-color: #0056b3; /* Cambia colore di sfondo al passaggio del mouse */
+    background-color: #b35f00; /* Cambia colore di sfondo al passaggio del mouse */
 }
 
 
+.name {
+    font-size: 9px; /* Dimensione del carattere del nome */
+    font-weight: bold; /* Testo in grassetto */
+    color: #FFF; /* Colore del testo bianco */
+    padding: 2px 8px; /* Aggiungi spazio intorno al testo */
+    border-radius: 20px; /* Angoli arrotondati per creare una forma arrotondata */
+    background-color: #59bb4c; /* Colore di sfondo simile al pulsante di apertura della chat */
+    display: inline-block; /* Per far sì che la larghezza della "nuvoletta" si adatti al contenuto */
+    margin-right: 8px; /* Margine a destra per separare il nome dal testo del messaggio */
+    max-width: 150px; /* Larghezza massima della "nuvoletta" per evitare che si estenda troppo */
+    word-wrap: break-word; /* Per far sì che il testo venga avvolto se è più lungo della larghezza massima */
+    transition: background-color 0.3s; /* Effetto di transizione per il cambio di colore di sfondo */
+}
+
+.name:hover {
+    background-color: #4ca746; /* Cambia il colore di sfondo al passaggio del mouse */
+}
+
+.text-chat {
+    font-size: 9px; /* Dimensione del carattere del testo del messaggio */
+    color: #333; /* Colore del testo scuro per maggiore leggibilità */
+    padding: 2px 8px; /* Aggiungi spazio intorno al testo */
+    border-radius: 10px; /* Angoli arrotondati per creare una forma arrotondata */
+    background-color: #f2f2f2; /* Colore di sfondo del testo del messaggio */
+    display: flex; 
+    margin-top: 2px; /* Margine superiore per separare il testo dal nome */
+    max-width: 30px; /* Larghezza massima del testo per evitare che si estenda troppo */
+    word-wrap: break-word; /* Per far sì che il testo venga avvolto se è più lungo della larghezza massima */
+    transition: background-color 0.3s; /* Effetto di transizione per il cambio di colore di sfondo */
+}
+
+.text-chat:hover {
+    background-color: #ddd; /* Cambia il colore di sfondo al passaggio del mouse */
+}
+
+.message {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Allinea gli elementi verso l'alto */
+    justify-content: space-between; /* Distribuisce uniformemente gli elementi lungo l'asse principale (orizzontalmente) */
+}
+
+.other-message .name {
+    margin-bottom: 2px;
+    margin-left: 150px; /* Aggiunge uno spazio tra il nome utente e il testo del messaggio */
+}
+.other-message .text-chat {
+    margin-top: 2px; 
+    margin-left: 150px; /* Aggiunge uno spazio tra il testo del messaggio e il nome utente */
+    margin-bottom: 10px;
+}
+
+
+.my-message .name {
+    margin-bottom: 2px;
+    margin-right: 150px; /* Aggiunge uno spazio tra il testo del messaggio e il nome utente */
+}
+.my-message .text-chat {
+    margin-top: 2px;
+    margin-right: 150px; /* Aggiunge uno spazio tra il nome utente e il testo del messaggio */
+    margin-bottom: 10px;
+}
