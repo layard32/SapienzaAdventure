@@ -110,14 +110,6 @@ function playGame(choice, playerNum) {
         // Mostra il risultato della partita
         displayResult(result);
 
-
-        var timerDisplay = document.querySelector('#timer');
-        var timerValue = timerDisplay.textContent;
-        // Controlla se il gioco è finito
-        if (timerValue==="00:00") {
-            clearInterval(interval);
-            endGame(); // Termina il gioco
-        }
     
         // Resetta le scelte dei giocatori
         playerOneChoice = '';
@@ -271,7 +263,7 @@ function resetGame() {
 }
 
 // Funzione per avviare il timer
-function startTimer(duration, display) {
+function startTimer(duration) {
     var timer = duration, minutes, seconds;
     interval = setInterval(function () {
         minutes = parseInt(timer / 60, 10);
@@ -280,7 +272,6 @@ function startTimer(duration, display) {
         minutes = minutes < 10 ? "0" + minutes : minutes;
         seconds = seconds < 10 ? "0" + seconds : seconds;
 
-        display.textContent = minutes + ":" + seconds;
 
         if (--timer < 0) {
             clearInterval(interval);
@@ -292,10 +283,9 @@ function startTimer(duration, display) {
 
 // Funzione per avviare il timer con una durata di 3 minuti (180 secondi)
 function startGameTimer() {
-    var threeMinutes = 60,
-        display = document.querySelector('#timer');
-    startTimer(threeMinutes, display);
-    updateTimerBar(threeMinutes);
+    var Minutes = 60;
+    startTimer(Minutes);
+    updateTimerBar(Minutes);
 }
 // Funzione per aggiornare la barra del timer
 function updateTimerBar(duration) {
@@ -329,19 +319,13 @@ function endGame() {
     });
 
     // Mostra il messaggio di vittoria/sconfitta dopo un secondo
-    setTimeout(() => {
-        // Disabilita tutti i pulsanti delle scelte
-        document.querySelectorAll('.emoji-buttons button').forEach(button => {
-            button.disabled = true;
-        });
 
-        setTimeout(()=>{
-            socket.emit('quitGame', { roomId: roomId, 
-                                    primaryPlayerPosition: primaryPosition,
-                                    secondaryPlayerPosition: secondaryPosition,
-                                    win: (playerOneScore>playerTwoScore), 
-                                    turn: turn });
-        }, 1000);
+    setTimeout(()=>{
+        socket.emit('quitGame', { roomId: roomId, 
+                                primaryPlayerPosition: primaryPosition,
+                                secondaryPlayerPosition: secondaryPosition,
+                                win: (playerOneScore>playerTwoScore), 
+                                turn: turn });
     }, 1000);
 }
 
