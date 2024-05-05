@@ -283,7 +283,7 @@ function startTimer(duration) {
 
 // Funzione per avviare il timer con una durata di 3 minuti (180 secondi)
 function startGameTimer() {
-    var Minutes = 60;
+    var Minutes = 30;
     startTimer(Minutes);
     updateTimerBar(Minutes);
 }
