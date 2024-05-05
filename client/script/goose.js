@@ -113,6 +113,7 @@ class Player {
             this.cell = targetCell; // Make sure this.cell is exactly targetCell
             this.isMoving = false;
             handleCellRedirection(this.cell);
+            // mostra la flipcard 
             showFlipCard(this.cell);
             if (this == primaryPlayer) activeFlipCard(this.cell); 
             return;
@@ -494,7 +495,7 @@ function initializeFlipcards() {
 
     return {flipcard, flipcardfront, flipcardback};
 }
-
+// funzione per mostrare la flipcard in base alla casella in cui capita il giocatore
 function showFlipCard(cell) {
     if (bonusCells.includes(cell)) {
         bonusTurn = true; 
@@ -759,7 +760,7 @@ function checkFlagForRedirection(cell) {
 };
 
 
-// gestione pulsante
+// gestione pulsante lancio dado
 button.addEventListener('animationend', () => {
     if (!isRolling && turn) movePlayer (primaryPlayer);
 })
@@ -769,28 +770,39 @@ document.addEventListener("DOMContentLoaded", function() {
     let holdInterval;
 
     button.addEventListener("mousedown", function() {
-        button.classList.add("progress"); // Aggiungi la classe aggiuntiva
+        button.classList.add("progress"); 
         holdInterval = setInterval(function() {
             button.classList.remove("progress");
-        }, 3000); // Tempo dell'animazione in millisecondi
+        }, 3000); 
     });
 
     button.addEventListener("mouseup", function() {
         clearInterval(holdInterval);
-        button.classList.remove("progress"); // Rimuovi la classe aggiuntiva
+        button.classList.remove("progress"); 
     });
 
     button.addEventListener("mouseleave", function() {
         clearInterval(holdInterval);
-        button.classList.remove("progress"); // Rimuovi la classe aggiuntiva
+        button.classList.remove("progress"); 
     });
+    button.addEventListener("touchstart", function() {
+        button.classList.add("progress"); 
+        holdInterval = setInterval(function() {
+            button.classList.remove("progress");
+        }, 3000); 
+    });
+    button.addEventListener("touchend", function() {
+        clearInterval(holdInterval);
+        button.classList.remove("progress"); 
+    });
+
+
 });
 
 
-// Ottieni il riferimento al pulsante
-const muteButton = document.getElementById('muteButton');
 
-// Aggiungi un gestore di eventi al pulsante
+const muteButton = document.getElementById('muteButton');
+// gestione del pulsante di muting
 muteButton.addEventListener('click', function() {
     // se la canzone attiva è mission impossible
     if (change) {
