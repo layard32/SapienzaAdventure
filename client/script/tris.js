@@ -111,10 +111,10 @@ document.addEventListener("DOMContentLoaded", () => {
     
     // Funzione per avviare il timer con una durata di 3 minuti (180 secondi)
     function startGameTimer() {
-        var threeMinutes = 60,
+        var Minutes = 60,
             display = document.querySelector('#timer');
-        startTimer(threeMinutes, display);
-        updateTimerBar(threeMinutes);
+        startTimer(Minutes, display);
+        updateTimerBar(Minutes);
     }
     // Funzione per aggiornare la barra del timer
     function updateTimerBar(duration) {
