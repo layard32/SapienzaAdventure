@@ -255,7 +255,8 @@ function handleCellRedirection(cell) {
     // Definizione delle condizioni per il reindirizzamento
     const redirectionConditions = {
         6: 'memory',
-        11: 'cfs'
+        11: 'cfs',
+        15: 'tris'
     };
     // Controlla se la cella corrente ha una condizione di reindirizzamento definita
     if (redirectionConditions.hasOwnProperty(cell)) {
@@ -747,16 +748,24 @@ socket.on('redirectToBothGame', (data) => {
 // Funzione per reindirizzare entrambi i giocatori al gioco specificato
 function redirectPlayersToGame(game,data) {
     if (game === 'memory') {
+
         const nextPage = `/memory?room=${data}&pos1=${primaryPlayer.cell}&pos2=${secondaryPlayer.cell}&turn=${turn}`;
         window.location.href = nextPage; // Reindirizza a Memory
+
     } else if (game === 'cfs') {
+
         const nextPage = `/cfs?room=${data}&pos1=${primaryPlayer.cell}&pos2=${secondaryPlayer.cell}&turn=${turn}`;
         window.location.href = nextPage; // Reindirizza a CFS
+
+    } else if(game == 'tris'){
+
+        const nextPage = `/tris?room=${data}&pos1=${primaryPlayer.cell}&pos2=${secondaryPlayer.cell}&turn=${turn}`;
+        window.location.href = nextPage; // Reindirizza a Tris
     }
 };
 
 function checkFlagForRedirection(cell) {
-    if (cell == 6 || cell == 11) flag = true;
+    if (cell == 6 || cell == 11 || cell == 15) flag = true;
 };
 
 

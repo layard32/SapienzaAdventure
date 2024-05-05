@@ -1,23 +1,41 @@
 document.addEventListener("DOMContentLoaded", () => {
     const board = document.getElementById("board");
+    const resultDisplay = document.getElementById("result");
 
     let currentPlayer = "X";
     let gameBoard = ["", "", "", "", "", "", "", "", ""];
 
     let interval; // Variabile per l'intervallo del timer
-    let gameEnded = false;
+
+
+    //GESTIONE SERVER
+    const urlParams = new URLSearchParams(window.location.search);
+    // prendo i parametri passati tramite chiamata GET
+    const roomId = urlParams.get('room');
+    const primaryPosition = urlParams.get('pos1');
+    const secondaryPosition = urlParams.get('pos2')
+    const turn = urlParams.get('turn');
+    const socket = io.connect('http://localhost:3000');
+    let win=false;
+
+    socket.emit("joinExistingRoom",roomId);
+
 
     render(); // Inizializzazione del gioco
 
-    board.addEventListener("click", (e) => {
-        if(gameEnded)return;
+    board.addEventListener("click", handleClick); // Aggiunta dell'evento click
+
+    function handleClick(e) {
         const cellIndex = parseInt(e.target.id);
         if (!isNaN(cellIndex) && gameBoard[cellIndex] === "") {
             gameBoard[cellIndex] = currentPlayer;
             render();
             if (checkWinner() && currentPlayer === "X") {
-                alert("Player wins!");
-                endGame();
+                resultDisplay.textContent = "Hai vinto!";
+            } else if (checkWinner() && currentPlayer === "O") {
+                resultDisplay.textContent = "Hai perso...";
+            } else if (!gameBoard.includes("")) {
+                resultDisplay.textContent = "Pareggio";
             } else {
                 currentPlayer = currentPlayer === "X" ? "O" : "X";
                 if (currentPlayer === "O") {
@@ -25,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             }
         }
-    });
+    }
 
     function render() {
         board.innerHTML = "";
@@ -73,11 +91,9 @@ document.addEventListener("DOMContentLoaded", () => {
         render();
 
         if (checkWinner() && currentPlayer === "O") {
-            endGame();
-            alert("AI wins!");
+            resultDisplay.textContent = "Hai perso...";
         } else if (!gameBoard.includes("")) {
-            alert("It's a draw!");
-            endGame();
+            resultDisplay.textContent = "Pareggio";
         } else {
             currentPlayer = "X";
         }
@@ -85,12 +101,30 @@ document.addEventListener("DOMContentLoaded", () => {
     
     function endGame() {
         // Disabilita il click sulla board per terminare il gioco
-        board.removeEventListener("click", handleBoardClick);
+        board.removeEventListener("click", handleClick);
         board.style.pointerEvents = "none";
-        gameEnded=true;
-    }
 
-    function startTimer(duration, display) {
+        if (checkWinner() && currentPlayer === "X") {
+            win=true;
+        } else if (checkWinner() && currentPlayer === "O") {
+            win=false;
+        } else if (!gameBoard.includes("")) {
+            win=false;
+        }
+
+        setTimeout(() => {
+    
+            setTimeout(()=>{
+                socket.emit('quitGame', { roomId: roomId, 
+                                        primaryPlayerPosition: primaryPosition,
+                                        secondaryPlayerPosition: secondaryPosition,
+                                        win: win, 
+                                        turn: turn });
+            }, 1000);
+        }, 1000);
+    }
+    
+    function startTimer(duration) {
         var timer = duration, minutes, seconds;
         interval = setInterval(function () {
             minutes = parseInt(timer / 60, 10);
@@ -99,11 +133,14 @@ document.addEventListener("DOMContentLoaded", () => {
             minutes = minutes < 10 ? "0" + minutes : minutes;
             seconds = seconds < 10 ? "0" + seconds : seconds;
     
-            display.textContent = minutes + ":" + seconds;
-    
             if (--timer < 0) {
                 clearInterval(interval);
                 endGame(); // Controlla la fine della partita quando il timer arriva a zero
+                if (checkWinner()) {
+                    console.log(currentPlayer + " wins!");
+                } else {
+                    console.log("It's a draw!");
+                }
             }
         }, 1000);
     }
@@ -111,9 +148,8 @@ document.addEventListener("DOMContentLoaded", () => {
     
     // Funzione per avviare il timer con una durata di 3 minuti (180 secondi)
     function startGameTimer() {
-        var Minutes = 60,
-            display = document.querySelector('#timer');
-        startTimer(Minutes, display);
+        var Minutes = 15;
+        startTimer(Minutes);
         updateTimerBar(Minutes);
     }
     // Funzione per aggiornare la barra del timer
@@ -126,4 +162,12 @@ document.addEventListener("DOMContentLoaded", () => {
     window.onload = function () {
         startGameTimer();
     };
+    
+    socket.on('redirect', (data) => {
+        // Effettua il reindirizzamento alla nuova pagina
+        window.location.href = data;
+    });
+    
 });
+
+

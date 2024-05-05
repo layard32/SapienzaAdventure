@@ -53,6 +53,10 @@ app.get("/cfs", (req, res) => {
   res.sendFile(srcPath("cfs.html"));
 });
 
+app.get("/tris", (req, res) => {
+  res.sendFile(srcPath("tris.html"));
+});
+
 // avvio il app express
 server.listen(PORT, () => {
   console.log(`Il app è in esecuzione sulla porta: ${PORT}`);
