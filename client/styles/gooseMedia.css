@@ -91,11 +91,6 @@
 }
 
 
-@media only screen and (max-width: 600px) {
-    #button {
-      height: 50px;
-    }
-}
 
 /* supporto mobile: cambia lo sfondo (ruotato) e si ruota canvas-container */
 @media screen and (max-width: 500px) {
@@ -140,5 +135,6 @@
         left:120%;
         transform: translate(-120%, -50%) rotate(90deg) !important;
     }
+    
 
 }

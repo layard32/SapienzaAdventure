@@ -128,7 +128,7 @@ body {
     background-repeat: no-repeat;
     background-position: left;
     border-radius: 15px;
-    height: 4rem;
+    height: 4.2rem;
     width: 30rem/*13rem*/;
     text-align: center;
     justify-items: end;
@@ -146,7 +146,22 @@ body {
     width: 60px;
 } */
 
+#playerContainer {
+    top:5%;
+    left:50%;
+    transform: translate(-50%, -4%);
+    position: fixed;
+    display: flex;
+    align-items: center;
+    height: 4.5rem;
+    width: 40rem/*13rem*/;
+
+}
+  
+
+
 #muteButton{
+    position: absolute;
     z-index: 1;
     border: none;
     background-image: url(../images/speaker_11343708.png);
@@ -155,11 +170,12 @@ body {
     background-size: 80%;
     height: 60px;
     width: 60px;
-    
-    position: fixed;
-    top: 5.5%;
-    left: 90%;
-    transform: translate(-90%, -5.5%);
+    order: -1;
+    margin-right: 10px; /* Optional: Adds some space between the button and the name */
+    /*position: fixed;*/
+    top: 35%;
+    left: 80%;
+    transform: translate(-80%, -25%);
 }
 
 #canvas {
