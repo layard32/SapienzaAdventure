@@ -6,8 +6,9 @@ const newGameContainer = document.getElementById("new-game-container");
 const canvas = document.getElementById("canvas");
 const resultText = document.getElementById("result-text");
 
-let win=true;
+let win=false;
 let interval; 
+
 
 //New Game
 window.onload = function() {
@@ -259,8 +260,8 @@ function startTimer(duration) {
       seconds = seconds < 10 ? "0" + seconds : seconds;
 
       if (--timer < 0) {
-          clearInterval(interval);
-          endGame(); // Controlla la fine della partita quando il timer arriva a zero
+        clearInterval(interval);
+        endGame(); // Controlla la fine della partita quando il timer arriva a zero
       }
   }, 1000);
 }
@@ -277,6 +278,7 @@ function updateTimerBar(duration) {
   var timerBar = document.querySelector('#timerBar');
   timerBar.style.animationDuration = duration + 's'; // Imposta la durata dell'animazione
 }
+
 
 function endGame() {
   setTimeout(()=>{
