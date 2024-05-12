@@ -279,30 +279,15 @@ function updateTimerBar(duration) {
 }
 
 function endGame() {
-  if (count < 6) {
-    resultText.innerHTML = `<h2 class='lose-msg'>Hai Perso!!</h2><p>La parola era <span>${chosenWord}</span></p>`;
-    blocker();
-    win = false;
-    // Invia i dati al server
-    setTimeout(() => {
-      socket.emit('quitGame', { roomId: roomId, 
-        primaryPlayerPosition: primaryPosition, 
-        secondaryPlayerPosition: secondaryPosition, 
-        win: win, 
-        turn: turn });
-    }, 1000);
-  }else{
-    setTimeout(() => {
-      socket.emit('quitGame', { roomId: roomId, 
-        primaryPlayerPosition: primaryPosition, 
-        secondaryPlayerPosition: secondaryPosition,
-        win: win, 
-        turn: turn });
+  setTimeout(()=>{
+    socket.emit('quitGame', { roomId: roomId, 
+      primaryPlayerPosition: primaryPosition,
+      secondaryPlayerPosition: secondaryPosition,
+      win: win, 
+      turn: turn });
     }, 1000);
 
-  }
 }
-
 
 //GESTIONE SERVER
 const urlParams = new URLSearchParams(window.location.search);
