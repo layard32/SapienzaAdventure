@@ -32,17 +32,17 @@ main {
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-direction: column; /* Modificato il layout in colonna */
-    gap: 5em; /* Aggiunta spaziatura tra gli elementi */
+    flex-direction: column; 
+    gap: 5em; 
     overflow: auto;
     
 }
 
 #game-info {
     display: flex;
-    flex-direction: column; /* Modificato il layout in colonna */
+    flex-direction: column; 
     align-items: center;
-    gap: 1vw; /* Aggiunta spaziatura tra gli elementi */
+    gap: 1vw; 
     
 }
 

@@ -257,7 +257,8 @@ function handleCellRedirection(cell) {
         6: 'memory',
         11: 'cfs',
         15: 'tris',
-        19: 'hangman'
+        19: 'hangman',
+        23: 'pingpong'
     };
     // Controlla se la cella corrente ha una condizione di reindirizzamento definita
     if (redirectionConditions.hasOwnProperty(cell)) {
@@ -768,10 +769,15 @@ function redirectPlayersToGame(game,data) {
         const nextPage = `/hangman?room=${data}&pos1=${primaryPlayer.cell}&pos2=${secondaryPlayer.cell}&turn=${turn}`;
         window.location.href = nextPage; // Reindirizza a Hangman
     }
+    else if(game == 'pingpong'){
+
+        const nextPage = `/pingpong?room=${data}&pos1=${primaryPlayer.cell}&pos2=${secondaryPlayer.cell}&turn=${turn}`;
+        window.location.href = nextPage; // Reindirizza a PingPong
+    }
 };
 
 function checkFlagForRedirection(cell) {
-    if (cell == 6 || cell == 11 || cell == 15 || cell == 19) flag = true;
+    if (cell == 6 || cell == 11 || cell == 15 || cell == 19|| cell==23) flag = true;
 };
 
 
@@ -938,6 +944,5 @@ function renderMessage(type, message){
     }
     messageContainer.scrollTop = messageContainer.scrollHeight - messageContainer.clientHeight; // Scrolling automatico verso il basso per mostrare i messaggi più recenti
 }
-
 
 
