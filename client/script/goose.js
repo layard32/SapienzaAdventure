@@ -393,7 +393,7 @@ function rollDice(number) {
         let dadoNumber = number;
         // TODO controllare che il numero sia effettivamente randomico
         // e non preimpostato per una delle mille prove
-        if (!number) dadoNumber = 2//Math.floor(Math.random() * 6) + 1;
+        if (!number) dadoNumber = Math.floor(Math.random() * 6) + 1;
 
         for (let i = 1; i <= 6; i++) dado.classList.remove('show-' + i);
         requestAnimationFrame(() => {
