@@ -24,6 +24,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const ballDiameter = ball.clientWidth;
     const ballRadius = ballDiameter / 2;
 
+    const modal = document.getElementById('myModal');
+    const closeModal = document.getElementById('closeModal');
+    const modalText = document.getElementById('modalText');
+
+
     // Set the initial position of the ball to the center of the game container
     ball.style.left = `${gameWidth / 2 - ballRadius}px`;
     ball.style.top = `${gameHeight / 2 - ballRadius}px`;
@@ -48,6 +53,7 @@ document.addEventListener('DOMContentLoaded', function () {
             ballSpeedY = 0;
             ball.style.left = `${gameWidth / 2 - ballRadius}px`;
             ball.style.top = `${gameHeight / 2 - ballRadius}px`;
+            showEndGameModal('Hai vinto!');
             return;
             
         }
@@ -56,6 +62,7 @@ document.addEventListener('DOMContentLoaded', function () {
             ballSpeedY = 0;
             ball.style.left = `${gameWidth / 2 - ballRadius}px`;
             ball.style.top = `${gameHeight / 2 - ballRadius}px`;
+            showEndGameModal('Hai perso!');
             return;
         }
 
@@ -202,27 +209,42 @@ document.addEventListener('DOMContentLoaded', function () {
             turn: turn });
         }, 1000);
     }
+
+    function showEndGameModal(message) {
+        modalText.textContent = message;
+        modal.style.display = 'block';
+    }
+    
+    // Funzione per nascondere il modale di fine partita
+    function hideEndGameModal() {
+        modal.style.display = 'none';
+    }
+    
+    const closeButton = document.querySelector('.close');
+    if (closeButton) {
+        closeButton.addEventListener('click', function() {
+            hideEndGameModal(); // Nascondi il modale quando l'utente fa clic sull'icona di chiusura
+        });
+    }
+
+});
+
+    
+//GESTIONE SERVER
+const urlParams = new URLSearchParams(window.location.search);
+// prendo i parametri passati tramite chiamata GET
+const roomId = urlParams.get('room');
+const primaryPosition = urlParams.get('pos1');
+const secondaryPosition = urlParams.get('pos2')
+const turn = urlParams.get('turn');
+const socket = io.connect('http://localhost:3000');
+    
+socket.emit("joinExistingRoom",roomId);
+    
+socket.on('redirect', (data) => {
+    // Effettua il reindirizzamento alla nuova pagina
+    window.location.href = data;
 });
 
 
 
-
-
-
-
-    
-    //GESTIONE SERVER
-    const urlParams = new URLSearchParams(window.location.search);
-    // prendo i parametri passati tramite chiamata GET
-    const roomId = urlParams.get('room');
-    const primaryPosition = urlParams.get('pos1');
-    const secondaryPosition = urlParams.get('pos2')
-    const turn = urlParams.get('turn');
-    const socket = io.connect('http://localhost:3000');
-    
-    socket.emit("joinExistingRoom",roomId);
-    
-    socket.on('redirect', (data) => {
-    // Effettua il reindirizzamento alla nuova pagina
-    window.location.href = data;
-    });
