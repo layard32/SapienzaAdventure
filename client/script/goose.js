@@ -255,10 +255,12 @@ function handleCellRedirection(cell) {
     // Definizione delle condizioni per il reindirizzamento
     const redirectionConditions = {
         6: 'memory',
+        28: 'memory',
         11: 'cfs',
+        33: 'cfs',
         15: 'tris',
         19: 'hangman',
-        23: 'pingpong'
+        23: 'pingpong',
     };
     // Controlla se la cella corrente ha una condizione di reindirizzamento definita
     if (redirectionConditions.hasOwnProperty(cell)) {
@@ -671,6 +673,8 @@ function changeMusic(cell) {
         backgroundMusic.currentTime = 0;
         slowStart(missionImpossible, 0.1);
         change = true;
+        // se la precedente è mutata, muto anche missionImpossible
+        if (backgroundMusic.muted) missionImpossible.muted = true;
     } else if (change && cell < 30) {
         missionImpossible.pause();;
         missionImpossible.currentTime = 0;
@@ -748,7 +752,7 @@ socket.on('redirectToBothGame', (data) => {
 });
 
 // Funzione per reindirizzare entrambi i giocatori al gioco specificato
-function redirectPlayersToGame(game,data) {
+function redirectPlayersToGame(game, data) {
     if (game === 'memory') {
 
         const nextPage = `/memory?room=${data}&pos1=${primaryPlayer.cell}&pos2=${secondaryPlayer.cell}&turn=${turn}`;
@@ -777,7 +781,7 @@ function redirectPlayersToGame(game,data) {
 };
 
 function checkFlagForRedirection(cell) {
-    if (cell == 6 || cell == 11 || cell == 15 || cell == 19|| cell==23) flag = true;
+    if (cell == 6 || cell == 11 || cell == 15 || cell == 19|| cell == 23 || cell == 28 || cell == 33) flag = true;
 };
 
 

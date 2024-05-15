@@ -4,70 +4,64 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rock Paper Scissors</title>
-    <script src="../script/cfs.js" defer></script> <!-- Collega il file JavaScript -->
     <link rel="stylesheet" href="../styles/cfs.css" type="text/css"> 
     <link rel="stylesheet" href="../styles/tempo.css">
 </head>
 <body>
+    
     <div id="container">
-        <!-- Schermo di avvio -->
         <div id="startScreen">
-            <h1>Rock Paper Scissors</h1> <!-- Intestazione del gioco -->
-            <button id="startButton">Start Game</button> <!-- Pulsante per avviare il gioco -->
+            <h1>Rock Paper Scissors</h1> 
+            <button id="startButton">Start Game</button> 
         </div>
 
-        <!-- Schermo di gioco -->
-        <div id="gameScreen" style="display: none;"> <!-- Inizialmente nascosto -->
+        <div id="gameScreen" style="display: none;"> 
             <header>
-                <h1>Rock Paper Scissors</h1> <!-- Intestazione del gioco -->
+                <h1>Rock Paper Scissors</h1>
             </header>
             
             <div id="tempo">Timer:</div>
             <div id="timerContainer">
-                <div id="timerBar"></div> <!-- La barra del timer -->
-                
+                <div id="timerBar"></div>           
             </div>
 
             <div class="scoreboard">
-                <h2 class="score-info" id="scoreInfo">Fai la tua scelta</h2> <!-- Informazioni sul punteggio -->
-                <h3 class="score-message" id="scoreMessage">Vinci per ottenere punti bonus per la corsa verso la Laurea! </h3> <!-- Messaggio sulle regole del gioco -->
+                <h2 class="score-info" id="scoreInfo">Fai la tua scelta</h2> 
+                <h3 class="score-message" id="scoreMessage">Vinci per ottenere punti bonus per la corsa verso la Laurea! </h3> 
                 <div class="scores-container">
-                    <!-- Contenitore per i punteggi dei giocatori -->
                     <div class="score-box">
-                        <div class="sign" id="playerSign">❔</div> <!-- Emoji del giocatore -->
-                        <p id="playerScore" class="score">Player: 0</p> <!-- Punteggio del giocatore -->
+                        <div class="sign" id="playerSign">❔</div> 
+                        <p id="playerScore" class="score">Player: 0</p> 
                     </div>
                     <div class="score-box">
-                        <div class="sign" id="computerSign">❔</div> <!-- Emoji del computer -->
-                        <p id="computerScore" class="score">Computer: 0</p> <!-- Punteggio del computer -->
+                        <div class="sign" id="computerSign">❔</div> 
+                        <p id="computerScore" class="score">Computer: 0</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Scelte del giocatore -->
             <div class="choices">
                 <div class="emoji-buttons">
-                    <!-- Pulsanti per le scelte del giocatore -->
                     <button onclick="playGame('sasso', 1)"><span>&#9994;</span></button> 
                     <button onclick="playGame('carta', 1)"><span>&#9995;</span></button> 
                     <button onclick="playGame('forbice', 1)"><span>&#9996;</span></button> 
                 </div>
             </div>
 
-            <!-- Messaggio di risultato della partita -->
             <div id="resultDisplay"></div>
             <div id="winnerDisplay"></div>
             <div id="turnDisplay"></div>
 
-            <!-- Modale di fine gioco -->
             <div id="gameOverModal" class="modal">
-                <span class="close" onclick="closeModal()">&times;</span> <!-- Pulsante per chiudere il modale -->
-                <p id="winMessage"></p> <!-- Messaggio di vittoria o sconfitta -->
-            </div>
-            
+                <span class="close" onclick="closeModal()">&times;</span> 
+                <p id="winMessage"></p> 
+            </div>          
         </div>
+        
     </div>
+
     <script src="https://cdn.socket.io/4.7.5/socket.io.min.js" integrity="sha384-2huaZvOR9iDzHqslqwpR87isEmrfxqyWOF7hr7BY6KG0+hVKLoEXMPUJw3ynWuhO" crossorigin="anonymous"></script>
+    <script src="../script/cfs.js"></script>
     
 </body>
 </html>
