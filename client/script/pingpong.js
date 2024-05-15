@@ -178,23 +178,23 @@ document.addEventListener('DOMContentLoaded', function () {
               endGame(); // Controlla la fine della partita quando il timer arriva a zero
             }
         }, 1000);
-      }
+    }
       
       
       // Funzione per avviare il timer con una durata di 3 minuti (180 secondi)
-      function startGameTimer() {
+    function startGameTimer() {
         var Minutes = 45;
         startTimer(Minutes);
         updateTimerBar(Minutes);
-      }
+    }
       // Funzione per aggiornare la barra del timer
-      function updateTimerBar(duration) {
+    function updateTimerBar(duration) {
         var timerBar = document.querySelector('#timerBar');
         timerBar.style.animationDuration = duration + 's'; // Imposta la durata dell'animazione
-      }
+    }
         
 
-    /*update();*/
+    
 
     function endGame() {
         setTimeout(()=>{

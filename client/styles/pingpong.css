@@ -36,10 +36,24 @@ body {
     width: 800px;
     height: 400px;
     background-color:#548DBF;
+    /*background-image:url('../images/cropped-logo.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size:80%;*/
     border-radius: 20px;
     border: #002c53 8px solid;
     margin-top: 50px;
 
+}
+
+.background-image {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    height: 90%;
+    opacity: 0.5; /* Set the opacity */
 }
 
 
