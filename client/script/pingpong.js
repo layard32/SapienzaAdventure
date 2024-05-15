@@ -43,12 +43,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
         if (playerScore== 3) {
-            alert('Congratulazioni, hai vinto!');
+            ballSpeedX = 0; 
+            ballSpeedY = 0;
+            ball.style.left = `${gameWidth / 2 - ballRadius}px`;
+            ball.style.top = `${gameHeight / 2 - ballRadius}px`;
             return;
             
         }
         else if (computerScore== 3) {
-            alert('Hai perso!');
+            ballSpeedX = 0; 
+            ballSpeedY = 0;
+            ball.style.left = `${gameWidth / 2 - ballRadius}px`;
+            ball.style.top = `${gameHeight / 2 - ballRadius}px`;
             return;
         }
 
@@ -165,6 +171,10 @@ document.addEventListener('DOMContentLoaded', function () {
       
             if (--timer < 0) {
               clearInterval(interval);
+              ballSpeedX = 0;
+              ballSpeedY = 0;
+              ball.style.left = `${gameWidth / 2 - ballRadius}px`;
+              ball.style.top = `${gameHeight / 2 - ballRadius}px`;
               endGame(); // Controlla la fine della partita quando il timer arriva a zero
             }
         }, 1000);
@@ -173,7 +183,7 @@ document.addEventListener('DOMContentLoaded', function () {
       
       // Funzione per avviare il timer con una durata di 3 minuti (180 secondi)
       function startGameTimer() {
-        var Minutes = 30;
+        var Minutes = 45;
         startTimer(Minutes);
         updateTimerBar(Minutes);
       }
@@ -184,7 +194,7 @@ document.addEventListener('DOMContentLoaded', function () {
       }
         
 
-    update();
+    /*update();*/
 
     function endGame() {
         setTimeout(()=>{
