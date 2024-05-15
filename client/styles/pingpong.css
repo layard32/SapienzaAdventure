@@ -93,3 +93,42 @@ body {
     transform: translateX(-50%);
     z-index: 1;
 }
+
+.modal {
+    display: none;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #002c53(0,0,0,0.4); 
+    z-index: 2;
+}
+
+.modal-content {
+    background-color: #F2EFE9;
+    border: 6px solid #002c53;
+    margin: 27% auto;
+    padding: 20px;
+    width: 80%;
+    max-width: 400px;
+    text-align: center;
+    border-radius: 10px;
+    font-size: 20px;
+    color: #002c53;
+    
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #002c53;
+    text-decoration: none;
+    cursor: pointer;
+}
