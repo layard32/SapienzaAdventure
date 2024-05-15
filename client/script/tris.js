@@ -32,10 +32,13 @@ document.addEventListener("DOMContentLoaded", () => {
             render();
             if (checkWinner() && currentPlayer === "X") {
                 resultDisplay.textContent = "Hai vinto!";
+                resultDisplay.style.opacity = "1";
             } else if (checkWinner() && currentPlayer === "O") {
                 resultDisplay.textContent = "Hai perso...";
+                resultDisplay.style.opacity = "1";
             } else if (!gameBoard.includes("")) {
                 resultDisplay.textContent = "Pareggio";
+                resultDisplay.style.opacity = "1";
             } else {
                 currentPlayer = currentPlayer === "X" ? "O" : "X";
                 if (currentPlayer === "O") {
