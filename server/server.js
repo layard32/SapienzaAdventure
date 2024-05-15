@@ -6,8 +6,6 @@ import { createServer } from 'node:http'; // per le chiamate HTTP
 import cookieParser from 'cookie-parser'; // per la gestione dei cookie 
 import cookie from 'cookie';
 
-// importiamo le seguenti librerie
-
 const dir = path.resolve(); // percorso assoluto corrente
 const PORT = 3000;
 
@@ -69,6 +67,7 @@ app.get("/pingpong", (req, res) => {
 server.listen(PORT, () => {
   console.log(`Il app è in esecuzione sulla porta: ${PORT}`);
 });
+
 
 
 // GESTIONE SOCKET
@@ -192,11 +191,6 @@ io.on('connection', (socket) => {
   })
 }); 
 
-
-
-
-
-
 function sendGameResult(roomId, winnerId) {
     const clientIDs = Array.from(io.sockets.adapter.rooms.get(roomId)).map(socketId => io.sockets.sockets.get(socketId).id);
     const loserId = clientIDs.find(id => id !== winnerId);
@@ -206,8 +200,3 @@ function sendGameResult(roomId, winnerId) {
     // Invia un messaggio di sconfitta al perdente
     io.to(loserId).emit('gameLost');
 }
-
-
-
-// per l'export su vercel
-export default app;
