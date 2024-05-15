@@ -7,7 +7,6 @@ html, body {
     background-color: #8C4A4A;
 }
 
-
 .container {
     text-align: center;
     display: flex;
@@ -71,6 +70,10 @@ h1 {
 }
 
 @media (max-height: 730px) {
+    h1 {
+        font-size: 50px;
+    }
+
     .container {
         zoom: 0.65;
     }

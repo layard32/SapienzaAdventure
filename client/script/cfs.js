@@ -161,15 +161,6 @@ function displayResult(result) {
 
 // Funzione per avviare il gioco
 function startGame() {
-    const startScreen = document.getElementById('startScreen');
-    const gameScreen = document.getElementById('gameScreen');
-    const gameOverModal = document.getElementById('gameOverModal');
-
-    // Nasconde lo schermo iniziale e mostra quello di gioco
-    startScreen.style.display = 'none';
-    gameScreen.style.display = 'block';
-    gameOverModal.style.display = 'none';
-
     // Resetta il gioco
     resetGame();
 

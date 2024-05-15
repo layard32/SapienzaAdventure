@@ -11,54 +11,38 @@
 </head>
 <body>
     
-    <div id="container">
-        <div id="startScreen">
-            <h1>Rock Paper Scissors</h1> 
-            <button id="startButton">Start Game</button> 
-        </div>
+    <h1>Rock Paper Scissors</h1>
 
-        <div id="gameScreen" style="display: none;"> 
-            <header>
-                <h1>Rock Paper Scissors</h1>
-            </header>
+    <div id="container"> 
             
-            <div id="tempo">Timer:</div>
-            <div id="timerContainer">
-                <div id="timerBar"></div>           
-            </div>
-
-            <div class="scoreboard">
-                <h2 class="score-info" id="scoreInfo">Fai la tua scelta</h2> 
-                <h3 class="score-message" id="scoreMessage">Vinci per ottenere punti bonus per la corsa verso la Laurea! </h3> 
-                <div class="scores-container">
-                    <div class="score-box">
-                        <div class="sign" id="playerSign">❔</div> 
-                        <p id="playerScore" class="score">Player: 0</p> 
-                    </div>
-                    <div class="score-box">
-                        <div class="sign" id="computerSign">❔</div> 
-                        <p id="computerScore" class="score">Computer: 0</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="choices">
-                <div class="emoji-buttons">
-                    <button onclick="playGame('sasso', 1)"><span>&#9994;</span></button> 
-                    <button onclick="playGame('carta', 1)"><span>&#9995;</span></button> 
-                    <button onclick="playGame('forbice', 1)"><span>&#9996;</span></button> 
-                </div>
-            </div>
-
-            <div id="resultDisplay"></div>
-            <div id="winnerDisplay"></div>
-            <div id="turnDisplay"></div>
-
-            <div id="gameOverModal" class="modal">
-                <span class="close" onclick="closeModal()">&times;</span> 
-                <p id="winMessage"></p> 
-            </div>          
+        <div id="tempo">Timer:</div>
+        <div id="timerContainer">
+            <div id="timerBar"></div>           
         </div>
+
+        <div class="scoreboard">
+            <h2 class="score-info" id="scoreInfo">Fai la tua scelta</h2> 
+            <h3 class="score-message" id="scoreMessage">Vinci per ottenere punti bonus per la corsa verso la Laurea! </h3> 
+            <div class="scores-container">
+                <div class="score-box">
+                    <div class="sign" id="playerSign">❔</div> 
+                    <p id="playerScore" class="score">Player: 0</p> 
+                </div>
+                <div class="score-box">
+                    <div class="sign" id="computerSign">❔</div> 
+                    <p id="computerScore" class="score">Computer: 0</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="choices">
+            <div class="emoji-buttons">
+                <button onclick="playGame('sasso', 1)"><span>&#9994;</span></button> 
+                <button onclick="playGame('carta', 1)"><span>&#9995;</span></button> 
+                <button onclick="playGame('forbice', 1)"><span>&#9996;</span></button> 
+            </div>
+        </div>
+    </div>
         
     </div>
 
