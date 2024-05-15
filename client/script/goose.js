@@ -1,32 +1,21 @@
 const CELLWIDTH = 150;
 const CELLHEIGHT = 100;
-const OFFSET = 90;
 const canvas = document.getElementById('canvas');
 const button = document.getElementById('button');
-const c = canvas.getContext('2d'); // in questo modo canvas verrà renderizzato in 2d
+const c = canvas.getContext('2d');
 const nameDiv = document.getElementById('playerName');
-const backgroundMusic = document.getElementById("background-music");
-const missionImpossible = document.getElementById("mission-impossible");
 const bonusCells = [3, 9, 26, 30, 36, 38];
 
-let gameEnded = false; //serve per gestire disconnessione da vittoria 
+let gameEnded = false; // per distinguere disconnessione da vittoria
+// flag e bonusTurn vengono usate per gestire i 'turni extra' cioè spostamenti al di fuori del proprio turno
 let flag = false;
-let bonusTurn = false;
 
-// partenza lenta di una musica
-function slowStart (music, increment) {
-    music.volume = 0.1;
-    music.play();
-    const fadeInterval = setInterval(() => {
-        if (music.volume < 1) music.volume += increment;
-        if (music.volume >= 0.9) clearInterval(fadeInterval);
-    }, 2000);
-}
+// importazioni necessarie per la gestione della musica
+import { changeMusic, change } from "./gooseMusic.js";
+// importazioni necessarie per mostrare le flipcards
+import { showFlipCard, bonusTurn } from "./gooseFlipcard.js";
 
-// quando la finestra si carica, parte la musica (col volume basso) e piano piano aumneta
-window.addEventListener('load', () => { slowStart(backgroundMusic, 0.05); });
-
-// la classe per un player
+// classe principale di un player
 class Player {
     constructor(n, startingCell = 1) {
         this.turn = n;
@@ -39,7 +28,6 @@ class Player {
         if (n) { image.src = '../images/rook.png'; this.type = 'rook'; }
         if (!n) { image.src = '../images/queen.png'; this.type = 'queen'; }
     
-        // aspettiamo che l'immagine si carichi
         image.onload = () => {
             const SCALE = 0.15;
             this.image = image;
@@ -110,7 +98,7 @@ class Player {
 
         // caso base: siamo arrivati alla cella finale
         if (this.cell == targetCell) {
-            this.cell = targetCell; // Make sure this.cell is exactly targetCell
+            this.cell = targetCell; 
             this.isMoving = false;
             handleCellRedirection(this.cell);
             // mostra la flipcard 
@@ -118,10 +106,9 @@ class Player {
             if (this == primaryPlayer) activeFlipCard(this.cell); 
             return;
         }
-        //flipcard.style.visibility='hidden';
 
-        // TODO: Semplificare sto casino di if
-        if (this.cell < targetCell) { // movimento in avanti
+        // movimento in avanti
+        if (this.cell < targetCell) { 
             if (this.cell >= 0 && this.cell < 9) {
                 this.direction = 'x';
                 this.targetPosition.x += CELLWIDTH;
@@ -144,7 +131,8 @@ class Player {
                 this.direction = 'x';
                 this.targetPosition.x -= CELLWIDTH;
             }
-        } else if (this.cell > targetCell) { // movimento indietro
+        // movimento indietro
+        } else if (this.cell > targetCell) { 
             if (this.cell > 0 && this.cell <= 9) {
                 this.direction = 'x';
                 this.targetPosition.x -= CELLWIDTH;
@@ -178,6 +166,7 @@ class Player {
         // con ogni spostamento controlla chi è primo
         setFirst();
 
+        // audio di spostamento
         const moveSound = new Audio('../audios/piece-move.wav');
         moveSound.volume = 0.5;
         moveSound.play();
@@ -190,187 +179,39 @@ class Player {
     }
 
     win() {
-        // TODO gestione vittoria (da fare: toast modale etc)
-        //alert('viva un dittatore a piacimento');
         socket.emit('gameEnd',roomId);
     }
 
     calculatePosition(cell) {
         let x = this.position.x, y = this.position.y;
         if (cell >= 0 && cell < 9) {
-            x += (cell - 2) * CELLWIDTH; // subtract 1 from cell count
+            x += (cell - 2) * CELLWIDTH; 
         } else if (cell >= 9 && cell < 15) {
             x += CELLWIDTH * 8;
-            y += (cell - 9) * CELLHEIGHT; // subtract 1 from cell count
+            y += (cell - 9) * CELLHEIGHT; 
         } else if (cell >= 15 && cell < 23) {
-            x = this.position.x + CELLWIDTH * 8; // reset x to the start of the row
+            x = this.position.x + CELLWIDTH * 8; 
             y += CELLHEIGHT * 6;
-            x -= (cell - 15) * CELLWIDTH; // subtract 1 from cell count
+            x -= (cell - 15) * CELLWIDTH; 
         } else if (cell >= 23 && cell < 27) {
-            x = this.position.x; // reset x to the start position
+            x = this.position.x; 
             y += CELLHEIGHT * 6;
-            y -= (cell - 23) * CELLHEIGHT; // subtract 1 from cell count
+            y -= (cell - 23) * CELLHEIGHT; 
         } else if (cell >= 27 && cell < 33) {
-            y = this.position.y; // reset y to the start position
-            x += (cell - 27) * CELLWIDTH; // subtract 1 from cell count
+            y = this.position.y; 
+            x += (cell - 27) * CELLWIDTH;
         } else if (cell >= 33 && cell < 35) {
-            x = this.position.x + CELLWIDTH * 6; // reset x to the start of the row
-            y += (cell - 33) * CELLHEIGHT; // subtract 1 from cell count
+            x = this.position.x + CELLWIDTH * 6; 
+            y += (cell - 33) * CELLHEIGHT; 
         } else if (cell >= 35 && cell < 39) {
-            y = this.position.y + CELLHEIGHT * 2; // reset y to the start of the column
-            x -= (cell - 35) * CELLWIDTH; // subtract 1 from cell count
+            y = this.position.y + CELLHEIGHT * 2; 
+            x -= (cell - 35) * CELLWIDTH; 
         }
         return { x, y };
     }
 };
 
-// GESTIONE USERNAME
-let username = ''; 
-
-// ogni client prende l'username dai cookie
-window.addEventListener('DOMContentLoaded', () => {
-    const usernameCookie = document.cookie.split('; ').find((cookie) => cookie.startsWith('username='));
-    username = usernameCookie ? usernameCookie.split('=')[1] : 'Utente';
-});
-// all'inizio il div viene settato a 'pareggio'
-// ad ogni passaggio di turno si controlla chi è il player più vicino alla fine
-nameDiv.textContent = 'Pareggio';
-
-
-// gestione turni (insieme ad altre funzioni)
-function setFirst() {
-    if (primaryPlayer.cell > secondaryPlayer.cell) {
-        nameDiv.textContent = username;
-    } else if (primaryPlayer.cell < secondaryPlayer.cell) {
-        socket.emit('requestOtherUsername', roomId);
-        socket.on('otherUsername', (data) => {
-            nameDiv.textContent = data;
-    });
-    } else nameDiv.textContent = 'Pareggio';
-};
-
-
-// gestione reindirizzamento 
-function handleCellRedirection(cell) { 
-    // Definizione delle condizioni per il reindirizzamento
-    const redirectionConditions = {
-        6: 'memory',
-        28: 'memory',
-        11: 'cfs',
-        33: 'cfs',
-        15: 'tris',
-        19: 'hangman',
-        23: 'pingpong',
-    };
-    // Controlla se la cella corrente ha una condizione di reindirizzamento definita
-    if (redirectionConditions.hasOwnProperty(cell)) {
-        const game = redirectionConditions[cell];
-        setTimeout(() => {
-            socket.emit('redirectToGame',{ game: game, roomId: roomId });
-        }, 1100); 
-    }
-}
-
-
-// GESTIONE SOCKET
-// prendiamo il parametro roomId dall'url per riconnettersi alla stanza
-// i websocket (come socket.io) non sono persistenti tra pagine html diverse
-// usiamo questo trucco per mantenere la connessione tra diverse pagine
-const socket = io.connect('http://localhost:3000');
-
-// prendiamo eventuali parametri di una chiamata GET
-const urlParams = new URLSearchParams(window.location.search);
-const roomId = urlParams.get('room');
-let turnParam = null;
-if (urlParams.has('turn')) { 
-    turnParam = urlParams.get('turn');
-    turnParam = (turnParam === 'true');
-}
-if (urlParams.has('win')) {
-    winParam = urlParams.get('win');
-    winParam = (winParam === 'true');
-} else winParam = null;
-let posFirstParam = urlParams.get('pos1');
-let posSecondParam = urlParams.get('pos2');
-
-// i due player si uniscono alla stanza
-socket.emit('joinExistingRoom', roomId);
-let turn;
-let primaryPlayer = {};
-let secondaryPlayer = {};
-socket.on('yourTurn', (data) => {
-    if (turnParam == null) {
-        turn = data;
-        primaryPlayer = new Player(turn);
-        secondaryPlayer = new Player(!turn);
-        document.cookie = `primary=${turn}; path=/`;
-        appearTurn(turn);
-    } else {
-        turn = false;
-        let primaryCookie = document.cookie.split('; ').find((cookie) => cookie.startsWith('primary='));
-        let primary = primaryCookie.split('=')[1];
-        primary = (primary === 'true');
-        primaryPlayer = new Player(primary, Number(posFirstParam));
-        secondaryPlayer = new Player(!primary, Number(posSecondParam));
-    }
-})
-
-
-window.addEventListener('DOMContentLoaded', () => {
-    const intervalPlayers = setInterval(() => {
-        if (primaryPlayer != {} && secondaryPlayer != {}) {
-            clearInterval (intervalPlayers);
-            if (winParam == null) return;
-
-            // caso con vittoria del minigame
-            else if (winParam) {
-                setTimeout(() => {
-                    bonusTurn = true;
-                    bonusEvent(2);
-                }, 100);
-
-                setTimeout(() => {
-                    let actualCell = primaryPlayer.cell;
-                    if (bonusCells.includes(actualCell)) {
-                        // caso B in cui la vittoria del minigame fa finire in una cella con un bonus o un imprevisto
-                        setTimeout(() => {
-                            turn = turnParam;
-                            appearTurn(turn);
-                        }, 7000);
-                    } else {
-                        // caso C in cui la vittoria del minigame NON fa finire in una cella con un bonus o un imprevisto
-                        setTimeout(() => {
-                            turn = turnParam;
-                            appearTurn(turn);
-                        }, 500);
-                    }
-                }, 2000);        
-            } else if (!winParam) {
-                // caso A senza vittoria di un minigame
-                setTimeout(() => {
-                    turn = turnParam;
-                    appearTurn(turn);
-                }, 500);
-            }
-        }
-    }, 500);
-})
-
-
-// gestione delle animazioni
-function animate() {
-    requestAnimationFrame(animate);    
-    c.clearRect(0, 0, canvas.width, canvas.height);
-    if (primaryPlayer instanceof Player) {
-        primaryPlayer.update();
-    }
-    if (secondaryPlayer instanceof Player) {
-        secondaryPlayer.update();
-    }
-};
-animate();
-
-// gestione del dado
+// gestione del lancio del dado
 const dado = document.getElementById("dice");
 const dadoContainer = document.querySelector(".diceCont");
 let isRolling = false;
@@ -437,6 +278,150 @@ function movePlayer(player) {
     }
 };
 
+/* il client inserisce l'username nei cookie in index.js
+in questa porzione di codice, l'username viene recuperato dai cookie */
+let username = ''; 
+window.addEventListener('DOMContentLoaded', () => {
+    const usernameCookie = document.cookie.split('; ').find((cookie) => cookie.startsWith('username='));
+    username = usernameCookie ? usernameCookie.split('=')[1] : 'Utente';
+});
+// all'inizio il div viene settato a 'pareggio'
+// ad ogni passaggio di turno si controlla chi è il player più vicino alla fine
+nameDiv.textContent = 'Pareggio';
+
+// gestione dei turni + impostazione di nameDiv
+function setFirst() {
+    if (primaryPlayer.cell > secondaryPlayer.cell) {
+        nameDiv.textContent = username;
+    } else if (primaryPlayer.cell < secondaryPlayer.cell) {
+        socket.emit('requestOtherUsername', roomId);
+        socket.on('otherUsername', (data) => {
+            nameDiv.textContent = data;
+    });
+    } else nameDiv.textContent = 'Pareggio';
+};
+
+// gestione reindirizzamento per minigame
+function handleCellRedirection(cell) { 
+    const redirectionConditions = {
+        6: 'memory',
+        28: 'memory',
+        11: 'cfs',
+        33: 'cfs',
+        15: 'tris',
+        19: 'hangman',
+        23: 'pingpong',
+    };
+    // Controlla se la cella corrente ha una condizione di reindirizzamento definita
+    if (redirectionConditions.hasOwnProperty(cell)) {
+        const game = redirectionConditions[cell];
+        setTimeout(() => {
+            socket.emit('redirectToGame',{ game: game, roomId: roomId });
+        }, 1100); 
+    }
+}
+
+/* GESTIONE SOCKET
+prendiamo il parametro roomId dall'url per riconnettersi alla stanza
+i websocket (come socket.io) non sono persistenti tra pagine html diverse
+usiamo questo trucco per mantenere la connessione tra diverse pagine */
+const socket = io.connect('http://localhost:3000');
+
+// prendiamo eventuali parametri di una chiamata GET
+const urlParams = new URLSearchParams(window.location.search);
+const roomId = urlParams.get('room');
+let turnParam = null;
+if (urlParams.has('turn')) { 
+    turnParam = urlParams.get('turn');
+    turnParam = (turnParam === 'true');
+}
+let winParam = null;
+if (urlParams.has('win')) {
+    winParam = urlParams.get('win');
+    winParam = (winParam === 'true');
+}
+let posFirstParam = urlParams.get('pos1');
+let posSecondParam = urlParams.get('pos2');
+
+// evento che segnala l'unione alla stanza (sia la prima volta, sia dopo i minigame)
+socket.emit('joinExistingRoom', roomId);
+let turn;
+let primaryPlayer = {};
+let secondaryPlayer = {};
+/* questo evento lanciato dal server gestisce l'assegnazione dei turni
+sono presenti regole particolari nel caso in cui ci siano dei parametri
+cioè nel caso in cui il client sta uscendo da un minigame */
+socket.on('yourTurn', (data) => {
+    if (turnParam == null) {
+        turn = data;
+        primaryPlayer = new Player(turn);
+        secondaryPlayer = new Player(!turn);
+        document.cookie = `primary=${turn}; path=/`;
+        appearTurn(turn);
+    } else {
+        turn = false;
+        let primaryCookie = document.cookie.split('; ').find((cookie) => cookie.startsWith('primary='));
+        let primary = primaryCookie.split('=')[1];
+        primary = (primary === 'true');
+        primaryPlayer = new Player(primary, Number(posFirstParam));
+        secondaryPlayer = new Player(!primary, Number(posSecondParam));
+    }
+})
+
+// gestione delle animazioni
+function animate() {
+    requestAnimationFrame(animate);    
+    c.clearRect(0, 0, canvas.width, canvas.height);
+    if (primaryPlayer instanceof Player) {
+        primaryPlayer.update();
+    }
+    if (secondaryPlayer instanceof Player) {
+        secondaryPlayer.update();
+    }
+};
+animate();
+
+// questa porzione di codice serve a gestire l'assegnazione dei turni nelle diverse casistiche
+// di vittoria, o meno, di minigame
+window.addEventListener('DOMContentLoaded', () => {
+    const intervalPlayers = setInterval(() => {
+        if (primaryPlayer != {} && secondaryPlayer != {}) {
+            clearInterval (intervalPlayers);
+            if (winParam == null) return;
+
+            // caso con vittoria del minigame
+            else if (winParam) {
+                setTimeout(() => {
+                    bonusEvent(2);
+                }, 100);
+
+                setTimeout(() => {
+                    let actualCell = primaryPlayer.cell;
+                    if (bonusCells.includes(actualCell)) {
+                        // caso B in cui la vittoria del minigame fa finire in una cella con un bonus o un imprevisto
+                        setTimeout(() => {
+                            turn = turnParam;
+                            appearTurn(turn);
+                        }, 7000);
+                    } else {
+                        // caso C in cui la vittoria del minigame NON fa finire in una cella con un bonus o un imprevisto
+                        setTimeout(() => {
+                            turn = turnParam;
+                            appearTurn(turn);
+                        }, 500);
+                    }
+                }, 2000);        
+            } else if (!winParam) {
+                // caso A senza vittoria di un minigame
+                setTimeout(() => {
+                    turn = turnParam;
+                    appearTurn(turn);
+                }, 500);
+            }
+        }
+    }, 500);
+})
+
 // gestione spostamento dell'altro giocatore
 socket.on('moveSecondaryPlayer', (data) => {
     if ((!turn && !secondaryPlayer.ismoving) || data.special) {
@@ -480,157 +465,22 @@ function appearTurn(turn) {
     }
 }
 
-
-// gestione flip cards (tre funzioni: una per inizializzare, una per mostrarle e una per attivarle)
-function initializeFlipcards() {
-    const flipcard = document.createElement('div');
-    flipcard.classList.add('flip-card', 'text');
-    const flipCardInner = document.createElement('div');
-    flipCardInner.classList.add('flip-card-inner');
-    const flipcardfront = document.createElement('div');
-    flipcardfront.classList.add('flip-card-front');
-    const flipcardback = document.createElement('div');
-    flipcardback.classList.add('flip-card-back');
-    flipCardInner.appendChild(flipcardfront);
-    flipCardInner.appendChild(flipcardback);
-    flipcard.appendChild(flipCardInner);
-    document.body.appendChild(flipcard);
-
-    flipcard.style.visibility = 'hidden';
-
-    return {flipcard, flipcardfront, flipcardback};
-}
-// funzione per mostrare la flipcard in base alla casella in cui capita il giocatore
-function showFlipCard(cell) {
-    if (bonusCells.includes(cell)) {
-        bonusTurn = true; 
-        const {flipcard, flipcardfront, flipcardback } = initializeFlipcards();
-
-        if (cell == 30 ) {
-            flipcard.style.visibility = 'visible';
-            flipcard.style.opacity=1;
-            flipcardfront.style.backgroundImage = `url('../images/minerva.png')`;
-            flipcardfront.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>IMPREVISTO</h1>`;
-            flipcardback.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>IMPREVISTO</h1><p style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>Oh no, c'è stato un imprevisto!  Hai guardato la minerva negli occhi, vai indietro di 2 caselle.</p>`;   
-            setTimeout(() => {
-                flipcard.style.opacity = '0';
-            }, 3600);
-            setTimeout(() => { 
-                flipcard.style.visibility = 'hidden';
-                setTimeout(() => {
-                    flipcard.remove();
-                }, 5000);
-            }, 4600);
-        }
-        else if (cell == 9) {
-            flipcard.style.visibility = 'visible';
-            flipcard.style.opacity=1;
-            flipcardfront.style.backgroundImage = `url('../images/fisica.png')`;
-            flipcardfront.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>IMPREVISTO</h1>`;
-            flipcardback.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>IMPREVISTO</h1><p style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>Oh no, c'è stato un imprevisto! Non hai passato l'esame di fisica, vai indietro di 2 caselle.</p>`; 
-            setTimeout(() => {
-                flipcard.style.opacity = '0';
-            }, 3600);
-            setTimeout(() => {
-                flipcard.style.visibility = 'hidden';
-                setTimeout(() => {
-                    flipcard.remove();
-                }, 5000);
-            }, 4600);
-        }
-        else if (cell == 38) {
-            flipcard.style.visibility = 'visible';
-            flipcard.style.opacity=1;
-            flipcardfront.style.backgroundImage = `url('../images/tesi.png')`;
-            flipcardfront.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>IMPREVISTO</h1>`;
-            flipcardback.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>IMPREVISTO</h1><p style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>Oh no, c'è stato un imprevisto! Devi scrivere la tesi, vai indietro di 3 caselle.</p>`;   
-            setTimeout(() => {
-                flipcard.style.opacity = '0';
-            }, 3600);
-            setTimeout(() => {
-                flipcard.style.visibility = 'hidden';
-                setTimeout(() => {
-                    flipcard.remove();
-                }, 5000);
-            }, 4600);
-        }
-        else if (cell == 3) {
-            flipcard.style.visibility = 'visible';
-            flipcard.style.opacity = 1;
-            flipcardfront.style.backgroundImage = `url('../images/esonero.png')`;
-            flipcardfront.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>BONUS</h1>`;
-            flipcardback.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>BONUS</h1><p style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>Bravo! Hai superato un esonero, vai avanti di 2 caselle.</p>`;   
-            setTimeout(() => {
-                flipcard.style.opacity = '0';
-            }, 3600);
-            setTimeout(() => {
-                flipcard.style.visibility = 'hidden';
-                setTimeout(() => {
-                    flipcard.remove();
-                }, 5000);
-            }, 4600);
-        }
-        else if (cell == 36) {
-            flipcard.style.visibility = 'visible';
-            flipcard.style.opacity=1;
-            flipcardfront.style.backgroundImage = `url('../images/esonero.png')`;
-            flipcardfront.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>BONUS</h1>`;
-            flipcardback.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>BONUS</h1><p style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>Bravo! Hai superato l'ultimo esame, vai avanti di 1 casella.</p>`;
-            setTimeout(() => {
-                flipcard.style.opacity = '0';
-            }, 3600);
-            setTimeout(() => {
-                flipcard.style.visibility = 'hidden';
-                setTimeout(() => {
-                    flipcard.remove();
-                }, 5000);
-            }, 4600);
-        }
-        else if (cell == 26) {
-            flipcard.style.visibility = 'visible';
-            flipcard.style.opacity=1;
-            flipcardfront.style.backgroundImage = `url('../images/relatore.png')`;
-            flipcardfront.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>BONUS</h1>`;
-            flipcardback.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>BONUS</h1><p style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>Bravo! Sei riuscito a trovare un relatore per la tesi, vai avanti di 2 caselle.</p>`;
-            setTimeout(() => {
-                flipcard.style.opacity = '0';
-            }, 3600);
-            setTimeout(() => {
-                flipcard.style.visibility = 'hidden';
-                setTimeout(() => {
-                    flipcard.remove();
-                }, 5000);
-            }, 4600);
-        }
-    }
-}
-
+/* gestione 'attiva' delle cards (cioè svolge effettivamente le azioni previste)
+con funzioni per eventi bonus, cioè spostamenti al di fuori del proprio turno */
 function activeFlipCard(cell) {
-    if(cell == 30 ) {    
-        setTimeout(() => { 
-            penaltyEvent(2);
-        }, 4000);
-    } else if(cell == 9) {
-        setTimeout(() => {
-            penaltyEvent(2);
-        }, 4000);
-    } else if(cell == 38) {
-        setTimeout(() => {
-            penaltyEvent(3);
-        }, 4000);
-    } else if(cell == 3) {  
-        setTimeout(() => {
-            bonusEvent(2);
-        }, 4000);
-    } else if(cell == 36){    
-        setTimeout(() => {
-            bonusEvent(1);
-        }, 4000);
-    } else if(cell == 26) {    
-        setTimeout(() => {
-            bonusEvent(2);
-        }, 4000);
-    }  
+    if (cell == 30) {
+        setTimeout(() => { penaltyEvent(2); }, 4000);
+    } else if (cell == 9) {
+        setTimeout(() => { penaltyEvent(2); }, 4000);
+    } else if (cell == 38) {
+        setTimeout(() => { penaltyEvent(3); }, 4000);
+    } else if (cell == 3) {
+        setTimeout(() => { bonusEvent(2); }, 4000);
+    } else if (cell == 36) {
+        setTimeout(() => { bonusEvent(1); }, 4000);
+    } else if (cell == 26) {
+        setTimeout(() => { bonusEvent(2); }, 4000);
+    }
 }
 
 // gestione evento bonus (o vittoria minigame)
@@ -665,31 +515,12 @@ function penaltyEvent(number) {
     }
 };
 
-// cambio musica raggiunta la cella 30
-let change = false;
-function changeMusic(cell) {
-    if (!change && cell >= 27) {
-        backgroundMusic.pause();
-        backgroundMusic.currentTime = 0;
-        slowStart(missionImpossible, 0.1);
-        change = true;
-        // se la precedente è mutata, muto anche missionImpossible
-        if (backgroundMusic.muted) missionImpossible.muted = true;
-    } else if (change && cell < 30) {
-        missionImpossible.pause();;
-        missionImpossible.currentTime = 0;
-        slowStart(backgroundMusic, 0.1);
-        change = false;
-    }
-}
-
 socket.on('setBonus', () => {
     bonusTurn = false;
 });     
 
 
-//gestione disconnessione / vittoria, etc.
-
+// gestione disconnessione forzata e vittoria
 //caso di refresh della pagina
 window.addEventListener('beforeunload',()=>{
     socket.emit('requestForcedDisconnect', roomId);
@@ -751,32 +582,24 @@ socket.on('redirectToBothGame', (data) => {
     redirectPlayersToGame(data.game,data.roomId);
 });
 
-// Funzione per reindirizzare entrambi i giocatori al gioco specificato
+// funzione per reindirizzare entrambi i giocatori al gioco specificato
 function redirectPlayersToGame(game, data) {
     if (game === 'memory') {
-
         const nextPage = `/memory?room=${data}&pos1=${primaryPlayer.cell}&pos2=${secondaryPlayer.cell}&turn=${turn}`;
-        window.location.href = nextPage; // Reindirizza a Memory
-
+        window.location.href = nextPage; 
     } else if (game === 'cfs') {
-
         const nextPage = `/cfs?room=${data}&pos1=${primaryPlayer.cell}&pos2=${secondaryPlayer.cell}&turn=${turn}`;
-        window.location.href = nextPage; // Reindirizza a CFS
-
+        window.location.href = nextPage; 
     } else if(game == 'tris'){
-
         const nextPage = `/tris?room=${data}&pos1=${primaryPlayer.cell}&pos2=${secondaryPlayer.cell}&turn=${turn}`;
-        window.location.href = nextPage; // Reindirizza a Tris
-
+        window.location.href = nextPage; 
     } else if(game == 'hangman'){
-
         const nextPage = `/hangman?room=${data}&pos1=${primaryPlayer.cell}&pos2=${secondaryPlayer.cell}&turn=${turn}`;
-        window.location.href = nextPage; // Reindirizza a Hangman
+        window.location.href = nextPage; 
     }
     else if(game === 'pingpong'){
-
         const nextPage = `/pingpong?room=${data}&pos1=${primaryPlayer.cell}&pos2=${secondaryPlayer.cell}&turn=${turn}`;
-        window.location.href = nextPage; // Reindirizza a PingPong
+        window.location.href = nextPage; 
     }
 };
 
@@ -828,36 +651,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 });
 
-
-
-const muteButton = document.getElementById('muteButton');
-// gestione del pulsante di muting
-muteButton.addEventListener('click', function() {
-    // se la canzone attiva è mission impossible
-    if (change) {
-        // se è mutata la smutiamo
-        if (missionImpossible.muted) {
-            missionImpossible.muted = false;
-            muteButton.style.backgroundImage="url('../images/speaker_11343708.png')";
-        // se è smutata la mutiamo
-        } else {
-            missionImpossible.muted = true;
-            muteButton.style.backgroundImage = "url('../images/mute-button_11343616.png')";
-        }
-    // se la canzone attiva è backgroundMusic
-    } else {
-        if (backgroundMusic.muted) {
-            backgroundMusic.muted = false;
-            muteButton.style.backgroundImage="url('../images/speaker_11343708.png')";
-        } else {
-            backgroundMusic.muted = true;
-            muteButton.style.backgroundImage = "url('../images/mute-button_11343616.png')";
-        }
-    }
-});
-
-
-//chatbox 
+// gestione della chatbox 
 let othername = ''; // Variabile per memorizzare il nome utente dell'altro utente della chat
 
 // Emit per richiedere il nome utente al server
@@ -952,5 +746,3 @@ function renderMessage(type, message){
     }
     messageContainer.scrollTop = messageContainer.scrollHeight - messageContainer.clientHeight; // Scrolling automatico verso il basso per mostrare i messaggi più recenti
 }
-
-
