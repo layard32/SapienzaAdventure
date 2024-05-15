@@ -393,7 +393,7 @@ function rollDice(number) {
         let dadoNumber = number;
         // TODO controllare che il numero sia effettivamente randomico
         // e non preimpostato per una delle mille prove
-        if (!number) dadoNumber = 14;//Math.floor(Math.random() * 6) + 1;
+        if (!number) dadoNumber = 2//Math.floor(Math.random() * 6) + 1;
 
         for (let i = 1; i <= 6; i++) dado.classList.remove('show-' + i);
         requestAnimationFrame(() => {
@@ -793,6 +793,10 @@ button.addEventListener('animationend', () => {
 document.addEventListener("DOMContentLoaded", function() {
     const button = document.getElementById("button");
     let holdInterval;
+
+    button.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+    });
 
     button.addEventListener("mousedown", function() {
         button.classList.add("progress"); 
