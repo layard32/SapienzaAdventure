@@ -1,5 +1,8 @@
+html {
+    font-family: Roboto Mono;
+}
+
 body {
-    font-family: Arial, sans-serif;
     margin: 0;
     display: flex;
     justify-content: center;
@@ -41,7 +44,6 @@ header {
 header h1 {
     margin: 0;
     font-size: 40px;
-    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
 .choices {

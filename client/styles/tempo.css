@@ -7,34 +7,32 @@
 
 #timerContainer {
     position: relative;
-    width: 60%; /* Riduci la larghezza del container del timer */
-    height: 20px; /* Riduci l'altezza della barra del timer */
-    margin: 0 auto; /* Centra il container */
-    border: 1px solid black; /* Aggiungi il bordo nero */
-    overflow: hidden; /* Nascondi il contenuto che va oltre i limiti del container */
+    width: 60%;
+    height: 20px;
+    margin: 0 auto;
+    border: 1px solid black;
+    overflow: hidden;
 }
 
 #timerBar {
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%; /* La barra del timer è inizialmente piena */
+    width: 100%;
     height: 100%;
-    background-color: #59bb4c; /* Colore della barra del timer (verde) quando è piena */
-    animation: fillTimer linear forwards; /* Animazione per riempire la barra del timer */
+    background-color: #59bb4c;
+    animation: fillTimer linear forwards;
 }
 
-
-/* Cambia il colore della barra del timer a giallo quando è a metà */
 @keyframes fillTimer {
     0% {
         width: 100%;
     }
     50% {
-        background-color: yellow; /* Giallo quando è a metà */
+        background-color: yellow;
     }
     100% {
         width: 0%;
-        background-color: red; /* Rosso quando sta per finire il tempo */
+        background-color: red;
     }
 }

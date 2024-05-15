@@ -1,17 +1,6 @@
-/* importazioni e definizioni di scheletro fondamentale */
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
-
 * { box-sizing: border-box; }
 
 html { min-height: 100dvh; }
-
-.text,p{ 
-  color: black;
-  font-family: Roboto Mono; 
-  text-align: center;   
-  word-wrap: break-word;
-  overflow: hidden;
-}
 
 body {
   background-image: url("../images/wallpaper.png");
@@ -123,15 +112,6 @@ body {
   margin-bottom: 30px;
 }
 
-.primary {
-  background-color: #8C4A4A !important;
-}
-
-.secondary {
-  background-color: rgb(70, 121, 166) !important;
-}
-
-/* definizione di altri elementi */
 .my-btn {
   min-width: 120px;
   font-size: 140%;
@@ -231,5 +211,3 @@ body {
 #usernameToast, #roomFullToast {
   font-size: 125%;
 }
-
-

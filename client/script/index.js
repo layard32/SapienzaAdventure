@@ -122,8 +122,7 @@ goBackButton2.addEventListener("click", () => {
     }, 500);
 });
 
-
-// DA QUI IN POI CONNESSIONE BACK-END
+// gestione back-end
 // inizializziamo socket
 let roomId = null;
 const socket = io.connect('http://localhost:3000');
@@ -183,4 +182,3 @@ socket.on('playersConnected', (data) => {
     const nextPage = `/goose?room=${data}`
     window.location.href = nextPage;
 });
-
