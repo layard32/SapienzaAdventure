@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
+    startGameTimer();
+
     const playerPaddle = document.getElementById('playerPaddle');
     const computerPaddle = document.getElementById('computerPaddle');
     const ball = document.getElementById('ball');
@@ -30,7 +32,6 @@ document.addEventListener('DOMContentLoaded', function () {
         gameStarted = true;
         ballSpeedX = 4; 
         ballSpeedY = 4; 
-        startGameTimer();
         update();
     });
 
@@ -158,7 +159,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function displayScores() {
         document.getElementById('playerScore').textContent = playerScore;
         document.getElementById('computerScore').textContent = computerScore;
-    }
+    }    
 
     function startTimer(duration) {
         var timer = duration, minutes, seconds;
@@ -179,9 +180,8 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }, 1000);
     }
-      
-      
-      // Funzione per avviare il timer con una durata di 3 minuti (180 secondi)
+    
+    // Funzione per avviare il timer con una durata di 3 minuti (180 secondi)
     function startGameTimer() {
         var Minutes = 45;
         startTimer(Minutes);
@@ -193,9 +193,6 @@ document.addEventListener('DOMContentLoaded', function () {
         timerBar.style.animationDuration = duration + 's'; // Imposta la durata dell'animazione
     }
         
-
-    
-
     function endGame() {
         setTimeout(()=>{
           socket.emit('quitGame', { roomId: roomId, 
@@ -204,9 +201,15 @@ document.addEventListener('DOMContentLoaded', function () {
             win: (playerScore==3), 
             turn: turn });
         }, 1000);
-      
     }
-    
+});
+
+
+
+
+
+
+
     
     //GESTIONE SERVER
     const urlParams = new URLSearchParams(window.location.search);
@@ -223,8 +226,3 @@ document.addEventListener('DOMContentLoaded', function () {
     // Effettua il reindirizzamento alla nuova pagina
     window.location.href = data;
     });
-    
-
-    
-});
-
