@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
-
 body {
     margin: 0; padding: 0;
     background-color: #8C4A4A !important;
@@ -24,21 +22,13 @@ body {
     left: inherit;
 }
 
-/*bottone lancio dado*/
 .buttonCont{
     top:98%;
     left:50%;
     transform: translate(-50%, -98%);
     position: fixed;
-    /*top: 100%;
-    left: 100%;
-    transform: translate(-100%, -100%);*/
-    /*width: 58.60vw;
-    height: 11.80vh;*/
     align-items: center;
-
 }
-
 
 #button {
     position: relative;
@@ -52,8 +42,8 @@ body {
     cursor: pointer;
     box-shadow: 0 9px #12480b;
     overflow: hidden;
-  }
-  
+}
+
 #button::before {
     content: "";
     position: absolute;
@@ -64,7 +54,7 @@ body {
     background:rgba(0, 0, 0, 0.2);
     border-radius: 15px;
 }
-  
+
 #button.progress::before {
     animation: progress 2.5s ease-in-out forwards;
 }
@@ -81,8 +71,6 @@ body {
     transition: width 0.1s ease-out; 
 }
 
-  
-
 @keyframes progress {
     0% {
       left: -100%;
@@ -91,7 +79,6 @@ body {
       left: 0%;
     }
 }
-
 
 #button .text-icon {
     height: 100%;
@@ -108,43 +95,27 @@ body {
     -moz-user-select: none; 
     -ms-user-select: none; 
     user-select: none; 
-    
 }
 
 #playerName {
     z-index: -1;
     position: fixed;
-    /*top: 99%;
-    transform: translate(2%, -100%);*/
     top:4%;
     left:50%;
     transform: translate(-50%, -4%);
     font-size: 50px;
     color:#59bb4c;
     background-color:#F2EFE9;
-    /*border:5px solid #F2EFE9;*/
     background-image: url(../images/chess.png);
     background-size: 15%;
     background-repeat: no-repeat;
     background-position: left;
     border-radius: 15px;
     height: 4.2rem;
-    width: 30rem/*13rem*/;
+    width: 30rem;
     text-align: center;
     justify-items: end;
 }
-
-/* .contButtonMute{
-    top:6%;
-    left: 64%;
-    transform: translate(-64%, -6%);
-    position: fixed;
-    align-items: center;
-    background-color: transparent;
-    border: none;
-    height: 60px;
-    width: 60px;
-} */
 
 #playerContainer {
     top:5%;
@@ -154,11 +125,8 @@ body {
     display: flex;
     align-items: center;
     height: 4.5rem;
-    width: 40rem/*13rem*/;
-
+    width: 40rem;
 }
-  
-
 
 #muteButton{
     position: absolute;
@@ -171,8 +139,7 @@ body {
     height: 60px;
     width: 60px;
     order: -1;
-    margin-right: 10px; /* Optional: Adds some space between the button and the name */
-    /*position: fixed;*/
+    margin-right: 10px;
     top: 35%;
     left: 80%;
     transform: translate(-80%, -25%);
@@ -198,7 +165,6 @@ body {
     transform: translate(-50%, -50%);
     transition: opacity 1s;
     opacity: 0;
-    
 }
 
 .flip-card-inner {
@@ -210,11 +176,9 @@ body {
     transform-style: preserve-3d;
 }
 
-
 .flip-card:hover .flip-card-inner {
     transform: rotateY(180deg);
 }
-
 
 .flip-card-front, .flip-card-back {
     position: absolute;
@@ -223,7 +187,6 @@ body {
     -webkit-backface-visibility:visible; 
     backface-visibility: hidden;    
 }
-
 
 .flip-card-front {
     background-color: #F2EFE9;
@@ -234,9 +197,7 @@ body {
     background-repeat: no-repeat;
     background-position: center;
     background-size:80%;
-    
 }
-
 
 .flip-card-back {
     background-color: #F2EFE9;
@@ -247,28 +208,21 @@ body {
     transform: rotateY(180deg);
 }
 
-
 #yourTurn {
   font-size: calc(3.5vh + 3.5vw);
   font-family: Roboto Mono;
   text-align: center;
-
   position: fixed;
   top: 20%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 60%;
-
   background-color: rgba(140, 74, 74, 0.7);
   border-radius: 20px;
-
   visibility: hidden;
   opacity: 0;
   transition: opacity 0.7s;
 }
-
-
-
 
 .diceCont{
     background-color: transparent;
@@ -401,178 +355,27 @@ body {
     left:80%;
 }
 
-/* Stile personalizzato per i toast */
 .toast {
     border-radius: 10px;
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-    width: 90%; /* Larghezza del toast */
-    max-width: 500px; /* Larghezza massima del toast */
-    margin: auto; /* Centrare il toast */
+    width: 90%;
+    max-width: 500px;
+    margin: auto;
 }
 
 .toast-body {
-    padding: 20px; /* Padding maggiore */
-    font-size: 20px; /* Dimensione del testo maggiore */
+    padding: 20px;
+    font-size: 20px;
 }
 
-/* Stile per il toast di vittoria a tavolino */
 #winToast {
-    background-color: #5cb85c; /* Colore di sfondo verde */
+    background-color: #5cb85c;
 }
 
-/* Stile per il toast di vittoria personalizzato */
 #customWinToast {
-    background-color: #007bff; /* Colore di sfondo blu */
+    background-color: #007bff;
 }
 
-/* Stile per il toast di sconfitta */
 #loseToast {
-    background-color: #dc3545; /* Colore di sfondo rosso */
-}
-
-
-/*chat*/
-
-.open-chat {
-    width: 48px;
-    height: 48px;
-    border: none;
-    background: #59bb4c; /* Colore di sfondo verde */
-    color: #FFF; /* Colore del testo bianco */
-    font-size: 24px;
-    cursor: pointer;
-    outline: none;
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    z-index: 1;
-    border-radius: 50%; /* Bordi arrotondati per rendere il pulsante circolare */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Ombra sottile per effetto tridimensionale */
-    transition: background-color 0.3s, transform 0.2s; /* Effetti di transizione */
-}
-
-.open-chat:hover {
-    background: #4ca746; /* Cambia il colore al passaggio del mouse */
-    transform: scale(1.1); /* Ingrandisce leggermente il pulsante al passaggio del mouse */
-}
-
-.open-chat::before {
-    content: "\1F4AC"; /* Icona del palloncino del fumetto */
-    position: relative;
-    left: 1px;
-}
-
-
-
-.logo {
-    font-size: 24px; /* Dimensione del carattere del logo */
-    font-weight: bold; /* Testo in grassetto */
-}
-
-.chat-screen {
-    width: 200px; /* Larghezza fissa della schermata della chat */
-    height: 70%; /* Altezza in percentuale rispetto all'altezza della viewport */
-    max-height: calc(100vh - 40px); /* Altezza massima meno l'altezza del pulsante */
-    overflow: auto; /* Aggiungi uno scorrimento se la chat è più grande dello spazio disponibile */
-    background-color: #fff; /* Colore di sfondo della schermata della chat */
-    border-radius: 10px; /* Bordi arrotondati */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Ombra leggera */
-    padding: 20px; /* Padding interno per separare i contenuti dai bordi */
-    display: none; /* La chat è inizialmente nascosta */
-}
-
-.chat-screen.active {
-    display: block; /* Mostra la chat quando è attiva */
-}
-
-.typebox {
-    display: flex;
-    align-items: center;
-}
-
-#message-input {
-    flex: 1; /* Fai espandere l'input per occupare lo spazio rimanente */
-    padding: 6px; /* Padding più piccolo */
-    font-size: 9px; /* Dimensione del testo più piccola */
-    border: 1px solid #ccc; /* Bordo leggero */
-    border-radius: 5px; /* Angoli arrotondati */
-    margin-right: 8px; /* Margine a destra più piccolo */
-}
-
-#send-message {
-    padding: 6px 10px; /* Padding interno più piccolo */
-    font-size: 9px; /* Dimensione del testo più piccola */
-    background-color: #ff0000; /* Colore di sfondo */
-    color: #fff; /* Colore del testo */
-    border: none; /* Rimuovi il bordo */
-    border-radius: 5px; /* Angoli arrotondati */
-    cursor: pointer; /* Cambia il cursore al passaggio del mouse */
-}
-
-#send-message:hover {
-    background-color: #b35f00; /* Cambia colore di sfondo al passaggio del mouse */
-}
-
-
-.name {
-    font-size: 9px; /* Dimensione del carattere del nome */
-    font-weight: bold; /* Testo in grassetto */
-    color: #FFF; /* Colore del testo bianco */
-    padding: 2px 8px; /* Aggiungi spazio intorno al testo */
-    border-radius: 20px; /* Angoli arrotondati per creare una forma arrotondata */
-    background-color: #59bb4c; /* Colore di sfondo simile al pulsante di apertura della chat */
-    display: inline-block; /* Per far sì che la larghezza della "nuvoletta" si adatti al contenuto */
-    margin-right: 8px; /* Margine a destra per separare il nome dal testo del messaggio */
-    max-width: 150px; /* Larghezza massima della "nuvoletta" per evitare che si estenda troppo */
-    word-wrap: break-word; /* Per far sì che il testo venga avvolto se è più lungo della larghezza massima */
-    transition: background-color 0.3s; /* Effetto di transizione per il cambio di colore di sfondo */
-}
-
-.name:hover {
-    background-color: #4ca746; /* Cambia il colore di sfondo al passaggio del mouse */
-}
-
-.text-chat {
-    font-size: 9px; /* Dimensione del carattere del testo del messaggio */
-    color: #333; /* Colore del testo scuro per maggiore leggibilità */
-    padding: 2px 8px; /* Aggiungi spazio intorno al testo */
-    border-radius: 10px; /* Angoli arrotondati per creare una forma arrotondata */
-    background-color: #f2f2f2; /* Colore di sfondo del testo del messaggio */
-    display: flex; 
-    margin-top: 2px; /* Margine superiore per separare il testo dal nome */
-    max-width: 30px; /* Larghezza massima del testo per evitare che si estenda troppo */
-    word-wrap: break-word; /* Per far sì che il testo venga avvolto se è più lungo della larghezza massima */
-    transition: background-color 0.3s; /* Effetto di transizione per il cambio di colore di sfondo */
-}
-
-.text-chat:hover {
-    background-color: #ddd; /* Cambia il colore di sfondo al passaggio del mouse */
-}
-
-.message {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start; /* Allinea gli elementi verso l'alto */
-    justify-content: space-between; /* Distribuisce uniformemente gli elementi lungo l'asse principale (orizzontalmente) */
-}
-
-.other-message .name {
-    margin-bottom: 2px;
-    margin-left: 150px; /* Aggiunge uno spazio tra il nome utente e il testo del messaggio */
-}
-.other-message .text-chat {
-    margin-top: 2px; 
-    margin-left: 150px; /* Aggiunge uno spazio tra il testo del messaggio e il nome utente */
-    margin-bottom: 10px;
-}
-
-
-.my-message .name {
-    margin-bottom: 2px;
-    margin-right: 150px; /* Aggiunge uno spazio tra il testo del messaggio e il nome utente */
-}
-.my-message .text-chat {
-    margin-top: 2px;
-    margin-right: 150px; /* Aggiunge uno spazio tra il nome utente e il testo del messaggio */
-    margin-bottom: 10px;
+    background-color: #dc3545;
 }

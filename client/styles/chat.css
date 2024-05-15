@@ -1,0 +1,139 @@
+.open-chat {
+    width: 48px;
+    height: 48px;
+    border: none;
+    background: #59bb4c;
+    color: #FFF;
+    font-size: 24px;
+    cursor: pointer;
+    outline: none;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 1;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.open-chat:hover {
+    background: #4ca746;
+    transform: scale(1.1);
+}
+
+.open-chat::before {
+    content: "\1F4AC";
+    position: relative;
+    left: 1px;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.chat-screen {
+    width: 200px;
+    height: 70%;
+    max-height: calc(100vh - 40px);
+    overflow: auto;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    display: none;
+}
+
+.chat-screen.active {
+    display: block;
+}
+
+.typebox {
+    display: flex;
+    align-items: center;
+}
+
+#message-input {
+    flex: 1;
+    padding: 6px;
+    font-size: 9px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 8px;
+}
+
+#send-message {
+    padding: 6px 10px;
+    font-size: 9px;
+    background-color: #ff0000;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#send-message:hover {
+    background-color: #b35f00;
+}
+
+.name {
+    font-size: 9px;
+    font-weight: bold;
+    color: #FFF;
+    padding: 2px 8px;
+    border-radius: 20px;
+    background-color: #59bb4c;
+    display: inline-block;
+    margin-right: 8px;
+    max-width: 150px;
+    word-wrap: break-word;
+    transition: background-color 0.3s;
+}
+
+.name:hover {
+    background-color: #4ca746;
+}
+
+.text-chat {
+    font-size: 9px;
+    color: #333;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background-color: #f2f2f2;
+    display: flex; 
+    margin-top: 2px;
+    max-width: 30px;
+    word-wrap: break-word;
+    transition: background-color 0.3s;
+}
+
+.text-chat:hover {
+    background-color: #ddd;
+}
+
+.message {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.other-message .name {
+    margin-bottom: 2px;
+    margin-left: 150px;
+}
+.other-message .text-chat {
+    margin-top: 2px; 
+    margin-left: 150px;
+    margin-bottom: 10px;
+}
+
+.my-message .name {
+    margin-bottom: 2px;
+    margin-right: 150px;
+}
+.my-message .text-chat {
+    margin-top: 2px;
+    margin-right: 150px;
+    margin-bottom: 10px;
+}
