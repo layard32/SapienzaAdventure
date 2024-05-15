@@ -469,7 +469,7 @@ function appearTurn(turn) {
 con funzioni per eventi bonus, cioè spostamenti al di fuori del proprio turno */
 function activeFlipCard(cell) {
     if (cell == 30) {
-        setTimeout(() => { penaltyEvent(2); }, 4000);
+        setTimeout(() => { penaltyEvent(3); }, 4000);
     } else if (cell == 9) {
         setTimeout(() => { penaltyEvent(2); }, 4000);
     } else if (cell == 38) {
