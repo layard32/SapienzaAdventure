@@ -434,8 +434,8 @@ body {
 /*chat*/
 
 .open-chat {
-    width: 40px;
-    height: 40px;
+    width: 48px;
+    height: 48px;
     border: none;
     background: #59bb4c; /* Colore di sfondo verde */
     color: #FFF; /* Colore del testo bianco */
@@ -458,6 +458,8 @@ body {
 
 .open-chat::before {
     content: "\1F4AC"; /* Icona del palloncino del fumetto */
+    position: relative;
+    left: 1px;
 }
 
 
