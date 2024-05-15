@@ -1,39 +1,36 @@
 <!DOCTYPE html>
 <html lang="it">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title> memory</title>
 
-        <link rel="stylesheet" href="../styles/memory.css" type="text/css">
-        <script src="../script/memory.js" defer></script>
-    </head>
-    <body> 
-        <header>
-            <h1 class="heading", style="color: #002c53;">Memory</h1>
-        </header>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Memory </title>
+    <link rel="stylesheet" href="../styles/memory.css" type="text/css">
+</head>
+
+<body> 
+    <header>
+        <h1 class="heading", style="color: #002c53;">Memory</h1>
+    </header>
             
-        <main>
+    <main>           
+        <div id="game-info">
+        <div id="tempo">Timer:</div>
+        <div id="timer">02:00</div>
 
-            
-            <div id="game-info">
+        <div id="end-game-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2 style="color: #002c53;">Fine della partita</h2>
+                <p style="color: #002c53;">La partita è terminata. Grazie per aver giocato!</p>
+            </div>
+        </div>
 
-                <div id="tempo">Timer:</div>
+        <div id="game-board"></div>
 
-                <div id="timer">02:00</div>
-
-                <div id="end-game-modal" class="modal">
-                    <div class="modal-content">
-                        <span class="close">&times;</span>
-                        <h2 style="color: #002c53;">Fine della partita</h2>
-                        <p style="color: #002c53;">La partita è terminata. Grazie per aver giocato!</p>
-                    </div>
-                </div>
-
-            <div id="game-board"></div>
-
-        </main>
+    </main>
         
-        <script src="https://cdn.socket.io/4.7.5/socket.io.min.js" integrity="sha384-2huaZvOR9iDzHqslqwpR87isEmrfxqyWOF7hr7BY6KG0+hVKLoEXMPUJw3ynWuhO" crossorigin="anonymous"></script>
-    </body>
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js" integrity="sha384-2huaZvOR9iDzHqslqwpR87isEmrfxqyWOF7hr7BY6KG0+hVKLoEXMPUJw3ynWuhO" crossorigin="anonymous"></script>
+    <script src="../script/memory.js"></script>    
+</body>
 </html>
