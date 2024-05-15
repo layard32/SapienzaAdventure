@@ -61,6 +61,10 @@ app.get("/hangman", (req, res) => {
   res.sendFile(srcPath("hangman.html"));
 });
 
+app.get("/pingpong", (req, res) => {
+  res.sendFile(srcPath("pingpong.html"));
+});
+
 // avvio il app express
 server.listen(PORT, () => {
   console.log(`Il app è in esecuzione sulla porta: ${PORT}`);

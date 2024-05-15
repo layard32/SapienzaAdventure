@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded', function () {
         gameStarted = true;
         ballSpeedX = 4; 
         ballSpeedY = 4; 
+        startGameTimer();
         update();
     });
 
@@ -43,13 +44,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (playerScore== 3) {
             alert('Congratulazioni, hai vinto!');
-            endGame();
             return;
             
         }
         else if (computerScore== 3) {
             alert('Hai perso!');
-            document.location.reload();
             return;
         }
 
@@ -155,7 +154,34 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('computerScore').textContent = computerScore;
     }
 
-    
+    function startTimer(duration) {
+        var timer = duration, minutes, seconds;
+        interval = setInterval(function () {
+            minutes = parseInt(timer / 60, 10);
+            seconds = parseInt(timer % 60, 10);
+      
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+      
+            if (--timer < 0) {
+              clearInterval(interval);
+              endGame(); // Controlla la fine della partita quando il timer arriva a zero
+            }
+        }, 1000);
+      }
+      
+      
+      // Funzione per avviare il timer con una durata di 3 minuti (180 secondi)
+      function startGameTimer() {
+        var Minutes = 30;
+        startTimer(Minutes);
+        updateTimerBar(Minutes);
+      }
+      // Funzione per aggiornare la barra del timer
+      function updateTimerBar(duration) {
+        var timerBar = document.querySelector('#timerBar');
+        timerBar.style.animationDuration = duration + 's'; // Imposta la durata dell'animazione
+      }
         
 
     update();
@@ -165,7 +191,7 @@ document.addEventListener('DOMContentLoaded', function () {
           socket.emit('quitGame', { roomId: roomId, 
             primaryPlayerPosition: primaryPosition,
             secondaryPlayerPosition: secondaryPosition,
-            win: win, 
+            win: (playerScore==3), 
             turn: turn });
         }, 1000);
       

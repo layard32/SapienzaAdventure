@@ -769,7 +769,7 @@ function redirectPlayersToGame(game,data) {
         const nextPage = `/hangman?room=${data}&pos1=${primaryPlayer.cell}&pos2=${secondaryPlayer.cell}&turn=${turn}`;
         window.location.href = nextPage; // Reindirizza a Hangman
     }
-    else if(game == 'pingpong'){
+    else if(game === 'pingpong'){
 
         const nextPage = `/pingpong?room=${data}&pos1=${primaryPlayer.cell}&pos2=${secondaryPlayer.cell}&turn=${turn}`;
         window.location.href = nextPage; // Reindirizza a PingPong
