@@ -11,8 +11,6 @@ document.addEventListener('DOMContentLoaded', function () {
     let ballSpeedY = 0;
 
     const paddleHeight = 100;
-    const paddleWidth = 10;
-    const paddleSpeed = 4;
     let computerPaddleY = 150;
     let playerPaddleY = 150;
 
@@ -25,7 +23,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const ballRadius = ballDiameter / 2;
 
     const modal = document.getElementById('myModal');
-    const closeModal = document.getElementById('closeModal');
     const modalText = document.getElementById('modalText');
 
 
@@ -94,25 +91,6 @@ document.addEventListener('DOMContentLoaded', function () {
         ball.style.top = ballY + 'px';
     }
 
-
-    /*function moveComputerPaddle() {
-        const ballCenterY = ballY + 10;
-        const computerPaddleCenterY = computerPaddleY + paddleHeight / 2;
-    
-        // Determina la distanza tra il centro della racchetta del computer e il centro della palla
-        const deltaY = ballCenterY - computerPaddleCenterY;
-    
-        // Muovi la racchetta del computer solo se la palla si sta avvicinando al computer
-        if (Math.abs(deltaY) > paddleHeight / 4) {
-            if (deltaY < 0 && computerPaddleY > 0) {
-                computerPaddleY -= paddleSpeed;
-            } else if (deltaY > 0 && computerPaddleY < gameHeight - paddleHeight) {
-                computerPaddleY += paddleSpeed;
-            }
-        }
-    
-        computerPaddle.style.top = computerPaddleY + 'px';
-    }*/
 
     let computerPaddleSpeed = 3;
     let computerPaddleDirection = 1;

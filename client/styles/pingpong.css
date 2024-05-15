@@ -35,11 +35,13 @@ body {
     position: relative;
     width: 800px;
     height: 400px;
+    /*height: 45vw;
+    width: 85vw;
+    max-width: 800px;
+    max-height: 400px;
+    min-width: 100px;
+    min-height: 50px;*/
     background-color:#548DBF;
-    /*background-image:url('../images/cropped-logo.png');
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size:80%;*/
     border-radius: 20px;
     border: #002c53 8px solid;
     margin-top: 50px;
@@ -61,7 +63,14 @@ body {
     position: absolute;
     width: 15px;
     height: 100px;
+    /*width: 1.5vw;
+    height: 20vw;
+    max-width: 15px;
+    max-height: 100px;
+    min-width: 10px;
+    min-height: 50px;*/
     background-color: #fff;
+    
 }
 
 #playerPaddle {
@@ -81,6 +90,7 @@ body {
     background-color: #fff;
     border-radius: 50%;
     z-index: 2;
+    
 }
 
 .half-line {
@@ -132,3 +142,5 @@ body {
     text-decoration: none;
     cursor: pointer;
 }
+
+
