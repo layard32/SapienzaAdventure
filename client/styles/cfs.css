@@ -1,141 +1,114 @@
-/* Stili di base */
 body {
-    font-family: Arial, sans-serif; /* Imposta il font del testo */
-    margin: 0; /* Rimuove il margine del corpo */
-    display: flex; /* Utilizza il layout flessibile */
-    justify-content: center; /* Centra gli elementi orizzontalmente */
-    align-items: center; /* Centra gli elementi verticalmente */
-    min-height: 100vh; /* Altezza minima della finestra del browser */
-    background-color: #f2f2f2; /* Colore di sfondo */
+    font-family: Arial, sans-serif;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f2f2f2;
 }
 
-/* Contenitore principale */
 #container {
-    text-align: center; /* Allinea il testo al centro */
-    max-width: none; /* Larghezza massima del contenitore principale */
-    width: 100%; /* Utilizza il 100% della larghezza disponibile */
-    margin: 0; /* Rimuove il margine */
-    padding: 0; /* Rimuove il padding */
-    height: 100vh; /* Altezza del contenitore principale */
+    text-align: center;
+    max-width: none;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
 }
 
-/* Schermo di avvio */
 #startScreen {
-    margin-bottom: 30px; /* Margine inferiore */
-    text-align: center; /* Allinea il testo al centro */
-    max-width: none; /* Larghezza massima */
-    position: absolute; /* Imposta il posizionamento assoluto */
-    top: 50%; /* Sposta l'elemento al 50% dell'altezza della finestra */
-    left: 50%; /* Sposta l'elemento al 50% della larghezza della finestra */
-    transform: translate(-50%, -50%); /* Centra l'elemento esattamente al centro */
+    margin-bottom: 30px;
+    text-align: center;
+    max-width: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
-
-/* Schermo di gioco */
 #gameScreen {
-    display: none; /* Nasconde lo schermo di gioco all'avvio */
+    display: none;
 }
 
-/* Intestazione */
 header {
-    background-color: #8C4A4A; /* Colore di sfondo */
-    color: white; /* Colore del testo */
-    text-align:center; /* Allinea il testo al centro */
-    padding: 20px 20px; /* Spaziatura interna */
+    background-color: #8C4A4A;
+    color: white;
+    text-align:center;
+    padding: 20px 20px;
 }
 
-/* Titolo nell'intestazione */
 header h1 {
-    margin: 0; /* Rimuove il margine */
-    font-size: 40px; /* Dimensione del carattere */
-    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif; /* Famiglia di caratteri */
+    margin: 0;
+    font-size: 40px;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
-/* Sezione delle scelte */
 .choices {
-    display: flex; /* Utilizza il layout flessibile */
-    justify-content: center; /* Centra gli elementi orizzontalmente */
-    margin-bottom: 20px; /* Margine inferiore */
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
 }
 
-/* Pulsanti delle emoji */
 .emoji-buttons {
-    display: flex; /* Utilizza il layout flessibile */
-    justify-content: center; /* Centra gli elementi orizzontalmente */
+    display: flex;
+    justify-content: center;
 }
 
-/* Stili per ogni pulsante delle emoji */
 .emoji-buttons button {
-    font-size: 3rem; /* Dimensione del carattere */
-    margin: 0 10px; /* Margine tra i pulsanti */
-    border-radius: 50%; /* Bordo arrotondato */
-    background-color: #8C4A4A; /* Colore di sfondo */
-    color: white; /* Colore del testo */
-    border: none; /* Rimuove il bordo */
-    padding: 20px; /* Spaziatura interna */
-    cursor: pointer; /* Mostra il cursore come puntatore */
-    transition: background-color 0.3s; /* Transizione al passaggio del mouse */
+    font-size: 3rem;
+    margin: 0 10px;
+    border-radius: 50%;
+    background-color: #8C4A4A;
+    color: white;
+    border: none;
+    padding: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
 
-/* Effetto al passaggio del mouse sui pulsanti delle emoji */
 .emoji-buttons button:hover {
-    background-color: #5F2C2C; /* Cambia il colore di sfondo al passaggio del mouse */
+    background-color: #5F2C2C;
 }
 
-/* Informazioni sul punteggio */
 .score-info {
-    color: black; /* Colore del testo */
-    font-size: 60px; /* Dimensione del carattere */
-    font-family: "Times New Roman", Times, serif; /* Famiglia di caratteri */
+    color: black;
+    font-size: 60px;
+    font-family: "Times New Roman", Times, serif;
 }
 
-/* Contenitore del punteggio */
 .scoreboard{
-    padding-top: 10px; /* Spaziatura superiore */
-    padding-bottom: 40px; /* Spaziatura inferiore */
+    padding-top: 10px;
+    padding-bottom: 40px;
 }
 
-/* Contenitore dei punteggi */
 .scores-container {
-    display: flex; /* Utilizza il layout flessibile */
-    align-items: center; /* Allinea gli elementi verticalmente */
-    justify-content: space-between; /* Distribuisce uniformemente gli elementi */
-    max-width: 400px; /* Larghezza massima */
-    padding: 10px; /* Spaziatura interna */
-    margin: 0 auto; /* Centra il contenitore */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 400px;
+    padding: 10px;
+    margin: 0 auto;
 }
 
-/* Box del punteggio */
 .score-box {
-    width: 170px; /* Larghezza */
+    width: 170px;
 }
 
-/* Emoji del punteggio */
 .sign {
-    font-size: 80px; /* Dimensione del carattere */
-    margin-bottom: 10px; /* Margine inferiore */
+    font-size: 80px;
+    margin-bottom: 10px;
 }
 
-/* Punteggio */
 .score {
-    margin-top: 10px; /* Margine superiore */
-    margin-bottom: 20px; /* Margine inferiore */
-    font-size: 22px; /* Dimensione del carattere */
-    font-weight: bold; /* Grassetto */
+    margin-top: 10px;
+    margin-bottom: 20px;
+    font-size: 22px;
+    font-weight: bold;
 }
 
-
-
-
-
-
-/* Media query per schermi di dimensioni inferiori a 768px */
 @media only screen and (max-width: 768px) {
     .some-element {
-        width: 100%; /* Imposta la larghezza al 100% */
+        width: 100%;
     }
-    /* Aggiungi qui altri stili per adattare il layout */
 }
-
-
-
