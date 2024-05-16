@@ -661,6 +661,7 @@ socket.emit('requestOtherUsername', roomId);
 socket.on('otherUsername', (data) => {
     othername = data; // Imposta il nome utente ricevuto dalla socket
     console.log("dentro socket", othername); // Stampa il nome utente nella console
+
 });
 
 console.log(othername); // Stampa il nome utente (potrebbe essere vuoto inizialmente)
