@@ -10,8 +10,12 @@
     width: 60%;
     height: 20px;
     margin: 0 auto;
-    border: 1px solid black;
     overflow: hidden;
+
+    border: 4px solid rgb(51, 51, 51);
+    border-radius: 5px;
+    padding: 1.5px;
+    box-shadow: 4px 4px 4px black;
 }
 
 #timerBar {
@@ -20,7 +24,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: #59bb4c;
+    background-color: rgb(70, 121, 166);
     animation: fillTimer linear forwards;
 }
 
@@ -29,10 +33,10 @@
         width: 100%;
     }
     50% {
-        background-color: yellow;
+        background-color: #8C4A4A;
     }
     100% {
         width: 0%;
-        background-color: red;
+        background-color: black;
     }
 }

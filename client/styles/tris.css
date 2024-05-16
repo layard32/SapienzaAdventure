@@ -27,7 +27,6 @@ h1 {
 
 .result {
     opacity: 0;
-
     text-align: center;
     font-size: 2.3em;
     font-weight: 500;
@@ -50,6 +49,7 @@ h1 {
     background-color: rgb(70, 121, 166);
     width: 380px;
     height: 380px;
+    border-radius: 15px;
 }
 
 .cell {
@@ -61,7 +61,7 @@ h1 {
     width: 100px;
     height: 100px;
     font-family: Roboto Mono;
-    font-size: 2.5em;
+    font-size: 3em;
     color: #993e3e;
     font-weight: 900;
 
