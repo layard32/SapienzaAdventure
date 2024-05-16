@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let ballSpeedX = 0;
     let ballSpeedY = 0;
 
-    const paddleHeight = 100;
+    const paddleHeight = playerPaddle.clientHeight;
     let computerPaddleY = 150;
     let playerPaddleY = 150;
 

@@ -148,4 +148,15 @@
         top: 50%;
         left: 25%;
     }
+
+    .chat.text {
+        transform: translate(-90%, -1%) rotate(90deg) scale(1);
+        top: 1%;
+        left: 90%;
+    }
+
+    .screen.chat-screen.active {
+        width: 200px;
+        height: 220px;
+    }
 }
