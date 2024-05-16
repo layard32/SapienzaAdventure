@@ -1,9 +1,9 @@
+const bonusCells = [3, 9, 26, 30, 36, 38];
+
 /* gestione flip cards, tramite tre funzioni: 
 1. una per inizializzare nel dom, 
 2. una per mostrarle
 3. una per attivare la relativa azione; quest'ultima si trova nel file principale */
-const bonusCells = [3, 9, 26, 30, 36, 38];
-let bonusTurn = false;
 
 function initializeFlipcards() {
     const flipcard = document.createElement('div');
@@ -18,15 +18,13 @@ function initializeFlipcards() {
     flipCardInner.appendChild(flipcardback);
     flipcard.appendChild(flipCardInner);
     document.body.appendChild(flipcard);
-
     flipcard.style.visibility = 'hidden';
-
+    
     return {flipcard, flipcardfront, flipcardback};
 }
 
 function showFlipCard(cell) {
     if (bonusCells.includes(cell)) {
-        bonusTurn = true; 
         const {flipcard, flipcardfront, flipcardback } = initializeFlipcards();
 
         if (cell == 30 ) {
@@ -128,4 +126,4 @@ function showFlipCard(cell) {
     }
 }
 
-export { showFlipCard, bonusTurn };
+export { showFlipCard };

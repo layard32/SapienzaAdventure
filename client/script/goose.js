@@ -9,11 +9,14 @@ const bonusCells = [3, 9, 26, 30, 36, 38];
 let gameEnded = false; // per distinguere disconnessione da vittoria
 // flag e bonusTurn vengono usate per gestire i 'turni extra' cioè spostamenti al di fuori del proprio turno
 let flag = false;
+let bonusTurn = false;
 
 // importazioni necessarie per la gestione della musica
 import { changeMusic, change } from "./gooseMusic.js";
-// importazioni necessarie per mostrare le flipcards
-import { showFlipCard, bonusTurn } from "./gooseFlipcard.js";
+// importiamo la funzione per mostrare le flipcards ad entrambi i giocatori
+import { showFlipCard} from "./gooseFlipcard.js";
+// importiamo la funzione per mostrare i messaggi nella chat
+import { renderMessage } from "./gooseChat.js";
 
 // classe principale di un player
 class Player {
@@ -101,7 +104,8 @@ class Player {
             this.cell = targetCell; 
             this.isMoving = false;
             handleCellRedirection(this.cell);
-            // mostra la flipcard 
+            // mostra la flipcard
+            if (bonusCells.includes(this.cell)) bonusTurn = true;
             showFlipCard(this.cell);
             if (this == primaryPlayer) activeFlipCard(this.cell); 
             return;
@@ -185,27 +189,27 @@ class Player {
     calculatePosition(cell) {
         let x = this.position.x, y = this.position.y;
         if (cell >= 0 && cell < 9) {
-            x += (cell - 2) * CELLWIDTH; 
+            x += (cell - 1) * CELLWIDTH; 
         } else if (cell >= 9 && cell < 15) {
             x += CELLWIDTH * 8;
             y += (cell - 9) * CELLHEIGHT; 
         } else if (cell >= 15 && cell < 23) {
-            x = this.position.x + CELLWIDTH * 8; 
             y += CELLHEIGHT * 6;
-            x -= (cell - 15) * CELLWIDTH; 
+            x += (23 - cell) * CELLWIDTH; 
         } else if (cell >= 23 && cell < 27) {
-            x = this.position.x; 
             y += CELLHEIGHT * 6;
             y -= (cell - 23) * CELLHEIGHT; 
         } else if (cell >= 27 && cell < 33) {
-            y = this.position.y; 
-            x += (cell - 27) * CELLWIDTH;
+            y += CELLHEIGHT * 2;
+            x += CELLWIDTH * 6;
+            x -= (33 - cell) * CELLWIDTH;
         } else if (cell >= 33 && cell < 35) {
-            x = this.position.x + CELLWIDTH * 6; 
-            y += (cell - 33) * CELLHEIGHT; 
+            x += CELLWIDTH * 6; 
+            y += CELLHEIGHT * 4;
+            y -= (35 - cell) * CELLHEIGHT; 
         } else if (cell >= 35 && cell < 39) {
-            y = this.position.y + CELLHEIGHT * 2; 
-            x -= (cell - 35) * CELLWIDTH; 
+            y += CELLHEIGHT * 4; 
+            x += (41 - cell) * CELLWIDTH;
         }
         return { x, y };
     }
@@ -278,49 +282,6 @@ function movePlayer(player) {
     }
 };
 
-/* il client inserisce l'username nei cookie in index.js
-in questa porzione di codice, l'username viene recuperato dai cookie */
-let username = ''; 
-window.addEventListener('DOMContentLoaded', () => {
-    const usernameCookie = document.cookie.split('; ').find((cookie) => cookie.startsWith('username='));
-    username = usernameCookie ? usernameCookie.split('=')[1] : 'Utente';
-});
-// all'inizio il div viene settato a 'pareggio'
-// ad ogni passaggio di turno si controlla chi è il player più vicino alla fine
-nameDiv.textContent = 'Pareggio';
-
-// gestione dei turni + impostazione di nameDiv
-function setFirst() {
-    if (primaryPlayer.cell > secondaryPlayer.cell) {
-        nameDiv.textContent = username;
-    } else if (primaryPlayer.cell < secondaryPlayer.cell) {
-        socket.emit('requestOtherUsername', roomId);
-        socket.on('otherUsername', (data) => {
-            nameDiv.textContent = data;
-    });
-    } else nameDiv.textContent = 'Pareggio';
-};
-
-// gestione reindirizzamento per minigame
-function handleCellRedirection(cell) { 
-    const redirectionConditions = {
-        6: 'memory',
-        28: 'memory',
-        11: 'cfs',
-        33: 'cfs',
-        15: 'tris',
-        19: 'hangman',
-        23: 'pingpong',
-    };
-    // Controlla se la cella corrente ha una condizione di reindirizzamento definita
-    if (redirectionConditions.hasOwnProperty(cell)) {
-        const game = redirectionConditions[cell];
-        setTimeout(() => {
-            socket.emit('redirectToGame',{ game: game, roomId: roomId });
-        }, 1100); 
-    }
-}
-
 /* GESTIONE SOCKET
 prendiamo il parametro roomId dall'url per riconnettersi alla stanza
 i websocket (come socket.io) non sono persistenti tra pagine html diverse
@@ -368,7 +329,7 @@ socket.on('yourTurn', (data) => {
     }
 })
 
-// gestione delle animazioni
+// esecuzione effettiva delle animazioni
 function animate() {
     requestAnimationFrame(animate);    
     c.clearRect(0, 0, canvas.width, canvas.height);
@@ -380,6 +341,51 @@ function animate() {
     }
 };
 animate();
+
+/* il client inserisce l'username nei cookie in index.js
+in questa porzione di codice, l'username viene recuperato dai cookie */
+let username = '';
+let secondaryUsername = '';
+window.addEventListener('DOMContentLoaded', () => {
+    const usernameCookie = document.cookie.split('; ').find((cookie) => cookie.startsWith('username='));
+    username = usernameCookie ? usernameCookie.split('=')[1] : 'Utente';
+    // per ottenere l'username dell'altro giocatore
+    setTimeout(() => { socket.emit('requestOtherUsername', roomId) }, 2000);
+    socket.on('otherUsername', (data) => { secondaryUsername = data; });
+});
+
+// all'inizio il div viene settato a 'pareggio'
+// ad ogni passaggio di turno si controlla chi è il player più vicino alla fine
+nameDiv.textContent = 'Pareggio';
+
+// gestione dei turni + impostazione di nameDiv
+function setFirst() {
+    if (primaryPlayer.cell > secondaryPlayer.cell) {
+        nameDiv.textContent = username;
+    } else if (primaryPlayer.cell < secondaryPlayer.cell) {
+        nameDiv.textContent = secondaryUsername;
+    } else nameDiv.textContent = 'Pareggio';
+};
+
+// gestione reindirizzamento per minigame
+function handleCellRedirection(cell) { 
+    const redirectionConditions = {
+        6: 'memory',
+        28: 'memory',
+        11: 'cfs',
+        33: 'cfs',
+        15: 'tris',
+        19: 'hangman',
+        23: 'pingpong',
+    };
+    // Controlla se la cella corrente ha una condizione di reindirizzamento definita
+    if (redirectionConditions.hasOwnProperty(cell)) {
+        const game = redirectionConditions[cell];
+        setTimeout(() => {
+            socket.emit('redirectToGame',{ game: game, roomId: roomId });
+        }, 1100); 
+    }
+}
 
 // questa porzione di codice serve a gestire l'assegnazione dei turni nelle diverse casistiche
 // di vittoria, o meno, di minigame
@@ -519,7 +525,6 @@ socket.on('setBonus', () => {
     bonusTurn = false;
 });     
 
-
 // gestione disconnessione forzata e vittoria
 //caso di refresh della pagina
 window.addEventListener('beforeunload',()=>{
@@ -568,7 +573,6 @@ socket.on('gameLost', () => {
     if (!gameEnded) {
         const loseToast = new bootstrap.Toast(document.getElementById('loseToast'));
         loseToast.show();
-
         gameEnded = true; 
 
         setTimeout(() => {
@@ -607,87 +611,10 @@ function checkFlagForRedirection(cell) {
     if (cell == 6 || cell == 11 || cell == 15 || cell == 19|| cell == 23 || cell == 28 || cell == 33) flag = true;
 };
 
-
-// gestione pulsante lancio dado
+// gestione logica pulsante lancio dado
 button.addEventListener('animationend', () => {
     if (!isRolling && turn) movePlayer (primaryPlayer);
 })
-
-document.addEventListener("DOMContentLoaded", function() {
-    const button = document.getElementById("button");
-    let holdInterval;
-
-    button.addEventListener('contextmenu', function(e) {
-        e.preventDefault();
-    });
-
-    button.addEventListener("mousedown", function() {
-        button.classList.add("progress"); 
-        holdInterval = setInterval(function() {
-            button.classList.remove("progress");
-        }, 3000); 
-    });
-
-    button.addEventListener("mouseup", function() {
-        clearInterval(holdInterval);
-        button.classList.remove("progress"); 
-    });
-
-    button.addEventListener("mouseleave", function() {
-        clearInterval(holdInterval);
-        button.classList.remove("progress"); 
-    });
-    button.addEventListener("touchstart", function() {
-        button.classList.add("progress"); 
-        holdInterval = setInterval(function() {
-            button.classList.remove("progress");
-        }, 3000); 
-    });
-    button.addEventListener("touchend", function() {
-        clearInterval(holdInterval);
-        button.classList.remove("progress"); 
-    });
-
-
-});
-
-// gestione della chatbox 
-let othername = ''; // Variabile per memorizzare il nome utente dell'altro utente della chat
-
-// Emit per richiedere il nome utente al server
-socket.emit('requestOtherUsername', roomId);
-
-// Ascolta l'evento 'otherUsername' dal server e imposta il nome utente ricevuto
-socket.on('otherUsername', (data) => {
-    othername = data; // Imposta il nome utente ricevuto dalla socket
-    console.log("dentro socket", othername); // Stampa il nome utente nella console
-
-});
-
-console.log(othername); // Stampa il nome utente (potrebbe essere vuoto inizialmente)
-
-// Event listener per il click sul pulsante per aprire o chiudere la chat
-document.getElementById("open-chat").addEventListener("click", function(){
-    const chatScreen = document.querySelector(".chat-screen");
-    if (chatScreen.classList.contains("active")) {
-        // Se la chat è già attiva, la chiudiamo
-        chatScreen.classList.remove("active");
-    } else {
-        // Altrimenti, attiviamo la chat
-        chatScreen.classList.add("active");
-    }
-});
-
-// Event listener per la pressione del tasto "Invio" nel campo di input del messaggio
-document.querySelector(".chat-screen #message-input").addEventListener("keydown", function(event) {
-    // Verifica se il tasto premuto è il tasto "Invio" (codice 13)
-    if (event.keyCode === 13) {
-        // Impedisce il comportamento predefinito del tasto "Invio" (evita di inviare una nuova riga)
-        event.preventDefault();
-        // Simula il click del pulsante "Invia"
-        document.getElementById("send-message").click();
-    }
-});
 
 // Event listener per il click sul pulsante "Invia" per inviare un messaggio
 document.querySelector(".chat-screen #send-message").addEventListener("click", function(){
@@ -695,55 +622,24 @@ document.querySelector(".chat-screen #send-message").addEventListener("click", f
     if(message.length == 0) return; // Se il messaggio è vuoto, non fare nulla
 
     renderMessage("my", { // Chiama la funzione renderMessage per renderizzare il messaggio inviato dall'utente
-        username: othername, //in realtà è inutile username:othername (dopo nell'html uso direttamente le due viarabili)
+        username: secondaryUsername, //in realtà è inutile username:othername (dopo nell'html uso direttamente le due viarabili)
         text: message 
-    });
+    }, username, secondaryUsername);
 
     socket.emit("chat", { // Emetti un evento "chat" attraverso la socket per inviare il messaggio al server
-        username: othername, // Nome utente dell'altro utente come mittente del messaggio
+        username: secondaryUsername, // Nome utente dell'altro utente come mittente del messaggio
         text: message // Testo del messaggio
-    });
+    }, username, secondaryUsername);
     document.querySelector(".chat-screen #message-input").value = ""; // Svuota il campo di input del messaggio
 });
 
 // Ascolta l'evento "update" dalla socket e chiama la funzione renderMessage per renderizzare l'aggiornamento
 socket.on("update", function(update){
-    renderMessage("update", update); // Chiama la funzione renderMessage per renderizzare l'aggiornamento
+    renderMessage("update", update, username, secondaryUsername); // Chiama la funzione renderMessage per renderizzare l'aggiornamento
 });
 
 // Ascolta l'evento "chat" dalla socket e chiama la funzione renderMessage per renderizzare il messaggio ricevuto
-socket.on("chat", function(message){
-    renderMessage("other", message); // Chiama la funzione renderMessage per renderizzare il messaggio ricevuto
+socket.on("chat", function(message) {
+    console.log(secondaryUsername)
+    renderMessage("other", message, username, secondaryUsername); // Chiama la funzione renderMessage per renderizzare il messaggio ricevuto
 });
-
-// Funzione per renderizzare i messaggi nella finestra di chat
-function renderMessage(type, message){
-    let messageContainer = document.querySelector(".chat-screen .messages"); // Contenitore dei messaggi
-    if(type == "my"){
-        let messageDiv = document.createElement("div"); // Crea un elemento div per il messaggio inviato dall'utente
-        messageDiv.classList.add("message", "my-message"); // Aggiungi classi per lo stile CSS
-        messageDiv.innerHTML = `
-            <div>
-                <div class="name">${username}</div> 
-                <div class="text-chat">${message.text}</div>
-            </div>
-        `;
-        messageContainer.appendChild(messageDiv); // Aggiungi il messaggio al contenitore dei messaggi
-    } else if(type == "other"){
-        let messageDiv = document.createElement("div"); // Crea un elemento div per il messaggio ricevuto dall'altro utente
-        messageDiv.classList.add("message", "other-message"); 
-        messageDiv.innerHTML = `
-            <div>
-                <div class="name">${othername}</div> <!-- Utilizza il nome utente del mittente del messaggio -->
-                <div class="text-chat">${message.text}</div>
-            </div>
-        `;
-        messageContainer.appendChild(messageDiv); // Aggiungi il messaggio al contenitore dei messaggi
-    } else if(type == "update"){
-        let updateDiv = document.createElement("div"); // Crea un elemento div per l'aggiornamento della chat
-        updateDiv.classList.add("update"); 
-        updateDiv.innerText = message; 
-        messageContainer.appendChild(updateDiv); // Aggiungi l'aggiornamento al contenitore dei messaggi
-    }
-    messageContainer.scrollTop = messageContainer.scrollHeight - messageContainer.clientHeight; // Scrolling automatico verso il basso per mostrare i messaggi più recenti
-}

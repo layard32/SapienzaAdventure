@@ -197,7 +197,7 @@ function startTimer(duration, display) {
 function startGameTimer() {
     let oneMinutes = 60*2,
         display = document.querySelector('#timer');
-    startTimer(oneMinutes, display);
+    startTimer(5, display);
 }
 
 // Avvia il timer quando la finestra si carica
