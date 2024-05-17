@@ -5,8 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const computerPaddle = document.getElementById('computerPaddle');
     const ball = document.getElementById('ball');
 
-    let ballX = 390;
-    let ballY = 190;
+    
     let ballSpeedX = 0;
     let ballSpeedY = 0;
 
@@ -15,9 +14,21 @@ document.addEventListener('DOMContentLoaded', function () {
     let playerPaddleY = 150;
 
     const gameContainer = document.querySelector('.game-container');
-    const gameHeight = gameContainer.clientHeight;
-    const gameWidth = gameContainer.clientWidth;
+    
+    
     let gameStarted = false;
+    let gameHeight = gameContainer.clientHeight;
+    let gameWidth = gameContainer.clientWidth;
+
+    window.addEventListener('resize', function() {
+        // Aggiorna le dimensioni del gioco quando la finestra viene ridimensionata
+        gameHeight = gameContainer.clientHeight;
+        gameWidth = gameContainer.clientWidth;
+    });
+
+    let ballX = gameWidth-gameWidth/2;
+    let ballY = gameHeight-gameHeight/2;
+
 
     const ballDiameter = ball.clientWidth;
     const ballRadius = ballDiameter / 2;
@@ -204,6 +215,8 @@ document.addEventListener('DOMContentLoaded', function () {
             hideEndGameModal(); // Nascondi il modale quando l'utente fa clic sull'icona di chiusura
         });
     }
+
+    
 
 });
 
