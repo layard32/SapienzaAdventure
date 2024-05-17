@@ -9,17 +9,13 @@ const resultText = document.getElementById("result-text");
 let win=false;
 let interval; 
 
-
-//New Game
+//appena la pagina viene caricata inizia il game
 window.onload = function() {
-
   initializer();
-  startGameTimer();
+  startGameTimer(); //inizia anche il timer
 };
 
-
-
-//Options values for buttons
+//creo il dizionario delle parole suddiviso per categoria
 let options = {
   frutta: [
     "Mela",
@@ -40,13 +36,13 @@ let options = {
   ],
 };
 
-//count
+//variabili per tenere il conto
 let winCount = 0;
 let count = 0;
 
 let chosenWord = "";
 
-//Display option buttons
+//mostra le opzioni da scegliere
 const displayOptions = () => {
   optionsContainer.innerHTML += `<h3>Selezionate un'opzione</h3>`;
   let buttonCon = document.createElement("div");
@@ -56,26 +52,28 @@ const displayOptions = () => {
   optionsContainer.appendChild(buttonCon);
 };
 
-//Block all the Buttons
+//serve a bloccare i tasti
 const blocker = () => {
   let optionsButtons = document.querySelectorAll(".options");
   let letterButtons = document.querySelectorAll(".letters");
-  //disable all options
+
+  //disabilito le categorie
   optionsButtons.forEach((button) => {
     button.disabled = true;
   });
 
-  //disable all letters
+  //disabilito la tastiera
   letterButtons.forEach((button) => {
     button.disabled.true;
   });
+
   newGameContainer.classList.remove("hide");
 };
 
-//Word Generator
+//una volta scelta la categoria, questa funzione scegli in maniera casuale una parola 
 const generateWord = (optionValue) => {
   let optionsButtons = document.querySelectorAll(".options");
-  //If optionValur matches the button innerText then highlight the button
+
   optionsButtons.forEach((button) => {
     if (button.innerText.toLowerCase() === optionValue) {
       button.classList.add("active");
@@ -83,95 +81,92 @@ const generateWord = (optionValue) => {
     button.disabled = true;
   });
 
-  //initially hide letters, clear previous word
   letterContainer.classList.remove("hide");
   userInputSection.innerText = "";
 
   let optionArray = options[optionValue];
-  //choose random word
+  //scelgo in maniera casuale
   chosenWord = optionArray[Math.floor(Math.random() * optionArray.length)];
   chosenWord = chosenWord.toUpperCase();
 
-  //replace every letter with span containing dash
+  //sostituisco le lettere della parola scelta con _ 
   let displayItem = chosenWord.replace(/./g, '<span class="dashes">_</span>');
 
-  //Display each element as span
   userInputSection.innerHTML = displayItem;
 };
 
-//Initial Function (Called when page loads/user presses new game)
+//funzione di inizio gioco c
 const initializer = () => {
   winCount = 0;
   count = 0;
 
-  //Initially erase all content and hide letteres and new game button
+  //all'inizio è tutto vuoto e nascondo i tasti della tastiera 
   userInputSection.innerHTML = "";
   optionsContainer.innerHTML = "";
   letterContainer.classList.add("hide");
   newGameContainer.classList.add("hide");
   letterContainer.innerHTML = "";
 
-  //For creating letter buttons
+  //creo i pulsanti della tastiera(cioè le lettere da A-Z)
   for (let i = 65; i < 91; i++) {
     let button = document.createElement("button");
+
     button.classList.add("letters");
-    //Number to ASCII[A-Z]
+
     button.innerText = String.fromCharCode(i);
-    //character button click
+
     button.addEventListener("click", () => {
       let charArray = chosenWord.split("");
       let dashes = document.getElementsByClassName("dashes");
-      //if array contains clciked value replace the matched dash with letter else dram on canvas
+      //se la parola scelta in maniera casuale contiene la lettera cliccata allora sostituisci _ con la lettera altrimenti disegno l'hangman
       if (charArray.includes(button.innerText)) {
+
         charArray.forEach((char, index) => {
-          //if character in array is same as clicked button
+
           if (char === button.innerText) {
-            //replace dash with letter
             dashes[index].innerText = char;
-            //increment counter
+            //aumento il punteggio win
             winCount += 1;
-            //if winCount equals word lenfth
+            //se winCount è uguale alla lunghezza della parola scelta random, allora ho vinto
             if (winCount == charArray.length) {
               win=true;
               resultText.innerHTML = `<h2 class='win-msg'>Hai Vinto!!</h2><p>La parola era <span>${chosenWord}</span></p>`;
-              //block all buttons
+              //blocco i pulsanti
               blocker();
             }
           }
         });
       } else {
-        //lose count
+        //altrimenti aumento il lose count
         count += 1;
-        //for drawing man
+        //disegno hangman
         drawMan(count);
-        //Count==6 because head,body,left arm, right arm,left leg,right leg
+        //se count è uguale a 6 significa che il disegno dell'hangman è completo (ho perso)
         if (count == 6) {
           win=false;
           resultText.innerHTML = `<h2 class='lose-msg'>Hai Perso!!</h2><p>La parola era <span>${chosenWord}</span></p>`;
           blocker();
         }
       }
-      //disable clicked button
       button.disabled = true;
     });
     letterContainer.append(button);
   }
 
   displayOptions();
-  //Call to canvasCreator (for clearing previous canvas and creating initial canvas)
+  //chiamata a canvasCreator (per cancellare il canvas precedente e creare la schermata iniziale )
   let { initialDrawing } = canvasCreator();
-  //initialDrawing would draw the frame
+
   initialDrawing();
 };
 
-//Canvas
 const canvasCreator = () => {
   let context = canvas.getContext("2d");
   context.beginPath();
   context.strokeStyle = "#000";
   context.lineWidth = 2;
 
-  //For drawing lines
+  //per disegnare le linee
   const drawLine = (fromX, fromY, toX, toY) => {
     context.moveTo(fromX, fromY);
     context.lineTo(toX, toY);
@@ -204,24 +199,24 @@ const canvasCreator = () => {
     drawLine(70, 80, 90, 110);
   };
 
-  //initial frame
+  //schermata iniziale
   const initialDrawing = () => {
-    //clear canvas
+    //pulisco il canvas
     context.clearRect(0, 0, context.canvas.width, context.canvas.height);
-    //bottom line
+    //linea in basso
     drawLine(10, 130, 130, 130);
-    //left line
+    //linea sinistra (quella in verticale)
     drawLine(10, 10, 10, 131);
-    //top line
+    //linea in alto 
     drawLine(10, 10, 70, 10);
-    //small top line
+    //linea piccola in alto (da dove parte impiccato)
     drawLine(70, 10, 70, 20);
   };
 
   return { initialDrawing, head, body, leftArm, rightArm, leftLeg, rightLeg };
 };
 
-//draw the man
+//disegno l'hangman
 const drawMan = (count) => {
   let { head, body, leftArm, rightArm, leftLeg, rightLeg } = canvasCreator();
   switch (count) {
@@ -249,7 +244,7 @@ const drawMan = (count) => {
 };
 
 
-
+//funzione per il timer
 function startTimer(duration) {
   var timer = duration, minutes, seconds;
   interval = setInterval(function () {
@@ -266,20 +261,18 @@ function startTimer(duration) {
   }, 1000);
 }
 
-
-// Funzione per avviare il timer con una durata di 3 minuti (180 secondi)
 function startGameTimer() {
   var Minutes = 30;
   startTimer(Minutes);
   updateTimerBar(Minutes);
 }
-// Funzione per aggiornare la barra del timer
+
 function updateTimerBar(duration) {
   var timerBar = document.querySelector('#timerBar');
-  timerBar.style.animationDuration = duration + 's'; // Imposta la durata dell'animazione
+  timerBar.style.animationDuration = duration + 's';
 }
 
-
+//funzione di fine gioco che notifica il server che è finito il gioco
 function endGame() {
   setTimeout(()=>{
     socket.emit('quitGame', { roomId: roomId, 
@@ -303,6 +296,6 @@ const socket = io.connect('http://localhost:3000');
 socket.emit("joinExistingRoom",roomId);
 
 socket.on('redirect', (data) => {
-  // Effettua il reindirizzamento alla nuova pagina
+  // effettuo il reindirizzamento al goose
   window.location.href = data;
 });

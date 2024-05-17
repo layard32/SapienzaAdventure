@@ -2,10 +2,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const board = document.getElementById("board");
     const resultDisplay = document.getElementById("result");
 
-    let currentPlayer = "X";
+    let currentPlayer = "X"; //di default il player è X (il computer è O) e comincia sempre il player
     let gameBoard = ["", "", "", "", "", "", "", "", ""];
 
-    let interval; // Variabile per l'intervallo del timer
+    let interval; // variabile per l'intervallo del timer
 
 
     //GESTIONE SERVER
@@ -21,25 +21,29 @@ document.addEventListener("DOMContentLoaded", () => {
     socket.emit("joinExistingRoom",roomId);
 
 
-    render(); // Inizializzazione del gioco
+    render(); // avvio il gioco
 
-    board.addEventListener("click", handleClick); // Aggiunta dell'evento click
+    board.addEventListener("click", handleClick); // gestisco i click sulla tabella
 
     function handleClick(e) {
         const cellIndex = parseInt(e.target.id);
         if (!isNaN(cellIndex) && gameBoard[cellIndex] === "") {
+            //se la casella è vuota e viene cliccata, sostituisco con il simbolo del currentPlayer 
             gameBoard[cellIndex] = currentPlayer;
-            render();
+            render(); //aggiorno la visualizzazione del tabellone
             if (checkWinner() && currentPlayer === "X") {
+                //controllo se ci troviamo in una condizione di vittoria e chi è il currentPlayer
                 resultDisplay.textContent = "Hai vinto!";
                 resultDisplay.style.opacity = "1";
             } else if (checkWinner() && currentPlayer === "O") {
                 resultDisplay.textContent = "Hai perso...";
                 resultDisplay.style.opacity = "1";
             } else if (!gameBoard.includes("")) {
+                //se non si è in una condizione di vittoria e il tabellone non contiene una casella vuota, allora è un pareggio
                 resultDisplay.textContent = "Pareggio";
                 resultDisplay.style.opacity = "1";
             } else {
+                //se ancora non si in una condizione di vittoria e ci sono delle caselle vuoto e il player è O, faccio fare la mossa al computer
                 currentPlayer = currentPlayer === "X" ? "O" : "X";
                 if (currentPlayer === "O") {
                     setTimeout(makeAIMove, 500);
@@ -59,27 +63,32 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    //funzione per capire se il player ha vinto o no 
     function checkWinner() {
+        //tutte le possibili combinazione di vittoria
         const winningConditions = [
-            [0, 1, 2],
-            [3, 4, 5],
-            [6, 7, 8],
-            [0, 3, 6],
-            [1, 4, 7],
-            [2, 5, 8],
-            [0, 4, 8],
-            [2, 4, 6]
+            [0, 1, 2], // prima riga
+            [3, 4, 5], // seconda riga
+            [6, 7, 8], // terza riga
+            [0, 3, 6], // prima colonna
+            [1, 4, 7], // seconda colonna
+            [2, 5, 8], // terza colonna
+            [0, 4, 8], // diagonale da sinistra a destra
+            [2, 4, 6]  // diagonale da destra a sinistra
         ];
+        
+        //con some verifico se esiste una combinazione vincente
         return winningConditions.some((condition) => {
             const [a, b, c] = condition;
             return (
-                gameBoard[a] &&
-                gameBoard[a] === gameBoard[b] &&
-                gameBoard[a] === gameBoard[c]
-            );
+                gameBoard[a] && // c'è un simbolo "X" o "O" in quella posizione
+                gameBoard[a] === gameBoard[b] && // il primo e il secondo elemento sono uguali
+                gameBoard[a] === gameBoard[c] // il primo e il terzo elemento sono uguali
+            );            
         });
     }
 
+    //serve per creare la mossa del computer (che di default è il player O)
     function makeAIMove() {
         const emptyCells = gameBoard.reduce((acc, cell, index) => {
             if (cell === "") {
@@ -103,13 +112,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     
     function endGame() {
-        // Disabilita il click sulla board per terminare il gioco
+        // disabilito il click sulla board per terminare il gioco
         board.removeEventListener("click", handleClick);
         board.style.pointerEvents = "none";
 
         if (checkWinner() && currentPlayer === "X") {
+            //il player ha vinto
             win=true;
         } else if (checkWinner() && currentPlayer === "O") {
+            //il computer ha vinto (player perde)
             win=false;
         } else if (!gameBoard.includes("")) {
             win=false;
@@ -118,6 +129,7 @@ document.addEventListener("DOMContentLoaded", () => {
         setTimeout(() => {
     
             setTimeout(()=>{
+                //notifica il server che è finito il gioco
                 socket.emit('quitGame', { roomId: roomId, 
                                         primaryPlayerPosition: primaryPosition,
                                         secondaryPlayerPosition: secondaryPosition,
@@ -147,27 +159,26 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }, 1000);
     }
-    
-    
-    // Funzione per avviare il timer con una durata di 3 minuti (180 secondi)
+
+    //funzione per il timer 
     function startGameTimer() {
         var Minutes = 15;
         startTimer(Minutes);
         updateTimerBar(Minutes);
     }
-    // Funzione per aggiornare la barra del timer
+
     function updateTimerBar(duration) {
         var timerBar = document.querySelector('#timerBar');
         timerBar.style.animationDuration = duration + 's'; // Imposta la durata dell'animazione
     }
     
-    // Avvia il timer quando la finestra si carica
+    // avvio il timer quando la finestra si carica
     window.onload = function () {
         startGameTimer();
     };
     
     socket.on('redirect', (data) => {
-        // Effettua il reindirizzamento alla nuova pagina
+        // effettuo il reindirizzamento al goose
         window.location.href = data;
     });
     

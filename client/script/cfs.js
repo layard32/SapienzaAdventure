@@ -6,7 +6,6 @@ let playerTwoChoice = ''; // scelta giocatore due
 let timer; // Timer per il turno del computer
 let timeout; // Timeout per il turno del computer
 
-
 startGame();//come prima cosa avvio il gioco
 
 //creo una funzione per le scelte del computer (che sarebbe il giocatore 2)
@@ -153,7 +152,6 @@ function displayResult(result) {
     }
 }
 
-
 //avvio il gioco
 function startGame() {
     resetGame();
@@ -164,10 +162,9 @@ function startGame() {
     startTurn(1);
 }
 
-
 //per controllare se il gioco è in corso
 function checkGameStarted() {
-    // Se il gioco non è in corso, mostra un messaggio e ritorna falso
+    // se il gioco non è in corso, mostro un messaggio e ritorna falso
     if (!gameStarted) {
         alert('You must start the game before playing!');
         return false;
@@ -188,12 +185,11 @@ function restartGame() {
     // resetto il gioco
     resetGame();
 
-    // avvio il gioco
+    // una volta che ho azzerato, avvio il gioco
     startGame();
 }
 
-
-// per resettare il gioco 
+// per resettare il gioco, imposto tutto alla condizione iniziale 
 function resetGame() {
     const playerSign = document.getElementById('playerSign');
     const computerSign = document.getElementById('computerSign');
@@ -229,7 +225,6 @@ function startTimer(duration) {
         minutes = minutes < 10 ? "0" + minutes : minutes;
         seconds = seconds < 10 ? "0" + seconds : seconds;
 
-
         if (--timer < 0) {
             clearInterval(interval);
             endGame(); //quando il timer arriva a zero, faccio finire la partita e comincia il reindirizzamento
@@ -253,7 +248,6 @@ window.onload = function () {
     startGameTimer();
 };
 
-
 //GESTIONE SERVER
 const urlParams = new URLSearchParams(window.location.search);
 // prendo i parametri passati tramite chiamata GET
@@ -264,7 +258,6 @@ const turn = urlParams.get('turn');
 const socket = io.connect('http://localhost:3000');
 
 socket.emit("joinExistingRoom",roomId);
-
 
 //quando il gioco è finito
 function endGame() {
