@@ -1,53 +1,53 @@
-let gameStarted = false; // Flag per indicare se il gioco è in corso
-let playerOneScore = 0; // Punteggio del giocatore uno
-let playerTwoScore = 0; // Punteggio del giocatore due
-let playerOneChoice = ''; // Scelta del giocatore uno
-let playerTwoChoice = ''; // Scelta del giocatore due
+let gameStarted = false; // flag per indicare se il gioco è in corso
+let playerOneScore = 0; // punteggio giocatore uno
+let playerTwoScore = 0; // punteggio giocatore due
+let playerOneChoice = '';// scelta giocatore uno
+let playerTwoChoice = ''; // scelta giocatore due
 let timer; // Timer per il turno del computer
 let timeout; // Timeout per il turno del computer
 
 
-startGame();
+startGame();//come prima cosa avvio il gioco
 
-// Funzione per la scelta casuale del computer
+//creo una funzione per le scelte del computer (che sarebbe il giocatore 2)
 function computerChoice() {
     const choices = ['sasso', 'carta', 'forbice']; // Opzioni possibili
-    return choices[Math.floor(Math.random() * choices.length)]; // Restituisce una scelta casuale
+    return choices[Math.floor(Math.random() * choices.length)]; 
 }
 
-// Funzione per aggiornare le scelte dei giocatori
+// questa funzione serve per aggiornare lo schermo in base alle scelte fatte
 function updateChoices(playerSelection, computerSelection) {
-    const playerSign = document.getElementById('playerSign'); // Emoji del giocatore
-    const computerSign = document.getElementById('computerSign'); // Emoji del computer
+    const playerSign = document.getElementById('playerSign'); 
+    const computerSign = document.getElementById('computerSign'); 
 
-    // Imposta l'emoji corrispondente alla scelta del giocatore
+    //aggiorna lo schermo in base alla scelta del giocatore 1 (Player)
     switch (playerSelection) {
         case 'sasso':
-            playerSign.textContent = '✊'; // Pugno
+            playerSign.textContent = '✊'; 
             break;
         case 'carta':
-            playerSign.textContent = '✋'; // Mano
+            playerSign.textContent = '✋';
             break;
         case 'forbice':
-            playerSign.textContent = '✌'; // Forbici
+            playerSign.textContent = '✌';
             break;
     }
 
-    // Imposta l'emoji corrispondente alla scelta del computer
+    //aggiorna lo schermo in base alla scelta del giocatore 2 (Computer)
     switch (computerSelection) {
         case 'sasso':
-            computerSign.textContent = '✊'; // Pugno
+            computerSign.textContent = '✊'; 
             break;
         case 'carta':
-            computerSign.textContent = '✋'; // Mano
+            computerSign.textContent = '✋';
             break;
         case 'forbice':
-            computerSign.textContent = '✌'; // Forbici
+            computerSign.textContent = '✌';
             break;
     }
 }
 
-// Funzione per iniziare il turno
+//questa funzione definisci che inizia per primo il turno (di default comincia sempre il giocatore 1)
 function startTurn(playerNum) {
     timer = setTimeout(() => {
         const randomChoice = computerChoice(); // Scelta casuale del computer
@@ -59,201 +59,167 @@ function startTurn(playerNum) {
     }, 100000);
 }
 
-// Funzione per giocare una partita
+// gestisce la logica del gioco 
 function playGame(choice, playerNum) {
-    clearTimeout(timeout); // Interrompe il timeout se il giocatore fa una mossa
+    clearTimeout(timeout); //se il giocatore fa una mossa fermo il timeout
 
-    // Controlla se il gioco è in corso
+    // controlla se il gioco è in corso
     if (!gameStarted) {
         alert('You must start the game before playing!');
         return;
     }
 
-    // Assegna la scelta al giocatore corrispondente
+    // assegna la scelta al giocatore corrispondente
     if (playerNum === 1) {
-        playerOneChoice = choice; // Assegna la scelta del giocatore uno
-        updateChoices(playerOneChoice, ''); // Aggiorna le emoji dei giocatori
+        playerOneChoice = choice; // ora il player 1 può fare la sua scelta 
+        updateChoices(playerOneChoice, '');
 
-        const computerMove = computerChoice(); // Scelta casuale del computer
-        updateChoices('', computerMove); // Aggiorna l'emoji del computer
+        const computerMove = computerChoice(); //dopo che il player 1 ha fatto la sua scelte, il computer fa la sua in modo casuale
+        updateChoices('', computerMove);
 
-        playerTwoChoice = computerMove; // Assegna la scelta del computer al giocatore due
+        playerTwoChoice = computerMove; //scelta casuale del computer
     } else {
-        playerTwoChoice = choice; // Assegna la scelta del giocatore due
-        updateChoices('', playerTwoChoice); // Aggiorna l'emoji del computer
+        playerTwoChoice = choice; // è il turno del computer
+        updateChoices('', playerTwoChoice);
     }
 
-    // Verifica se entrambi i giocatori hanno fatto una scelta
+    // verifico se entrambi i giocatori hanno fatto una scelta e visualizzo il risultato
     if (playerOneChoice && playerTwoChoice) {
-        let result = ''; // Risultato della partita
+        let result = ''; 
 
-        // Determina il vincitore o se c'è un pareggio
+        // controllo se c'è il vincitore o se c'è un pareggio
         if (playerOneChoice === playerTwoChoice) {
             result = 'TIE'; // Pareggio
         } else {
             switch (playerOneChoice) {
+                //in base alla scelta fatta dal player 1 vedo se ha vinto, pareggiato o perso
                 case 'sasso':
-                    result = (playerTwoChoice === 'forbice') ? 'PLAYER' : 'COMPUTER'; // Vincitore in base alla scelta del giocatore uno
+                    result = (playerTwoChoice === 'forbice') ? 'PLAYER' : 'COMPUTER'; 
                     break;
                 case 'carta':
-                    result = (playerTwoChoice === 'sasso') ? 'PLAYER' : 'COMPUTER'; // Vincitore in base alla scelta del giocatore uno
+                    result = (playerTwoChoice === 'sasso') ? 'PLAYER' : 'COMPUTER';
                     break;
                 case 'forbice':
-                    result = (playerTwoChoice === 'carta') ? 'PLAYER' : 'COMPUTER'; // Vincitore in base alla scelta del giocatore uno
+                    result = (playerTwoChoice === 'carta') ? 'PLAYER' : 'COMPUTER'; 
                     break;
             }
         }
 
-        // Aggiorna i punteggi
+        //aggiorno i punteggi
         updateScores(result);
 
-        // Mostra il risultato della partita
         displayResult(result);
 
     
-        // Resetta le scelte dei giocatori
+        //resetto le scelte dei due player a 0 (perchè cominicia un nuovo turno)
         playerOneChoice = '';
         playerTwoChoice = '';
     }
 }
 
-// Funzione per aggiornare i punteggi
+//aggiorno i punteggi dei player
 function updateScores(result) {
-    // Se il giocatore uno vince, incrementa il suo punteggio
+    // Se player 1 vince, incremento il suo punteggio
     if (result === 'PLAYER') {
         playerOneScore++;
     } 
-    // Se il computer vince, incrementa il suo punteggio
+    // Se il computer vince, incremento il suo punteggio
     else if (result === 'COMPUTER') {
         playerTwoScore++;
     }
 
-    // Aggiorna i punteggi visualizzati a schermo
+    // aggiorno il display mostrando i punteggi
     const playerOneScoreDisplay = document.getElementById("playerScore");
     const playerTwoScoreDisplay = document.getElementById("computerScore");
     playerOneScoreDisplay.textContent = "Player: " + playerOneScore;
     playerTwoScoreDisplay.textContent = "Computer: " + playerTwoScore;
 }
 
-// Funzione per mostrare il risultato della partita
+//mostra il risultato
 function displayResult(result) {
-    // Ottiene gli elementi per visualizzare il risultato
     const scoreInfo = document.getElementById("scoreInfo");
-    //const scoreMessage = document.getElementById("scoreMessage");
 
-    // Mostra il messaggio corrispondente al risultato
+
+    // mostra un messaggio corrispondente al risultato
     switch (result) {
         case 'TIE':
-            scoreInfo.textContent = "Pareggio!"; // Pareggio
-            //scoreMessage.textContent = "Both players chose the same weapon."; // Entrambi i giocatori hanno scelto la stessa arma
-            break;
+            scoreInfo.textContent = "Pareggio!";
         case 'PLAYER':
-            scoreInfo.textContent = "Hai vinto!"; // Vittoria del giocatore
-           // scoreMessage.textContent = getWinningMessage(playerOneChoice, playerTwoChoice); // Messaggio di vittoria
+            scoreInfo.textContent = "Hai vinto!"; //il player 1 ha vinto
             break;
         case 'COMPUTER':
-            scoreInfo.textContent = "Hai perso..."; // Sconfitta del giocatore
-            //scoreMessage.textContent = getWinningMessage(playerTwoChoice, playerOneChoice); // Messaggio di sconfitta
+            scoreInfo.textContent = "Hai perso..."; // player 1 ha perso (player ha vinto)
             break;
     }
 }
 
 
-// Funzione per avviare il gioco
+//avvio il gioco
 function startGame() {
-    // Resetta il gioco
     resetGame();
 
-    // Imposta il flag del gioco a true
     gameStarted = true;
 
-    // Inizia il turno del giocatore uno
+    // inizia il turno facendo iniziare il giocatore uno
     startTurn(1);
 }
 
-// Aggiunge un event listener al pulsante di avvio del gioco
-//document.getElementById('startButton').addEventListener('click', startGame);
 
-// Funzione per controllare se il gioco è in corso
+//per controllare se il gioco è in corso
 function checkGameStarted() {
     // Se il gioco non è in corso, mostra un messaggio e ritorna falso
     if (!gameStarted) {
         alert('You must start the game before playing!');
         return false;
     }
-    // Altrimenti ritorna vero
     return true;
 }
 
-// Funzione per riavviare il gioco
+//per riavviare il gioco
 function restartGame() {
     const gameOverModal = document.getElementById('gameOverModal');
     gameOverModal.style.display = 'none';
 
-    // Abilita tutti i pulsanti delle scelte
+    // abilito tutti i pulsanti
     document.querySelectorAll('.emoji-buttons button').forEach(button => {
         button.disabled = false;
     });
 
-    // Resetta il gioco
+    // resetto il gioco
     resetGame();
 
-    // Avvia il gioco
+    // avvio il gioco
     startGame();
 }
 
-// Funzione per uscire dal gioco
-function quitGame() {
-    const startScreen = document.getElementById('startScreen');
-    const gameScreen = document.getElementById('gameScreen');
-    const gameOverModal = document.getElementById('gameOverModal');
 
-    // Mostra lo schermo iniziale e nasconde quello di gioco
-    startScreen.style.display = 'block';
-    gameScreen.style.display = 'none';
-    gameOverModal.style.display = 'none';
-
-    // Resetta il gioco
-    resetGame();
-}
-
-// Funzione per chiudere il modale
-function closeModal() {
-    const gameOverModal = document.getElementById('gameOverModal');
-    gameOverModal.style.display = 'none';
-}
-
-// Funzione per resettare il gioco
+// per resettare il gioco 
 function resetGame() {
     const playerSign = document.getElementById('playerSign');
     const computerSign = document.getElementById('computerSign');
     const playerOneScoreDisplay = document.getElementById("playerScore");
     const playerTwoScoreDisplay = document.getElementById("computerScore");
 
-    // Resetta le emoji e i punteggi
     playerSign.textContent = "❔";
     computerSign.textContent = "❔";
     playerOneScoreDisplay.textContent = "Player: 0";
     playerTwoScoreDisplay.textContent = "Computer: 0";
 
-    // Abilita tutti i pulsanti delle scelte
     document.querySelectorAll('.emoji-buttons button').forEach(button => {
         button.disabled = false;
     });
 
-    // Resetta le variabili di gioco
     gameStarted = false;
     playerOneScore = 0;
     playerTwoScore = 0;
     playerOneChoice = '';
     playerTwoChoice = '';
 
-    // Resetta il testo di scelta dei giocatori
     document.getElementById('scoreInfo').textContent = 'Fai la tua scelta';
     document.getElementById('scoreMessage').textContent = 'Vinci per ottenere punti bonus per la corsa verso la Laurea!';
 }
 
-// Funzione per avviare il timer
+//serve per avviare il timer
 function startTimer(duration) {
     var timer = duration, minutes, seconds;
     interval = setInterval(function () {
@@ -266,25 +232,23 @@ function startTimer(duration) {
 
         if (--timer < 0) {
             clearInterval(interval);
-            endGame(); // Controlla la fine della partita quando il timer arriva a zero
+            endGame(); //quando il timer arriva a zero, faccio finire la partita e comincia il reindirizzamento
         }
     }, 1000);
 }
 
-
-// Funzione per avviare il timer con una durata di 3 minuti (180 secondi)
 function startGameTimer() {
     var Minutes = 30;
     startTimer(Minutes);
     updateTimerBar(Minutes);
 }
-// Funzione per aggiornare la barra del timer
+
 function updateTimerBar(duration) {
     var timerBar = document.querySelector('#timerBar');
-    timerBar.style.animationDuration = duration + 's'; // Imposta la durata dell'animazione
+    timerBar.style.animationDuration = duration + 's';
 }
 
-// Avvia il timer quando la finestra si carica
+// avvio il timer quando la finestra si carica
 window.onload = function () {
     startGameTimer();
 };
@@ -302,16 +266,15 @@ const socket = io.connect('http://localhost:3000');
 socket.emit("joinExistingRoom",roomId);
 
 
-// Funzione per terminare il gioco
+//quando il gioco è finito
 function endGame() {
-    // Disabilita tutti i pulsanti delle scelte
+    // disabilito tutti i pulsanti
     document.querySelectorAll('.emoji-buttons button').forEach(button => {
         button.disabled = true;
     });
 
-    // Mostra il messaggio di vittoria/sconfitta dopo un secondo
-
     setTimeout(()=>{
+        //mando segnale al server che ho finito il gioco
         socket.emit('quitGame', { roomId: roomId, 
                                 primaryPlayerPosition: primaryPosition,
                                 secondaryPlayerPosition: secondaryPosition,
@@ -321,6 +284,6 @@ function endGame() {
 }
 
 socket.on('redirect', (data) => {
-    // Effettua il reindirizzamento alla nuova pagina
+    // effettuo il reindirizzamento al goose
     window.location.href = data;
 });
