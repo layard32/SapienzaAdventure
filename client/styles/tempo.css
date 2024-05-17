@@ -6,6 +6,7 @@
 }
 
 #timerContainer {
+    background-color: #ffffff;
     position: relative;
     width: 60%;
     height: 20px;
