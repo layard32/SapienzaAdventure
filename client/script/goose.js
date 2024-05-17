@@ -616,16 +616,17 @@ button.addEventListener('animationend', () => {
     if (!isRolling && turn) movePlayer (primaryPlayer);
 })
 
-const MAX_WORD_LENGTH = 15; // Set the maximum word length
+const MAX_WORD_LENGTH = 15; // Lunghezza massima di una parola
+
 // Event listener per il click sul pulsante "Invia" per inviare un messaggio
 document.querySelector(".chat-screen #send-message").addEventListener("click", function(){
     let message = document.querySelector(".chat-screen #message-input").value; // Recupera il testo del messaggio
     const words = message.split(' ');
 
-    // Check the length of each word
+    // Controllo della lunghezza delle parole
     for (let i = 0; i < words.length; i++) {
         if (words[i].length > MAX_WORD_LENGTH) {
-            alert(`One of your words is too long! Please limit each word to ${MAX_WORD_LENGTH} characters.`);
+            alert(`Una delle parole è troppo lunga! Limita le parole a una lunghezza di ${MAX_WORD_LENGTH} caratteri.`);
             return;
         }
     }
