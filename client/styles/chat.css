@@ -45,12 +45,13 @@
     padding: 20px;
     display: none;
     border:#002c53 solid 5px;
+    overflow-x: hidden;
 
 }
 
 .chat{
     position: fixed;
-    top: 2%;
+    top: 4%;
     left: 2%;
     transform: translate(-2%, -2%);
     z-index: 1;

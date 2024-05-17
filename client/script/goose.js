@@ -616,9 +616,19 @@ button.addEventListener('animationend', () => {
     if (!isRolling && turn) movePlayer (primaryPlayer);
 })
 
+const MAX_WORD_LENGTH = 15; // Set the maximum word length
 // Event listener per il click sul pulsante "Invia" per inviare un messaggio
 document.querySelector(".chat-screen #send-message").addEventListener("click", function(){
     let message = document.querySelector(".chat-screen #message-input").value; // Recupera il testo del messaggio
+    const words = message.split(' ');
+
+    // Check the length of each word
+    for (let i = 0; i < words.length; i++) {
+        if (words[i].length > MAX_WORD_LENGTH) {
+            alert(`One of your words is too long! Please limit each word to ${MAX_WORD_LENGTH} characters.`);
+            return;
+        }
+    }
     if(message.length == 0) return; // Se il messaggio è vuoto, non fare nulla
 
     renderMessage("my", { // Chiama la funzione renderMessage per renderizzare il messaggio inviato dall'utente
@@ -643,3 +653,5 @@ socket.on("chat", function(message) {
     console.log(secondaryUsername)
     renderMessage("other", message, username, secondaryUsername); // Chiama la funzione renderMessage per renderizzare il messaggio ricevuto
 });
+
+
