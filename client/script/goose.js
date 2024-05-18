@@ -394,7 +394,7 @@ function handleCellRedirection(cell) {
         const game = redirectionConditions[cell];
         setTimeout(() => {
             socket.emit('redirectToGame',{ game: game, roomId: roomId });
-        }, 1100); 
+        }, 1600); 
     }
 }
 
