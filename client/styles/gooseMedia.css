@@ -138,7 +138,7 @@
         zoom: 0.7;
     }
 
-    .toast-container.text {
+    .toast-container {
         transform: translate(-50%, -50%) rotate(90deg) !important;
     }
 
@@ -150,13 +150,9 @@
     }
 
     .chat.text {
-        transform: translate(-90%, -1%) rotate(90deg) scale(1);
-        top: 1%;
-        left: 90%;
-    }
-
-    .screen.chat-screen.active {
-        width: 200px;
-        height: 220px;
+        transform: translate(-135%, -10%) rotate(90deg) scale(1);
+        top: 10%;
+        left: 135%;
+        height: 200px;
     }
 }
