@@ -35,9 +35,19 @@ document.addEventListener("DOMContentLoaded", () => {
                 //controllo se ci troviamo in una condizione di vittoria e chi è il currentPlayer
                 resultDisplay.textContent = "Hai vinto!";
                 resultDisplay.style.opacity = "1";
+
+                //se ho vinto voglio disabilitare i click sulla tabella 
+                board.removeEventListener("click", handleClick);
+                board.style.pointerEvents = "none";
+
             } else if (checkWinner() && currentPlayer === "O") {
                 resultDisplay.textContent = "Hai perso...";
                 resultDisplay.style.opacity = "1";
+
+                //se ho perso voglio disabilitare i click sulla tabella 
+                board.removeEventListener("click", handleClick);
+                board.style.pointerEvents = "none";
+
             } else if (!gameBoard.includes("")) {
                 //se non si è in una condizione di vittoria e il tabellone non contiene una casella vuota, allora è un pareggio
                 resultDisplay.textContent = "Pareggio";
