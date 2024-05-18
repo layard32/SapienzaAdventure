@@ -45,9 +45,7 @@
     padding: 20px;
     display: none;
     border:#002c53 solid 5px;
-    overflow-x: hidden;
-
-
+    /* overflow-x: hidden; commentata perché elimina la scrollbar verticale su mobile */
 }
 
 .chat{
