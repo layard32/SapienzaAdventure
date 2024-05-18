@@ -195,3 +195,9 @@ body {
 #loseToast {
     background-color: #dc3545;
 }
+
+#loseToast .toast-body {
+    white-space: nowrap;
+    min-width: 120px; 
+    padding: 10px; 
+}
