@@ -7,7 +7,6 @@ body {
     justify-content: center;
     height: 100vh;
     background-color: #f0f0f0;
-
 }
 
 .heading {
@@ -30,26 +29,16 @@ body {
     color: #ffff;
 }
  
-
 .game-container {
     position: relative;
     width: 85vw;
     height: 45vw;
     max-width: 800px;
     max-height: 400px;
-    /* width: 800px;
-    height: 400px; */
-
-    /*height: 45vw;
-    width: 85vw;
-
-    min-width: 100px;
-    min-height: 50px;*/
     background-color:#548DBF;
     border-radius: 20px;
     border: #002c53 8px solid;
     margin-top: 50px;
-
 }
 
 .background-image {
@@ -59,25 +48,14 @@ body {
     transform: translate(-50%, -50%);
     width: 90%;
     height: 90%;
-    opacity: 0.5; /* Set the opacity */
+    opacity: 0.5; 
 }
-
 
 .paddle {
     position: absolute;
     width: 1.7%;
     height: 22%;
-
-    /* width: 15px;
-    height: 100px; */
-    /*width: 1.5vw;
-    height: 20vw;
-    max-width: 15px;
-    max-height: 100px;
-    min-width: 10px;
-    min-height: 50px;*/
     background-color: #fff;
-    
 }
 
 #playerPaddle {
@@ -94,19 +72,15 @@ body {
     position: absolute;
     width: 2%;
     height: 3%;
-    /* width: 20px;
-    height: 20px; */
     background-color: #fff;
     border-radius: 50%;
     z-index: 2;
-    
 }
 
 .half-line {
     position: absolute;
     width: 8px;
     height: 100%;
-    /* height: 400px; */
     background-color: #002c53;
     left: 50%;
     top: 0;
@@ -136,7 +110,6 @@ body {
     border-radius: 10px;
     font-size: 20px;
     color: #002c53;
-    
 }
 
 .close {
@@ -153,22 +126,6 @@ body {
     cursor: pointer;
 }
 
-
-
-/* @media (max-width: 850px) {
-    .heading { font-size: 60px }
-    html { zoom: 0.8; }
-}
-
-@media (max-width: 680px) {
-    .heading { font-size: 50px }
-    html { zoom: 0.6; }
-}
-
-@media (max-width: 500px) {
-    .heading { font-size: 45px }
-    html { zoom: 0.45; }
-} */
 @media (max-width: 850px) {
     .heading { font-size: 60px; } /* Adjust as needed */
 }

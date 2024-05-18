@@ -616,7 +616,7 @@ button.addEventListener('animationend', () => {
     if (!isRolling && turn) movePlayer (primaryPlayer);
 })
 
-const MAX_WORD_LENGTH = 15; // Lunghezza massima di una parola
+const MAX_WORD_LENGTH = 20; // Lunghezza massima di una parola
 
 // Event listener per il click sul pulsante "Invia" per inviare un messaggio
 document.querySelector(".chat-screen #send-message").addEventListener("click", function(){
