@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const computerPaddle = document.getElementById('computerPaddle');
     const ball = document.getElementById('ball');
 
-    
     let ballSpeedX = 0;
     let ballSpeedY = 0;
 
@@ -15,13 +14,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const gameContainer = document.querySelector('.game-container');
     
-    
     let gameStarted = false;
     let gameHeight = gameContainer.clientHeight;
     let gameWidth = gameContainer.clientWidth;
 
     window.addEventListener('resize', function() {
-        // Aggiorna le dimensioni del gioco quando la finestra viene ridimensionata
         gameHeight = gameContainer.clientHeight;
         gameWidth = gameContainer.clientWidth;
     });
@@ -37,10 +34,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const modalText = document.getElementById('modalText');
 
 
-    // Set the initial position of the ball to the center of the game container
+    //Imposta la posizione iniziale della palla al centro del gioco
     ball.style.left = `${gameWidth / 2 - ballRadius}px`;
     ball.style.top = `${gameHeight / 2 - ballRadius}px`;
 
+    //Una volta che l'utente fa clic sulla palla, il gioco inizia e la pallina inizia a muoversi
     ball.addEventListener('click', () => {
         gameStarted = true;
         ballSpeedX = 4; 
@@ -48,13 +46,11 @@ document.addEventListener('DOMContentLoaded', function () {
         update();
     });
 
-    
-
+    //Funzione per aggiornare la posizione della palla in caso di fine partita e in cui vengono chiamate le varie funzioni per far partire il gioco
     function update() {
         if (!gameStarted) {
             return;
         }
-
 
         if (playerScore== 3) {
             ballSpeedX = 0; 
@@ -62,8 +58,7 @@ document.addEventListener('DOMContentLoaded', function () {
             ball.style.left = `${gameWidth / 2 - ballRadius}px`;
             ball.style.top = `${gameHeight / 2 - ballRadius}px`;
             showEndGameModal('Hai vinto!');
-            return;
-            
+            return; 
         }
         else if (computerScore== 3) {
             ballSpeedX = 0; 
@@ -74,18 +69,15 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        
         moveBall();
         moveComputerPaddle();
         checkCollision();
         requestAnimationFrame(update);
         updateScores();
         displayScores();
-
-
-
     }
 
+    //Funzione per la gestione del movimento della palla
     function moveBall() {
         ballX += ballSpeedX;
         ballY += ballSpeedY;
@@ -97,7 +89,6 @@ document.addEventListener('DOMContentLoaded', function () {
         if (ballY <= 0 || ballY >= gameHeight - 20) {
             ballSpeedY *= -1;
         }
-
         ball.style.left = ballX + 'px';
         ball.style.top = ballY + 'px';
     }
@@ -106,17 +97,17 @@ document.addEventListener('DOMContentLoaded', function () {
     let computerPaddleSpeed = 3;
     let computerPaddleDirection = 1;
 
+    //Funzione per il movimento della racchetta del computer
     function moveComputerPaddle() {
         computerPaddleY += computerPaddleSpeed * computerPaddleDirection;
 
         if (computerPaddleY <= 0 || computerPaddleY >= gameHeight - paddleHeight) {
-            computerPaddleDirection *= -1; // Change the direction of the paddle when it hits the top or bottom of the game container
+            computerPaddleDirection *= -1; 
         }
-
         computerPaddle.style.top = computerPaddleY + 'px';
     }
     
-
+    //Funzione per controllare la collisione della palla 
     function checkCollision() {
         if (ballX <= 30 && ballY >= playerPaddleY && ballY <= playerPaddleY + paddleHeight) {
             ballSpeedX *= -1;
@@ -127,6 +118,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    //Gestione del movimento della racchetta del player
     gameContainer.addEventListener('mousemove', function (event) {
         const mouseY = event.clientY - gameContainer.getBoundingClientRect().top;
         playerPaddleY = mouseY - paddleHeight / 2;
@@ -138,11 +130,10 @@ document.addEventListener('DOMContentLoaded', function () {
         playerPaddle.style.top = playerPaddleY + 'px';
     });
 
-    // Step 1: Create variables for scores
     let playerScore = 0;
     let computerScore = 0;
 
-    // Step 2: Update scores
+    //Funzione per aggiornare i punteggi
     function updateScores() {
         if (ballX + 20 >= gameWidth) {
             playerScore += 1;
@@ -151,12 +142,12 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Step 3: Display scores
     function displayScores() {
         document.getElementById('playerScore').textContent = playerScore;
         document.getElementById('computerScore').textContent = computerScore;
     }    
 
+    //Funzione per avviare il timer
     function startTimer(duration) {
         var timer = duration, minutes, seconds;
         interval = setInterval(function () {
@@ -172,23 +163,25 @@ document.addEventListener('DOMContentLoaded', function () {
               ballSpeedY = 0;
               ball.style.left = `${gameWidth / 2 - ballRadius}px`;
               ball.style.top = `${gameHeight / 2 - ballRadius}px`;
-              endGame(); // Controlla la fine della partita quando il timer arriva a zero
+              endGame(); 
             }
         }, 1000);
     }
     
-    // Funzione per avviare il timer con una durata di 3 minuti (180 secondi)
+    //Funzione per avviare il timer con una durata di 45 secondi
     function startGameTimer() {
         var Minutes = 45;
         startTimer(Minutes);
         updateTimerBar(Minutes);
     }
-      // Funzione per aggiornare la barra del timer
+
+    //Funzione per aggiornare la barra del timer
     function updateTimerBar(duration) {
         var timerBar = document.querySelector('#timerBar');
         timerBar.style.animationDuration = duration + 's'; // Imposta la durata dell'animazione
     }
-        
+    
+    //Funzione per reindirizzare i giocatori alla pagina principale alla fine della partita
     function endGame() {
         setTimeout(()=>{
           socket.emit('quitGame', { roomId: roomId, 
@@ -199,12 +192,13 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 1000);
     }
 
+    //Funzione per mostrare il modale di fine partita
     function showEndGameModal(message) {
         modalText.textContent = message;
         modal.style.display = 'block';
     }
     
-    // Funzione per nascondere il modale di fine partita
+    //Funzione per nascondere il modale di fine partita
     function hideEndGameModal() {
         modal.style.display = 'none';
     }
@@ -212,18 +206,15 @@ document.addEventListener('DOMContentLoaded', function () {
     const closeButton = document.querySelector('.close');
     if (closeButton) {
         closeButton.addEventListener('click', function() {
-            hideEndGameModal(); // Nascondi il modale quando l'utente fa clic sull'icona di chiusura
+            hideEndGameModal(); 
         });
     }
-
-    
-
 });
 
     
 //GESTIONE SERVER
 const urlParams = new URLSearchParams(window.location.search);
-// prendo i parametri passati tramite chiamata GET
+//Prendo i parametri passati tramite chiamata GET
 const roomId = urlParams.get('room');
 const primaryPosition = urlParams.get('pos1');
 const secondaryPosition = urlParams.get('pos2')
@@ -233,7 +224,7 @@ const socket = io.connect('http://localhost:3000');
 socket.emit("joinExistingRoom",roomId);
     
 socket.on('redirect', (data) => {
-    // Effettua il reindirizzamento alla nuova pagina
+    //I giocatori vengono reindirizzati a goose
     window.location.href = data;
 });
 

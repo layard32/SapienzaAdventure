@@ -34,7 +34,6 @@ main {
     flex-direction: column; 
     align-items: center;
     gap: 1vw; 
-    
 }
 
 #game-board {
@@ -82,7 +81,6 @@ main {
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
     color: #002c53 ;
     font-size: 40px;
-
 }
 
 .card.shake{
