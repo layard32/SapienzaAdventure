@@ -238,7 +238,7 @@ function rollDice(number) {
         let dadoNumber = number;
         // TODO controllare che il numero sia effettivamente randomico
         // e non preimpostato per una delle mille prove
-        if (!number) dadoNumber =  Math.floor(Math.random() * 6) + 1;
+        if (!number) dadoNumber =  5// Math.floor(Math.random() * 6) + 1;
 
         for (let i = 1; i <= 6; i++) dado.classList.remove('show-' + i);
         requestAnimationFrame(() => {
@@ -288,6 +288,25 @@ i websocket (come socket.io) non sono persistenti tra pagine html diverse
 usiamo questo trucco per mantenere la connessione tra diverse pagine */
 const socket = io.connect('http://localhost:3000');
 
+/* il client inserisce l'username nei cookie in index.js
+in questa porzione di codice, l'username viene recuperato dai cookie */
+let username = '';
+let secondaryUsername = '';
+window.addEventListener('DOMContentLoaded', () => {
+    const usernameCookie = document.cookie.split('; ').find((cookie) => cookie.startsWith('username='));
+    username = usernameCookie ? usernameCookie.split('=')[1] : 'Utente';
+    // per ottenere l'username dell'altro giocatore
+    setTimeout(() => { socket.emit('requestOtherUsername', roomId) }, 1000);
+    socket.on('otherUsername', (data) => { secondaryUsername = data; });
+    // aggiorniamo il div, al rientro da un minigame, solo dopo che l'abbiamo ottenuto
+    const getSecondaryUsername = setInterval (() => { 
+        if (secondaryUsername != '') { 
+            setFirst();
+            clearInterval (getSecondaryUsername);
+        }
+    }, 500)
+});
+
 // prendiamo eventuali parametri di una chiamata GET
 const urlParams = new URLSearchParams(window.location.search);
 const roomId = urlParams.get('room');
@@ -304,8 +323,11 @@ if (urlParams.has('win')) {
 let posFirstParam = urlParams.get('pos1');
 let posSecondParam = urlParams.get('pos2');
 
-// evento che segnala l'unione alla stanza (sia la prima volta, sia dopo i minigame)
-socket.emit('joinExistingRoom', roomId);
+/* evento che segnala l'unione alla stanza (sia la prima volta, sia dopo i minigame)
+   viene integrato un piccolo timeout per evitare problemi con eventuali sfasamenti
+   nei tempi di caricamenti dei browser */
+setTimeout(() => { socket.emit('joinExistingRoom', roomId); }, 50)
+
 let turn;
 let primaryPlayer = {};
 let secondaryPlayer = {};
@@ -319,6 +341,11 @@ socket.on('yourTurn', (data) => {
         secondaryPlayer = new Player(!turn);
         document.cookie = `primary=${turn}; path=/`;
         appearTurn(turn);
+        /* all'inizio il div viene settato a 'pareggio'
+           poi viene aggiornato ad ogni movimento
+           se si rientra da un minigame viene aggiornato direttamente dalla porzione di codice in cui viene 
+           preso il secondaryUsername */
+        nameDiv.textContent = 'Pareggio';
     } else {
         turn = false;
         let primaryCookie = document.cookie.split('; ').find((cookie) => cookie.startsWith('primary='));
@@ -341,22 +368,6 @@ function animate() {
     }
 };
 animate();
-
-/* il client inserisce l'username nei cookie in index.js
-in questa porzione di codice, l'username viene recuperato dai cookie */
-let username = '';
-let secondaryUsername = '';
-window.addEventListener('DOMContentLoaded', () => {
-    const usernameCookie = document.cookie.split('; ').find((cookie) => cookie.startsWith('username='));
-    username = usernameCookie ? usernameCookie.split('=')[1] : 'Utente';
-    // per ottenere l'username dell'altro giocatore
-    setTimeout(() => { socket.emit('requestOtherUsername', roomId) }, 2000);
-    socket.on('otherUsername', (data) => { secondaryUsername = data; });
-});
-
-// all'inizio il div viene settato a 'pareggio'
-// ad ogni passaggio di turno si controlla chi è il player più vicino alla fine
-nameDiv.textContent = 'Pareggio';
 
 // gestione dei turni + impostazione di nameDiv
 function setFirst() {
