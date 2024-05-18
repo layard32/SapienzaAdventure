@@ -169,7 +169,7 @@ function startTimer(duration, display) {
 
 // Funzione per avviare il timer con una durata di 2 minuti (120 secondi)
 function startGameTimer() {
-    let oneMinutes = 60*2,
+    let oneMinutes = 60,
         display = document.querySelector('#timer');
     startTimer(oneMinutes, display);
 }
