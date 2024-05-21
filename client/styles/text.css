@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
 
-.text, p{ 
+.text, p { 
     font-family: Roboto Mono; 
     text-align: center;   
     word-wrap: break-word;
@@ -12,5 +12,5 @@
 }
   
 .secondary {
-  background-color: rgb(70, 121, 166) !important;
+  background-color: #4679a6 !important;
 }
