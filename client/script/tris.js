@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 //se ancora non si in una condizione di vittoria e ci sono delle caselle vuoto e il player è O, faccio fare la mossa al computer
                 currentPlayer = currentPlayer === "X" ? "O" : "X";
                 if (currentPlayer === "O") {
-                    setTimeout(makeAIMove, 500);
+                    setTimeout(makeAIMove, 250);
                 }
             }
         }
@@ -114,6 +114,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (checkWinner() && currentPlayer === "O") {
             resultDisplay.textContent = "Hai perso...";
+            resultDisplay.style.opacity = "1";
+            //se ho perso voglio disabilitare i click sulla tabella 
+            board.removeEventListener("click", handleClick);
+            board.style.pointerEvents = "none";
         } else if (!gameBoard.includes("")) {
             resultDisplay.textContent = "Pareggio";
         } else {
