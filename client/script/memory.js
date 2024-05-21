@@ -119,72 +119,27 @@ document.addEventListener('DOMContentLoaded', function() {
 
 //Funzione per gestire la fine della partita quando tutte le coppie sono state trovate o il timer è scaduto
 function checkGameEnd() {
-    let timerDisplay = document.querySelector('#timer');
-    let timerValue = timerDisplay.textContent;
-
-    if (/*timerValue === "00:00"*/ --timer < 0) {
-        clearInterval(interval); 
-        showEndGameModal();
-        canFlip = false;
-        gameOver=true;
-        playerTwo=1;
-    }
-    else if(matchedCards.length === cards.length){
+    if(matchedCards.length === cards.length){
         showEndGameModal();
         canFlip = false;
         gameOver=true;
         playerOne=1;
     }
     
-    //Quando il timer è scaduto i giocatori vengono reindirizzati alla pagina di goose
-    if(--timer < 0/*timerValue === "00:00"*/){
-        socket.emit('quitGame', { roomId: roomId, 
-            primaryPlayerPosition: primaryPosition,
-            secondaryPlayerPosition: secondaryPosition,
-            win: (playerOne == 1), 
-            turn: turn 
-        });
-    }
     
 }
 
- //Funzione per avviare il timer
- function startTimer(duration) {
-    var timer = duration, minutes, seconds;
-    interval = setInterval(function () {
-        minutes = parseInt(timer / 60, 10);
-        seconds = parseInt(timer % 60, 10);
-  
-        minutes = minutes < 10 ? "0" + minutes : minutes;
-        seconds = seconds < 10 ? "0" + seconds : seconds;
-  
-        if (--timer < 0) {
-          clearInterval(interval);
-          checkGameEndendGame(); 
-        }
-    }, 1000);
+function endGame() {
+    socket.emit('quitGame', { roomId: roomId, 
+        primaryPlayerPosition: primaryPosition,
+        secondaryPlayerPosition: secondaryPosition,
+        win: (playerOne == 1), 
+        turn: turn 
+    });
 }
-
-//Funzione per avviare il timer con una durata di 45 secondi
-function startGameTimer() {
-    var Minutes = 60;
-    startTimer(Minutes);
-    updateTimerBar(Minutes);
-}
-
-//Funzione per aggiornare la barra del timer
-function updateTimerBar(duration) {
-    var timerBar = document.querySelector('#timerBar');
-    timerBar.style.animationDuration = duration + 's'; // Imposta la durata dell'animazione
-}
-
-window.onload = function () {
-    startGameTimer();
-};
-
 
 //Funzione per avviare il timer
-/*function startTimer(duration, display) {
+function startTimer(duration, display) {
     let timer = duration, minutes, seconds;
     interval = setInterval(function () {
         minutes = parseInt(timer / 60, 10);
@@ -193,26 +148,31 @@ window.onload = function () {
         minutes = minutes < 10 ? "0" + minutes : minutes;
         seconds = seconds < 10 ? "0" + seconds : seconds;
 
-        display.textContent = minutes + ":" + seconds;
 
         if (--timer < 0) {
             clearInterval(interval);
-            checkGameEnd(); // Controlla la fine della partita quando il timer arriva a zero
+            endGame(); 
         }
     }, 1000);
 }
 
 // Funzione per avviare il timer con una durata di 2 minuti (120 secondi)
 function startGameTimer() {
-    let oneMinutes = 60,
-        display = document.querySelector('#timer');
+    let oneMinutes = 2,
+    display = document.querySelector('#timer');
     startTimer(oneMinutes, display);
+    updateTimerBar(oneMinutes);
+}
+
+function updateTimerBar(duration) {
+    var timerBar = document.querySelector('#timerBar');
+    timerBar.style.animationDuration = duration + 's'; // Imposta la durata dell'animazione
 }
 
 //Avvia il timer quando la finestra si carica
 window.onload = function () {
     startGameTimer();
-};*/
+};
 
 
 
