@@ -1,6 +1,14 @@
 * {
   box-sizing: border-box;
-  font-family: Roboto Mono; 
+  font-family: Roboto Mono;
+}
+
+#timerContainer {
+  position: fixed !important;
+  top: 10% !important;
+  left: 50% !important; 
+  transform: translate(-50%, -10%) !important;
+  width: 50% !important;
 }
 
 body {
@@ -10,10 +18,11 @@ body {
 .container {
   z-index: -1;
   background-color: white;
-  width: 95vw;
-  max-width: 50em; 
-  
-  position: absolute;
+  width: 35%; 
+  min-width: 350px;
+  min-height: 350px;
+
+  position: fixed;
   transform: translate(-50%, -50%);
   top: 50%;
   left: 50%;
@@ -28,24 +37,27 @@ body {
   text-align: center;
 }
 
-#options-container h3 {
+#options-container #big-text {
   font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
   background-color: #fff;
   color:black;
   text-align: center;
 
-  font-size: 55px;
+  font-size: calc(3vh + 1vw);
   font-weight: 500;
+
+  margin-bottom: 30px;
 }
 
-#options-container div {
+#options-container .button-container {
   width: 100%;
   display: flex;
   justify-content: space-between;
-  margin: 1.2em 0 2.4em 0;
+  margin-bottom: 30px;
 }
 
 #options-container button {
+  font-size: calc(2vh);
   padding: 0.6em 1.2em;
   border: 5px solid #000000;
   background-color: #ffffff;
@@ -116,7 +128,7 @@ body {
   display: flex;
   justify-content: center;
   font-size: 1.8em;
-  margin: 0.6em 0 1.2em 0;
+  margin: 15px 0;
 }
 
 canvas {
@@ -124,7 +136,7 @@ canvas {
   margin: auto;
   border: 10px solid #8C4A4A;
   border-radius: 10px;
-  width: 100%;
+  width: 270px;
   height: 150px;
 }
 

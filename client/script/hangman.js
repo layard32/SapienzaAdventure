@@ -44,8 +44,9 @@ let chosenWord = "";
 
 //mostra le opzioni da scegliere
 const displayOptions = () => {
-  optionsContainer.innerHTML += `<h3>Selezionate un'opzione</h3>`;
+  optionsContainer.innerHTML += `<div id="big-text">Selezionate un'opzione</div>`;
   let buttonCon = document.createElement("div");
+  buttonCon.classList.add("button-container");
   for (let value in options) {
     buttonCon.innerHTML += `<button class="options" onclick="generateWord('${value}')">${value}</button>`;
   }
