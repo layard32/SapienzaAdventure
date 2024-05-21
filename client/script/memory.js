@@ -60,8 +60,6 @@ function flipCard(){
                 canFlip = true; // Reimposta la possibilità di girare le carte dopo un certo periodo di tempo
             }, 1600);
             setTimeout(checkMatch, 900); 
-
-
         }
     }
 }
@@ -124,9 +122,7 @@ function checkGameEnd() {
         canFlip = false;
         gameOver=true;
         playerOne=1;
-    }
-    
-    
+    } 
 }
 
 function endGame() {
@@ -173,8 +169,6 @@ function updateTimerBar(duration) {
 window.onload = function () {
     startGameTimer();
 };
-
-
 
 //GESTIONE SERVER
 const urlParams = new URLSearchParams(window.location.search);
