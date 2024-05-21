@@ -121,9 +121,9 @@ body {
     color: #002c53;
 }
 
-/* #timerContainer {
-    margin-bottom: 20px;
-} */
+#timerContainer {
+    height: 20px !important;
+}
 
 @media only screen and (max-width: 768px) {
     .scores-container {
