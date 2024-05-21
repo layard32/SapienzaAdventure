@@ -23,9 +23,9 @@ body {
 }
 
 .buttonCont{
-    top: 98%;
+    top: 99%;
     left: 50%;
-    transform: translate(-50%, -98%);
+    transform: translate(-50%, -99%);
     position: fixed;
     align-items: center;
 }
@@ -119,9 +119,9 @@ body {
 }
 
 #playerContainer {
-    top:5%;
+    top:2%;
     left:50%;
-    transform: translate(-50%, -4%);
+    transform: translate(-50%, -2%);
     position: fixed;
     display: flex;
     align-items: center;

@@ -293,23 +293,11 @@ in questa porzione di codice, l'username viene recuperato dai cookie */
 let username = '';
 let secondaryUsername = '';
 window.addEventListener('DOMContentLoaded', () => {
-    /* evento che segnala l'unione alla stanza (sia la prima volta, sia dopo i minigame)
-    viene integrato un piccolo timeout per evitare problemi con eventuali sfasamenti
-    nei tempi di caricamenti dei browser */
-    setTimeout(() => { socket.emit('joinExistingRoom', roomId); }, 50)
-
+    // evento che segnala l'unione alla stanza (sia la prima volta, sia dopo i minigame)
+    socket.emit('joinExistingRoom', roomId);
+    // per ottenere il proprio username
     const usernameCookie = document.cookie.split('; ').find((cookie) => cookie.startsWith('username='));
     username = usernameCookie ? usernameCookie.split('=')[1] : 'Utente';
-    // per ottenere l'username dell'altro giocatore
-    setTimeout(() => { socket.emit('requestOtherUsername', roomId) }, 1000);
-    socket.on('otherUsername', (data) => { secondaryUsername = data; });
-    // aggiorniamo il div, al rientro da un minigame, solo dopo che l'abbiamo ottenuto
-    const getSecondaryUsername = setInterval (() => { 
-        if (secondaryUsername != '') { 
-            setFirst();
-            clearInterval (getSecondaryUsername);
-        }
-    }, 500)
 });
 
 // prendiamo eventuali parametri di una chiamata GET
@@ -335,17 +323,23 @@ let secondaryPlayer = {};
 sono presenti regole particolari nel caso in cui ci siano dei parametri
 cioè nel caso in cui il client sta uscendo da un minigame */
 socket.on('yourTurn', (data) => {
+    // per ottenere l'username dell'altro giocatore
+    socket.emit('requestOtherUsername', roomId)
+    socket.on('otherUsername', (data) => { 
+        secondaryUsername = data;
+        /* all'inizio il div viene settato a 'pareggio'
+        poi viene aggiornato ad ogni movimento
+        se si rientra da un minigame viene aggiornato direttamente dalla porzione di codice in cui viene 
+        preso il secondaryUsername */
+        setFirst() 
+    })
+
     if (turnParam == null) {
         turn = data;
         primaryPlayer = new Player(turn);
         secondaryPlayer = new Player(!turn);
         document.cookie = `primary=${turn}; path=/`;
         appearTurn(turn);
-        /* all'inizio il div viene settato a 'pareggio'
-           poi viene aggiornato ad ogni movimento
-           se si rientra da un minigame viene aggiornato direttamente dalla porzione di codice in cui viene 
-           preso il secondaryUsername */
-        nameDiv.textContent = 'Pareggio';
     } else {
         turn = false;
         let primaryCookie = document.cookie.split('; ').find((cookie) => cookie.startsWith('primary='));
@@ -353,6 +347,46 @@ socket.on('yourTurn', (data) => {
         primary = (primary === 'true');
         primaryPlayer = new Player(primary, Number(posFirstParam));
         secondaryPlayer = new Player(!primary, Number(posSecondParam));
+    
+        // questa porzione di codice serve a gestire l'assegnazione dei turni nelle diverse casistiche
+        // di vittoria, o meno, di minigame
+        setTimeout( () => { 
+            const intervalPlayers = setInterval(() => {
+                if (primaryPlayer != {} && secondaryPlayer != {}) {
+                    clearInterval (intervalPlayers);
+
+                    // caso con vittoria del minigame
+                    if (winParam) {
+                        setTimeout(() => {
+                            bonusEvent(2);
+                        }, 100);
+
+                        setTimeout(() => {
+                            let actualCell = primaryPlayer.cell;
+                            if (bonusCells.includes(actualCell)) {
+                                // caso B in cui la vittoria del minigame fa finire in una cella con un bonus o un imprevisto
+                                setTimeout(() => {
+                                    turn = turnParam;
+                                    appearTurn(turn);
+                                }, 7000);
+                            } else {
+                                // caso C in cui la vittoria del minigame NON fa finire in una cella con un bonus o un imprevisto
+                                setTimeout(() => {
+                                    turn = turnParam;
+                                    appearTurn(turn);
+                                }, 500);
+                            }
+                        }, 2000);        
+                    } else if (!winParam) {
+                        // caso A senza vittoria di un minigame
+                        setTimeout(() => {
+                            turn = turnParam;
+                            appearTurn(turn);
+                        }, 500);
+                    }
+                }
+            }, 500);
+        }, 1000)
     }
 })
 
@@ -394,52 +428,9 @@ function handleCellRedirection(cell) {
         const game = redirectionConditions[cell];
         setTimeout(() => {
             socket.emit('redirectToGame',{ game: game, roomId: roomId });
-        }, 1600); 
+        }, 2200); 
     }
 }
-
-// questa porzione di codice serve a gestire l'assegnazione dei turni nelle diverse casistiche
-// di vittoria, o meno, di minigame
-window.addEventListener('DOMContentLoaded', () => {
-    setTimeout( () => { 
-        const intervalPlayers = setInterval(() => {
-            if (primaryPlayer != {} && secondaryPlayer != {}) {
-                clearInterval (intervalPlayers);
-                if (winParam == null) return;
-    
-                // caso con vittoria del minigame
-                else if (winParam) {
-                    setTimeout(() => {
-                        bonusEvent(2);
-                    }, 100);
-    
-                    setTimeout(() => {
-                        let actualCell = primaryPlayer.cell;
-                        if (bonusCells.includes(actualCell)) {
-                            // caso B in cui la vittoria del minigame fa finire in una cella con un bonus o un imprevisto
-                            setTimeout(() => {
-                                turn = turnParam;
-                                appearTurn(turn);
-                            }, 7000);
-                        } else {
-                            // caso C in cui la vittoria del minigame NON fa finire in una cella con un bonus o un imprevisto
-                            setTimeout(() => {
-                                turn = turnParam;
-                                appearTurn(turn);
-                            }, 500);
-                        }
-                    }, 2000);        
-                } else if (!winParam) {
-                    // caso A senza vittoria di un minigame
-                    setTimeout(() => {
-                        turn = turnParam;
-                        appearTurn(turn);
-                    }, 500);
-                }
-            }
-        }, 500);
-    }, 1000)
-})
 
 // gestione spostamento dell'altro giocatore
 socket.on('moveSecondaryPlayer', (data) => {

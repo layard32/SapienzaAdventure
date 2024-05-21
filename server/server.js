@@ -5,6 +5,10 @@ import { Server } from 'socket.io'; // per la comunicazione bidirezionale
 import { createServer } from 'node:http'; // per le chiamate HTTP
 import cookieParser from 'cookie-parser'; // per la gestione dei cookie 
 import cookie from 'cookie';
+let playerQueue = [];
+let isPairing = false;
+import AsyncLock from 'async-lock';
+const lock = new AsyncLock();
 
 const dir = path.resolve(); // percorso assoluto corrente
 const PORT = 3000;
@@ -109,16 +113,16 @@ io.on('connection', (socket) => {
     }
   });
 
+  /* funzione per joinare la stanza: l'utilizzo combinato di lock e flag consente ad uno solo client di
+  porsi in attesa, ricorsivamente, che anche l'altro client sia pronto ad unirsi */
   socket.on('joinExistingRoom', (data) => {
-    socket.join(data);
-    // assegna i turni 
-    setTimeout(() => {
-        // prendi gli id dei clients nella stanza
-        const room = io.sockets.adapter.rooms.get(data);
-        const clientIDs = room ? Array.from(room).map(socketId => io.sockets.sockets.get(socketId).id) : [];
-        io.to(clientIDs[0]).emit('yourTurn', true);
-        io.to(clientIDs[1]).emit('yourTurn', false);
-    }, 500);
+    playerQueue.push({ socket: socket, room: data });
+    lock.acquire("pairing", function() {
+      if (!isPairing) {
+        isPairing = true;
+        pairPlayers();
+      }
+    });
   });
 
   // per lo spostamento del player secondario
@@ -159,12 +163,13 @@ io.on('connection', (socket) => {
     if (!otherSocket) return;
 
     // processa i cookie relativo all'username
-    const cookies = cookie.parse(otherSocket.handshake.headers.cookie);
-    const otherUsername = decodeURIComponent(cookies.username);
-
-    // manda il segnale con l'altro username
-    socket.emit('otherUsername', otherUsername);
-  
+    let otherUsername = '';
+    if (typeof otherSocket.handshake.headers.cookie === 'string') {
+      const cookies = cookie.parse(otherSocket.handshake.headers.cookie);
+      otherUsername = decodeURIComponent(cookies.username);
+      // manda il segnale con l'altro username
+      socket.emit('otherUsername', otherUsername);
+    } 
   });
 
   socket.on('redirectToGame', ({ game, roomId })=> {
@@ -199,4 +204,31 @@ function sendGameResult(roomId, winnerId) {
     io.to(winnerId).emit('gameWon');
     // Invia un messaggio di sconfitta al perdente
     io.to(loserId).emit('gameLost');
+}
+
+// funzione per far entrare i due player contemporaneamente alla stanza
+function pairPlayers() {
+  if (playerQueue.length >= 2) {
+    const player1 = playerQueue.shift();
+    const player2 = playerQueue.shift();
+
+    player1.socket.join(player1.room);
+    player2.socket.join(player2.room);
+
+    // assegnazione dei turni
+    setTimeout(() => {
+      const room = io.sockets.adapter.rooms.get(player1.room);
+      const clientIDs = room ? Array.from(room).map(socketId => io.sockets.sockets.get(socketId).id) : [];
+      io.to(clientIDs[0]).emit('yourTurn', true);
+      io.to(clientIDs[1]).emit('yourTurn', false);
+    }, 500);
+
+    isPairing = false;
+    // rimuove i due player dalla queue
+    playerQueue = playerQueue.slice(2);
+  }
+  // se ci sta solo un player, aspetta che entri il secondo richiamando la funzione
+  else if (playerQueue.length < 2) {
+    setTimeout(pairPlayers, 100); 
+  }
 }

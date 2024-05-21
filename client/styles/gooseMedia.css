@@ -14,11 +14,17 @@
     #background {
         zoom: 0.70;
     }
+    #playerContainer.text {
+        zoom: 0.95;
+    }
 }
 
 @media screen and (max-width: 1320px) and (min-height: 900px) {
     #background {
         zoom: 0.85;
+    }
+    #playerContainer.text {
+        zoom: 0.90;
     }
 }
 
@@ -26,17 +32,26 @@
     #background {
         zoom: 0.65;
     }
+    #playerContainer.text {
+        zoom: 0.85;
+    }
 }
 
 @media screen and (max-width: 1300px) and (max-height: 800px) {
     #background {
         zoom: 0.60;
     }
+    #playerContainer.text {
+        zoom: 0.84;
+    }
 }
 
 @media screen and (max-width: 1230px) and (max-height: 800px) {
     #background {
         zoom: 0.55;
+    }
+    #playerContainer.text {
+        zoom: 0.82;
     }
 }
 
@@ -50,11 +65,17 @@
     #background {
         zoom: 0.50;
     }
+    #playerContainer.text {
+        zoom: 0.80;
+    }
 }
 
 @media screen and (max-width: 1050px) and (min-height: 900px) {
     #background {
         zoom: 0.65;
+    }
+    #playerContainer.text {
+        zoom: 0.85;
     }
 }
 
@@ -62,11 +83,17 @@
     #background {
         zoom: 0.60;
     }
+    #playerContainer.text {
+        zoom: 0.84;
+    }
 }
 
 @media screen and (max-width: 850px) and (min-height: 900px) {
     #background {
         zoom: 0.50;
+    }
+    #playerContainer.text {
+        zoom: 0.80;
     }
 }
 
@@ -74,17 +101,26 @@
     #background {
         zoom: 0.45;
     }
+    #playerContainer.text {
+        zoom: 0.70;
+    }
 }
 
 @media screen and (max-width: 650px) {
     #background {
         zoom: 0.40;
     }
+    #playerContainer.text {
+        zoom: 0.68;
+    }
 }
 
 @media screen and (max-width: 550px) {
     #background {
         zoom: 0.35;
+    }
+    #playerContainer.text {
+        zoom: 0.65;
     }
 }
 
