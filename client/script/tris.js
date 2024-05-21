@@ -62,7 +62,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function render() {
-        board.innerHTML = "";
+        while (board.firstChild) {
+            board.removeChild(board.firstChild);
+        }
         gameBoard.forEach((cell, index) => {
             const cellElement = document.createElement("div");
             cellElement.classList.add("cell");
