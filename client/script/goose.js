@@ -215,10 +215,13 @@ class Player {
     }
 };
 
+const hand = document.getElementById("hand");
 // gestione del lancio del dado
 const dado = document.getElementById("dice");
 const dadoContainer = document.querySelector(".diceCont");
 let isRolling = false;
+
+
 function rollDice(number) {
     return new Promise((resolve, reject) => {
         if (isRolling) { 
