@@ -122,7 +122,7 @@ function checkGameEnd() {
     let timerDisplay = document.querySelector('#timer');
     let timerValue = timerDisplay.textContent;
 
-    if (timerValue === "00:00") {
+    if (/*timerValue === "00:00"*/ --timer < 0) {
         clearInterval(interval); 
         showEndGameModal();
         canFlip = false;
@@ -137,7 +137,7 @@ function checkGameEnd() {
     }
     
     //Quando il timer è scaduto i giocatori vengono reindirizzati alla pagina di goose
-    if(timerValue === "00:00"){
+    if(--timer < 0/*timerValue === "00:00"*/){
         socket.emit('quitGame', { roomId: roomId, 
             primaryPlayerPosition: primaryPosition,
             secondaryPlayerPosition: secondaryPosition,
@@ -148,8 +148,43 @@ function checkGameEnd() {
     
 }
 
+ //Funzione per avviare il timer
+ function startTimer(duration) {
+    var timer = duration, minutes, seconds;
+    interval = setInterval(function () {
+        minutes = parseInt(timer / 60, 10);
+        seconds = parseInt(timer % 60, 10);
+  
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+  
+        if (--timer < 0) {
+          clearInterval(interval);
+          checkGameEndendGame(); 
+        }
+    }, 1000);
+}
+
+//Funzione per avviare il timer con una durata di 45 secondi
+function startGameTimer() {
+    var Minutes = 60;
+    startTimer(Minutes);
+    updateTimerBar(Minutes);
+}
+
+//Funzione per aggiornare la barra del timer
+function updateTimerBar(duration) {
+    var timerBar = document.querySelector('#timerBar');
+    timerBar.style.animationDuration = duration + 's'; // Imposta la durata dell'animazione
+}
+
+window.onload = function () {
+    startGameTimer();
+};
+
+
 //Funzione per avviare il timer
-function startTimer(duration, display) {
+/*function startTimer(duration, display) {
     let timer = duration, minutes, seconds;
     interval = setInterval(function () {
         minutes = parseInt(timer / 60, 10);
@@ -177,7 +212,7 @@ function startGameTimer() {
 //Avvia il timer quando la finestra si carica
 window.onload = function () {
     startGameTimer();
-};
+};*/
 
 
 

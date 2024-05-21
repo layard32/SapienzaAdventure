@@ -7,6 +7,7 @@ import cookieParser from 'cookie-parser'; // per la gestione dei cookie
 import cookie from 'cookie';
 let playerQueue = [];
 let isPairing = false;
+let isPairingScheduled = false;
 import AsyncLock from 'async-lock';
 const lock = new AsyncLock();
 
@@ -226,9 +227,10 @@ function pairPlayers() {
     isPairing = false;
     // rimuove i due player dalla queue
     playerQueue = playerQueue.slice(2);
+    isPairingScheduled = false;
   }
   // se ci sta solo un player, aspetta che entri il secondo richiamando la funzione
-  else if (playerQueue.length < 2) {
+  else if (playerQueue.length < 2 && !isPairingScheduled) {
     setTimeout(pairPlayers, 200); 
   }
 }
