@@ -19,7 +19,7 @@ body {
 
 .score-message {
     color: #002c53;
-    font-size: calc(4vh);
+    font-size: calc(3vh);
     font-family: Roboto Mono;
     font-weight: 900;
     margin-bottom: 40px;
