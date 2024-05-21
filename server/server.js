@@ -229,6 +229,6 @@ function pairPlayers() {
   }
   // se ci sta solo un player, aspetta che entri il secondo richiamando la funzione
   else if (playerQueue.length < 2) {
-    setTimeout(pairPlayers, 100); 
+    setTimeout(pairPlayers, 200); 
   }
 }

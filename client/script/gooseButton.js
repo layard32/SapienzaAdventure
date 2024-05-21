@@ -19,13 +19,11 @@ document.addEventListener("DOMContentLoaded", function() {
         setTimeout(function(){
             hand.style.visibility = "hidden";
         }, 1100);
-    }, 4500); 
+    }, 3500); 
 
     button.addEventListener("contextmenu", function(e) {
         e.preventDefault();
     });
-
-    
 
     button.addEventListener("mousedown", function() {
         button.classList.add("progress"); 
