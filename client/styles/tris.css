@@ -7,6 +7,31 @@ html, body {
     background-color: #8C4A4A;
 }
 
+body {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    flex-direction: column;
+}
+
+.header {
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    background-color: #8C4A4A;
+    color:#002c53;
+    text-align: center;
+
+    font-size: 450%;
+    font-weight: 400;
+    padding: 0 2px;
+
+    flex: 3 1 auto;
+
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    flex-direction: column;
+}
+
 .container {
     text-align: center;
     display: flex;
@@ -15,15 +40,14 @@ html, body {
     justify-content: center;
 
     background-color: white;
-    height: 70%;
+    min-height: 40dvh;
+
+    flex: 7 1 auto;
 }
 
-h1 {
-    text-align: center;
-    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-    font-size: 65px;
-    font-weight: 500;
-}
+ #footer {
+    flex: 6 1 auto;
+ }
 
 .result {
     opacity: 0;
@@ -50,6 +74,7 @@ h1 {
     width: 380px;
     height: 380px;
     border-radius: 15px;
+
 }
 
 .cell {
@@ -69,12 +94,18 @@ h1 {
     background-color: white;
 }
 
-@media (max-height: 730px) {
-    h1 {
-        font-size: 50px;
-    }
+.score-message {
+    color: #002c53;
+    font-size: calc(4vh);
+    font-family: Roboto Mono;
+    font-weight: 900;
+    margin-top: 40px;
+}
 
+
+
+@media (max-height: 768px) {
     .container {
-        zoom: 0.65;
+        zoom: 0.7;
     }
 }

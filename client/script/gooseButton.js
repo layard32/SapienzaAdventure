@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function() {
         button.classList.add("progress");
     }, 1000);
      
-    holdInterval = setInterval(function() {
+    setTimeout(function() {
         button.classList.remove("progress");
 
         hand.style.opacity = "0";
@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function() {
         button.classList.add("progress"); 
         holdInterval = setInterval(function() {
             button.classList.remove("progress");
-        }, 3000); 
+        }, 3200); 
 
     });
 
@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", function() {
         button.classList.add("progress"); 
         holdInterval = setInterval(function() {
             button.classList.remove("progress");
-        }, 3000); 
+        }, 3200); 
     });
 
     button.addEventListener("touchend", function() {

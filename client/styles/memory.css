@@ -20,6 +20,18 @@
     padding-bottom: 1%;
 }
 
+.score-message {
+    color: #002c53;
+    font-size: calc(2.5vh);
+    font-family: Roboto Mono;
+    font-weight: 900;
+    text-align: center;
+}
+
+#timerContainer {
+   width:80% !important;
+}
+
 main {
     display: flex;
     justify-content: center;
@@ -43,7 +55,8 @@ main {
     padding-bottom: 7%;
     padding-left: 3%;
     padding-right: 3%;
-    overflow: auto;  
+    overflow: auto; 
+    padding-top: 3%;
 }
 
 .card{

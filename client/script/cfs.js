@@ -88,7 +88,7 @@ function playGame(choice, playerNum) {
 
         // controllo se c'è il vincitore o se c'è un pareggio
         if (playerOneChoice === playerTwoChoice) {
-            result = 'TIE'; // Pareggio
+            result = 'PAREGGIO'; // Pareggio
         } else {
             switch (playerOneChoice) {
                 //in base alla scelta fatta dal player 1 vedo se ha vinto, pareggiato o perso
@@ -141,8 +141,9 @@ function displayResult(result) {
 
     // mostra un messaggio corrispondente al risultato
     switch (result) {
-        case 'TIE':
+        case 'PAREGGIO':
             scoreInfo.textContent = "Pareggio!";
+            break;
         case 'PLAYER':
             scoreInfo.textContent = "Hai vinto!"; //il player 1 ha vinto
             break;
