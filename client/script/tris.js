@@ -7,7 +7,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let interval; // variabile per l'intervallo del timer
 
-
     //GESTIONE SERVER
     const urlParams = new URLSearchParams(window.location.search);
     // prendo i parametri passati tramite chiamata GET
@@ -197,7 +196,4 @@ document.addEventListener("DOMContentLoaded", () => {
         // effettuo il reindirizzamento al goose
         window.location.href = data;
     });
-    
 });
-
-

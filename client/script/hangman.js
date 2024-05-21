@@ -272,7 +272,6 @@ const drawMan = (count) => {
   }
 };
 
-
 //funzione per il timer
 function startTimer(duration) {
   var timer = duration, minutes, seconds;
