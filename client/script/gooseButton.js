@@ -5,8 +5,6 @@ document.addEventListener("DOMContentLoaded", function() {
     const button = document.getElementById("button");
     let hand = document.querySelector(".hand");
     let holdInterval;
-
-    //hand.style.display = "block";
     
     setTimeout(function() {
         hand.style.visibility = "visible";

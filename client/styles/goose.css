@@ -114,7 +114,6 @@ body {
     transition: opacity 1s;
     opacity: 0;
     visibility: hidden;
-    /*display: none;*/
 }
 
 #playerName {
