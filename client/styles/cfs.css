@@ -5,24 +5,25 @@ html, body {
     height: 100%;
     width: 100%;
     overflow: hidden;
-    }
+}
 
 body {
     display: flex;
     flex-direction: column;
+    gap: 50px;
 }
 
 .header {
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
     background-color: #8C4A4A;
-    color:black;
+    color:#002c53;
     text-align: center;
 
-    font-size: 280%;
+    font-size: 320%;
     font-weight: 500;
     padding: 0 2px;
 
-    flex: 2 0 auto;
+    flex: 4 0 auto;
 
     display: flex;
     justify-content: center;
@@ -47,21 +48,22 @@ body {
 
 .footer {
     background-color: #8C4A4A;
-    flex: 3 0 auto;
+    flex: 7 0 auto;
 }
 
 .score-info {
-    color: black;
-    font-size: calc(4vh + 2vw);
+    color: #002c53;
+    font-size: calc(3.5vh + 1.5vw);
     font-family: Roboto Mono;
     font-weight: 500;
+    margin-bottom: 5px;
 }
 
 .score-message {
-    color: black;
+    color: #002c53;
     font-size: calc(2vh);
     font-family: Roboto Mono;
-    font-weight: 500;
+    font-weight: 900;
 }
 
 .scores-container {
@@ -116,7 +118,12 @@ body {
 .score {
     font-size: 22px;
     font-weight: bold;
+    color: #002c53;
 }
+
+/* #timerContainer {
+    margin-bottom: 20px;
+} */
 
 @media only screen and (max-width: 768px) {
     .scores-container {
