@@ -11,18 +11,17 @@
   </head>
   <body>
 
+    <div id="header"> Hangman </div>
+
     <div id="timerContainer" class="timerContainer">
-        <div id="timerBar"></div>
+      <div id="timerBar"></div>
     </div>
 
-    <div class="container">
-      <div id="options-container"></div>
+    <div class="container" id="special">
+      <div id="options-container"> </div>
       <div id="letter-container" class="letter-container hide"></div>
       <div id="user-input-section"></div>
       <canvas id="canvas"></canvas>
-      <div id="new-game-container" class="new-game-popup hide">
-        <div id="result-text"></div>    
-      </div>
     </div>
 
     <script src="https://cdn.socket.io/4.7.5/socket.io.min.js" integrity="sha384-2huaZvOR9iDzHqslqwpR87isEmrfxqyWOF7hr7BY6KG0+hVKLoEXMPUJw3ynWuhO" crossorigin="anonymous"></script>
