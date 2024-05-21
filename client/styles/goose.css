@@ -98,6 +98,25 @@ body {
     user-select: none; 
 }
 
+.hand{
+    position: absolute;
+    background-image: url(../images/touch.png) !important;
+    background-size: 80%;
+    background-repeat: no-repeat;
+    top: 99%;
+    left: 50%;
+    transform: translate(-50%, -99%);
+    height: 60px;
+    width: 60px;
+    z-index: 3;
+    align-items: center;
+    background-color: transparent;
+    transition: opacity 1s;
+    opacity: 0;
+    visibility: hidden;
+    /*display: none;*/
+}
+
 #playerName {
     z-index: -1;
     position: fixed;
