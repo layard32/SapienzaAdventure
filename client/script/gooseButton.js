@@ -1,6 +1,4 @@
 // gestione del pulsante 'lancia il dado'
-
-
 document.addEventListener("DOMContentLoaded", function() {
     const button = document.getElementById("button");
     let hand = document.querySelector(".hand");

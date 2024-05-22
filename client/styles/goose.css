@@ -35,13 +35,14 @@ body {
     height: 65px;
     max-width: 300px;
     width: 100%;
-    background: #59bb4c;
+    background: #8C4A4A;
     color: #F2EFE9;
     border:none;
     border-radius: 15px;
     cursor: pointer;
-    box-shadow: 0 9px #12480b;
+    box-shadow: 0 9px #581313;
     overflow: hidden;
+    transition: box-shadow 1.6s ease, background 1.6s ease;
 }
 
 #button::before {

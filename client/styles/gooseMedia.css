@@ -191,4 +191,11 @@
         left: 135%;
         height: 200px;
     }
+
+    .hand {
+        transform: translate(-5%, -50%) rotate(90deg) !important;
+        zoom: 0.5;
+        top: 50% !important;
+        left: 5% !important;
+    }
 }

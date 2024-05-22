@@ -338,11 +338,15 @@ socket.on('yourTurn', (data) => {
         poi viene aggiornato ad ogni movimento
         se si rientra da un minigame viene aggiornato direttamente dalla porzione di codice in cui viene 
         preso il secondaryUsername */
-        setFirst() 
+        setFirst();
     })
 
     if (turnParam == null) {
         turn = data;
+        if (turn) { 
+            button.style.backgroundColor = '#59bb4c';
+            button.style.boxShadow = '0 9px #12480b';
+        }
         primaryPlayer = new Player(turn);
         secondaryPlayer = new Player(!turn);
         document.cookie = `primary=${turn}; path=/`;
@@ -452,6 +456,8 @@ socket.on('changeTurn', () => {
     if (primaryPlayer.cell != 39 && secondaryPlayer.cell != 39) {
         const intervalTurn = setInterval(() => {
             if (!bonusTurn) {
+                button.style.backgroundColor = '#59bb4c';
+                button.style.boxShadow = '0 9px #12480b';
                 turn = true;
                 appearTurn(turn);
                 clearInterval(intervalTurn);
@@ -607,7 +613,11 @@ function checkFlagForRedirection(cell) {
 
 // gestione logica pulsante lancio dado
 button.addEventListener('animationend', () => {
-    if (!isRolling && turn) movePlayer (primaryPlayer);
+    if (!isRolling && turn) { 
+        movePlayer (primaryPlayer);
+        button.style.backgroundColor = '#8C4A4A';
+        button.style.boxShadow = '0 9px #581313';
+    }
 })
 
 const MAX_WORD_LENGTH = 20; // Lunghezza massima di una parola
