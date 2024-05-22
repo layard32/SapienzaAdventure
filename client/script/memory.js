@@ -161,7 +161,7 @@ function startTimer(duration, display) {
 
 //funzione per avviare il timer con una durata di 1 minuto
 function startGameTimer() {
-    let oneMinutes = 10,
+    let oneMinutes = 60,
     display = document.querySelector('#timer');
     startTimer(oneMinutes, display);
     updateTimerBar(oneMinutes);
