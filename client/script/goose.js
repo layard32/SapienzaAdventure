@@ -10,6 +10,8 @@ let gameEnded = false; // per distinguere disconnessione da vittoria
 // flag e bonusTurn vengono usate per gestire i 'turni extra' cioè spostamenti al di fuori del proprio turno
 let flag = false;
 let bonusTurn = false;
+// per la gestione dei permessi speciali come admin
+let admin = false;
 
 // importazioni necessarie per la gestione della musica
 import { changeMusic, change } from "./gooseMusic.js";
@@ -221,13 +223,14 @@ const dado = document.getElementById("dice");
 const dadoContainer = document.querySelector(".diceCont");
 let isRolling = false;
 
-
+let dadoNumber;
 function rollDice(number) {
     return new Promise((resolve, reject) => {
         if (isRolling) { 
             reject('Il dado sta già girando');
             return;
         }       
+        console.log(admin)
         isRolling = true;
         turn = false;
         // suono del dado
@@ -238,10 +241,9 @@ function rollDice(number) {
         // comparsa del dado
         dadoContainer.style.opacity = '1';
 
-        let dadoNumber = number;
         // TODO controllare che il numero sia effettivamente randomico
         // e non preimpostato per una delle mille prove
-        if (!number) dadoNumber = Math.floor(Math.random() * 6) + 1;
+        if (!number && !admin) dadoNumber = Math.floor(Math.random() * 6) + 1;
 
         for (let i = 1; i <= 6; i++) dado.classList.remove('show-' + i);
         requestAnimationFrame(() => {
@@ -253,7 +255,7 @@ function rollDice(number) {
             setTimeout(() => { 
                 isRolling = false;
                 dadoContainer.style.opacity = '0'; 
-                resolve(dadoNumber); // return the number after the animation is done
+                resolve(dadoNumber); 
             }, 500);
         }, 1500); 
     });
@@ -301,6 +303,8 @@ window.addEventListener('DOMContentLoaded', () => {
     // per ottenere il proprio username
     const usernameCookie = document.cookie.split('; ').find((cookie) => cookie.startsWith('username='));
     username = usernameCookie ? usernameCookie.split('=')[1] : 'Utente';
+    // se l'utente si chiama admin, si attivano degli strumenti di debugging
+    if (username == 'admin') specialPermission();  
 });
 
 // prendiamo eventuali parametri di una chiamata GET
@@ -429,9 +433,7 @@ function handleCellRedirection(cell) {
     // Controlla se la cella corrente ha una condizione di reindirizzamento definita
     if (redirectionConditions.hasOwnProperty(cell)) {
         const game = redirectionConditions[cell];
-        setTimeout(() => {
-            socket.emit('redirectToGame',{ game: game, roomId: roomId });
-        }, 2200); 
+        socket.emit('redirectToGame',{ game: game, roomId: roomId });
     }
 }
 
@@ -500,13 +502,13 @@ function activeFlipCard(cell) {
 function bonusEvent(number) {
     if (!turn) {
         primaryPlayer.isMoving = true;
-        bonusTurn = false;
         socket.emit('requestSetBonus', roomId);
         setTimeout(() => {
             primaryPlayer.moveByCells(number);
             socket.emit('requestMoveSecondaryPlayer', { dice: number, roomId: roomId, special: true });
             setTimeout(() => {
                 primaryPlayer.isMoving = false;
+                bonusTurn = false;
             }, 1000);
         }, 500);
     }
@@ -516,13 +518,13 @@ function bonusEvent(number) {
 function penaltyEvent(number) {
     if (!turn) {
         primaryPlayer.isMoving = true;
-        bonusTurn = false;
         socket.emit('requestSetBonus', roomId);
         setTimeout(() => {
             primaryPlayer.moveByCells(-number);
             socket.emit('requestMoveSecondaryPlayer', { dice: -number, roomId: roomId, special: true });
             setTimeout(() => {
                 primaryPlayer.isMoving = false;
+                bonusTurn = false;
             }, 1000);
         }, 500);
     }
@@ -595,23 +597,8 @@ socket.on('redirectToBothGame', (data) => {
 
 // funzione per reindirizzare entrambi i giocatori al gioco specificato
 function redirectPlayersToGame(game, data) {
-    if (game === 'memory') {
-        const nextPage = `/memory?room=${data}&pos1=${primaryPlayer.cell}&pos2=${secondaryPlayer.cell}&turn=${turn}`;
-        window.location.href = nextPage; 
-    } else if (game === 'cfs') {
-        const nextPage = `/cfs?room=${data}&pos1=${primaryPlayer.cell}&pos2=${secondaryPlayer.cell}&turn=${turn}`;
-        window.location.href = nextPage; 
-    } else if(game == 'tris'){
-        const nextPage = `/tris?room=${data}&pos1=${primaryPlayer.cell}&pos2=${secondaryPlayer.cell}&turn=${turn}`;
-        window.location.href = nextPage; 
-    } else if(game == 'hangman'){
-        const nextPage = `/hangman?room=${data}&pos1=${primaryPlayer.cell}&pos2=${secondaryPlayer.cell}&turn=${turn}`;
-        window.location.href = nextPage; 
-    }
-    else if(game === 'pingpong'){
-        const nextPage = `/pingpong?room=${data}&pos1=${primaryPlayer.cell}&pos2=${secondaryPlayer.cell}&turn=${turn}`;
-        window.location.href = nextPage; 
-    }
+    const nextPage = `/${game}?room=${data}&pos1=${primaryPlayer.cell}&pos2=${secondaryPlayer.cell}&turn=${turn}`;
+    window.location.href = nextPage;
 };
 
 function checkFlagForRedirection(cell) {
@@ -662,4 +649,23 @@ socket.on("chat", function(message) {
     renderMessage("other", message, username, secondaryUsername); // Chiama la funzione renderMessage per renderizzare il messaggio ricevuto
 });
 
+// per strumenti di debugging
+function specialPermission() {
+    const diceInput = document.createElement('input');
+    diceInput.id = 'diceInput';
+    diceInput.type = 'text';
+    diceInput.setAttribute("maxlength", "2");
+    diceInput.setAttribute("pattern", "[0-9]+");
 
+    const diceInputButton = document.createElement('button');
+    diceInputButton.id = 'diceInputButton';
+    diceInputButton.textContent = 'Imposta il dado';
+    diceInputButton.addEventListener('click', () => {
+        if (diceInput.value) {
+            admin = true;
+            dadoNumber = Number(diceInput.value);
+        }
+    })
+    document.body.appendChild(diceInput);
+    document.body.appendChild(diceInputButton);
+}

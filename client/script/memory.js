@@ -154,7 +154,7 @@ function startTimer(duration, display) {
 
 // Funzione per avviare il timer con una durata di 1 minuto
 function startGameTimer() {
-    let oneMinutes = 60,
+    let oneMinutes = 10,
     display = document.querySelector('#timer');
     startTimer(oneMinutes, display);
     updateTimerBar(oneMinutes);
@@ -179,8 +179,10 @@ const secondaryPosition = urlParams.get('pos2')
 const turn = urlParams.get('turn');
 const socket = io.connect('http://localhost:3000');
 
-
-socket.emit("joinExistingRoom",roomId);
+//Gestione del click sull'icona di chiusura del modale
+document.addEventListener('DOMContentLoaded', () => {
+    socket.emit("joinExistingRoom",roomId);
+});
 
 //I giocatori vengono reindirizzati a goose
 socket.on('redirect', (data) => {

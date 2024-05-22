@@ -5,11 +5,10 @@ import { Server } from 'socket.io'; // per la comunicazione bidirezionale
 import { createServer } from 'node:http'; // per le chiamate HTTP
 import cookieParser from 'cookie-parser'; // per la gestione dei cookie 
 import cookie from 'cookie';
-let playerQueue = [];
-let isPairing = false;
-let isPairingScheduled = false;
 import AsyncLock from 'async-lock';
 const lock = new AsyncLock();
+let playerQueue = [];
+let playerExitQueue = [];
 
 const dir = path.resolve(); // percorso assoluto corrente
 const PORT = 3000;
@@ -73,8 +72,6 @@ server.listen(PORT, () => {
   console.log(`Il app è in esecuzione sulla porta: ${PORT}`);
 });
 
-
-
 // GESTIONE SOCKET
 // dizionario che rappresenta le stanze. ha chiave codice della stanza e valore vuoto
 const rooms = {};
@@ -114,16 +111,15 @@ io.on('connection', (socket) => {
     }
   });
 
-  /* funzione per joinare la stanza: l'utilizzo combinato di lock e flag consente ad uno solo client di
-  porsi in attesa, ricorsivamente, che anche l'altro client sia pronto ad unirsi */
+  /* funzione per joinare la stanza, da goose in poi: l'utilizzo della lock asincrona e delle premesse consente, ad un solo client,
+  di aspettare l'altro ed eseguire poi l'assegnazione dei turni */
   socket.on('joinExistingRoom', (data) => {
+    // aggiungiamo il player interessato ad entrare dentro una queue
     playerQueue.push({ socket: socket, room: data });
-    lock.acquire("pairing", function() {
-      if (!isPairing) {
-        isPairing = true;
-        pairPlayers();
-      }
-    });
+    /* il lock fa si che solo un client possa accedere alla funzione pairPlayers (il primo client che manda l'evento joinExistingRoom)
+    si utilizza come key la roomId: in questo modo diverse coppie di giocatori possono giocare contemporaneamente */
+    if (lock.isBusy(data)) console.log('lock già preso da un altro client');
+    else lock.acquire(data, () => pairPlayers(socket, data));
   });
 
   // per lo spostamento del player secondario
@@ -148,8 +144,6 @@ io.on('connection', (socket) => {
     const disconnectedPlayerID = clientIDs.find(id => id !== data);
     //notifico l'altro player(quello in partita)
     socket.to(disconnectedPlayerID).emit('forcedDisconnect');
-    //console.log("aooooo ti sei arreso looser");
-
   })
 
   socket.on('gameEnd', (data) => {
@@ -173,9 +167,12 @@ io.on('connection', (socket) => {
     } 
   });
 
-  socket.on('redirectToGame', ({ game, roomId })=> {
-    // Invia un segnale a entrambi i giocatori nella stanza per reindirizzare al gioco specificato
-    io.to(roomId).emit('redirectToBothGame', {game,roomId});
+  socket.on('redirectToGame', ({ game, roomId }) => {
+    /* utilizziamo un meccanismo simile al join, basato su lock e
+    una queue in cui tenere i client che vogliono uscire ed essere reindirizzati ad un gioco */
+    playerExitQueue.push({ socket: socket, room: roomId });
+    if (lock.isBusy(game)) console.log('lock già preso da un altro client');
+    else lock.acquire (game, () => { exitAndRedirect (game, roomId, socket); })
   });
 
   socket.on('quitGame',(data)=>{
@@ -194,7 +191,7 @@ io.on('connection', (socket) => {
 
   socket.on("chat",function(message){
     socket.broadcast.emit("chat",message);
-  })
+  });
 }); 
 
 function sendGameResult(roomId, winnerId) {
@@ -207,30 +204,65 @@ function sendGameResult(roomId, winnerId) {
     io.to(loserId).emit('gameLost');
 }
 
-// funzione per far entrare i due player contemporaneamente alla stanza
-function pairPlayers() {
-  if (playerQueue.length >= 2) {
-    const player1 = playerQueue.shift();
-    const player2 = playerQueue.shift();
+// funzione di wait tramite promise
+function delay (time) {
+  return new Promise(resolve => { 
+    setTimeout(() => { resolve() }, time);
+  })
+}
 
-    player1.socket.join(player1.room);
-    player2.socket.join(player2.room);
+// la funzione chiamata dal lock nell'evento joinExistingRoom
+async function pairPlayers(socket, roomId) {
+  /* finché non ci sta un altro player nella queue, DIVERSO DA QUELLO CHE HA CHIAMATO LA FUNZIONE nella queue 
+  e che vuole entrare nella stessa stanza, si sfrutta l'await su una funzione async (pur non essendo async, 
+  lo è nel senso che restituisce una promise) per aspettare */
+  while (!playerQueue.some((player) => player.room == roomId && player.socket.id != socket.id)) await delay(100);
 
-    // assegnazione dei turni
-    setTimeout(() => {
-      const room = io.sockets.adapter.rooms.get(player1.room);
-      const clientIDs = room ? Array.from(room).map(socketId => io.sockets.sockets.get(socketId).id) : [];
-      io.to(clientIDs[0]).emit('yourTurn', true);
-      io.to(clientIDs[1]).emit('yourTurn', false);
-    }, 500);
+  // il client accede a questa porzione di codice solo quando un altro player segnala di voler entrare stessa nella stanza
 
-    isPairing = false;
-    // rimuove i due player dalla queue
-    playerQueue = playerQueue.slice(2);
-    isPairingScheduled = false;
+  /* prendiamo i due client interessati ad entrare nella stessa stanza e li rimuoviamo dalla queue
+  ciò evita problemi per eventuali altri client interessati ad entrare */ 
+  const player1 = playerQueue.find(player => player.socket === socket);
+  const player2 = playerQueue.find(player => player.room === player1.room && player.socket !== player1.socket);
+
+  if (!player1 || !player2) {
+    console.log('uno dei due player nella queue non è definito');
+    return;
   }
-  // se ci sta solo un player, aspetta che entri il secondo richiamando la funzione
-  else if (playerQueue.length < 2 && !isPairingScheduled) {
-    setTimeout(pairPlayers, 200); 
+
+  player1.socket.join(player1.room);
+  player2.socket.join(player2.room);
+  playerQueue = playerQueue.filter(player => player !== player1 && player !== player2);
+
+  // assegnazione dei turni
+  setTimeout(() => {
+    const room = io.sockets.adapter.rooms.get(player1.room);
+    const clientIDs = room ? Array.from(room).map(socketId => io.sockets.sockets.get(socketId).id) : [];
+    io.to(clientIDs[0]).emit('yourTurn', true);
+    io.to(clientIDs[1]).emit('yourTurn', false);
+  }, 500);
+}
+
+async function exitAndRedirect (game, roomId, socket) {
+  /* analogamente all'entrata, aspetto ci sia un altro player, con lo stesso roomId
+  che vuole uscire ed essere reindirizzato ad un altro minigame */
+  while (!playerExitQueue.some((player) => player.room == roomId && player.socket.id != socket.id)) await delay(1000);
+
+  // si accede a questa porzione di codice solo quando c'è un altro client che vuole uscire per entrare allo stesso gioco
+
+  // prendo i due client che volevano uscire
+  const player1_exit = playerExitQueue.find(player => player.socket === socket);
+  const player2_exit = playerExitQueue.find(player => player.room === player1_exit.room && player.socket !== player1_exit.socket);
+  playerExitQueue = playerExitQueue.filter(player => player !== player1_exit && player !== player2_exit);
+
+  if (!player1_exit || !player2_exit) {
+    console.log('uno dei due player nella queue non è definito');
+    return;
   }
+
+  // faccio uscire i client dalla stanza e poi emitto ai loro socket 
+  player1_exit.socket.leave(roomId);
+  player2_exit.socket.leave(roomId);
+  player1_exit.socket.emit('redirectToBothGame', {game, roomId});
+  player2_exit.socket.emit('redirectToBothGame', {game, roomId});
 }
