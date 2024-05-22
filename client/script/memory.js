@@ -63,8 +63,6 @@ function flipCard(){
                 canFlip = true; //reimposta la possibilità di girare le carte dopo un certo periodo di tempo
             }, 1600);
             setTimeout(checkMatch, 900); 
-
-
         }
     }
 }
@@ -130,9 +128,7 @@ function checkGameEnd() {
         canFlip = false;
         gameOver=true;
         playerOne=1;
-    }
-    
-    
+    } 
 }
 
 //funzione per il reindirizzamento alla pagina goose dopo la fine della partita
@@ -180,8 +176,6 @@ function updateTimerBar(duration) {
 window.onload = function () {
     startGameTimer();
 };
-
-
 
 //GESTIONE SERVER
 const urlParams = new URLSearchParams(window.location.search);

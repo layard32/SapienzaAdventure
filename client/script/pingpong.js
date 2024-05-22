@@ -95,7 +95,6 @@ document.addEventListener('DOMContentLoaded', function () {
         ball.style.top = ballY + 'px';
     }
 
-
     let computerPaddleSpeed = 3;
     let computerPaddleDirection = 1;
 
@@ -219,7 +218,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
-    
 //GESTIONE SERVER
 const urlParams = new URLSearchParams(window.location.search);
 //prendo i parametri passati tramite chiamata GET
@@ -235,6 +233,3 @@ socket.on('redirect', (data) => {
     //i giocatori vengono reindirizzati a goose
     window.location.href = data;
 });
-
-
-

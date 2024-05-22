@@ -2,9 +2,8 @@
 const letterContainer = document.getElementById("letter-container");
 const optionsContainer = document.getElementById("options-container");
 const userInputSection = document.getElementById("user-input-section");
-const newGameContainer = document.getElementById("new-game-container");
 const canvas = document.getElementById("canvas");
-const resultText = document.getElementById("result-text");
+let container = document.querySelector("#special");
 
 let win=false;
 let interval; 
@@ -44,7 +43,16 @@ let chosenWord = "";
 
 //mostra le opzioni da scegliere
 const displayOptions = () => {
-  optionsContainer.innerHTML += `<div id="big-text">Selezionate un'opzione</div>`;
+  let bigText = document.createElement("div");
+  bigText.id = "big-text";
+  bigText.textContent = "Selezionate un'opzione"
+  optionsContainer.appendChild(bigText);
+
+  let smallText = document.createElement("div");
+  smallText.id = "small-text";
+  smallText.textContent = "Vinci per ottenere punti bonus per la corsa verso la Laurea!"
+  optionsContainer.appendChild(smallText);
+
   let buttonCon = document.createElement("div");
   buttonCon.classList.add("button-container");
   for (let value in options) {
@@ -68,11 +76,34 @@ const blocker = () => {
     button.disabled.true;
   });
 
-  newGameContainer.classList.remove("hide");
+  // mostrato modale di fine partita
+  container.innerHTML = '';
+  showWin();
 };
+
+function showWin() {
+  container.style.minHeight = "400px";
+  let wordContainer = document.createElement("div");
+  let winMessage = document.createElement("div");
+  let word = document.createElement("div");
+
+  winMessage.id = "winMessage";
+  word.id = "word";
+  wordContainer.id = "wordContainer";
+
+  if (win) { winMessage.innerHTML = `Hai <span style="color: green">vinto</span>!!`; } 
+  else if (!win) { winMessage.innerHTML = `Hai <span style="color: red">perso</span>!!`; }
+  word.textContent = "La parola era " + chosenWord + ".";
+
+  wordContainer.appendChild(winMessage);
+  wordContainer.appendChild(word);
+  container.appendChild(wordContainer);
+}
 
 //una volta scelta la categoria, questa funzione scegli in maniera casuale una parola 
 const generateWord = (optionValue) => {
+  container.style.minHeight = "560px";
+
   let optionsButtons = document.querySelectorAll(".options");
 
   optionsButtons.forEach((button) => {
@@ -105,7 +136,6 @@ const initializer = () => {
   userInputSection.innerHTML = "";
   optionsContainer.innerHTML = "";
   letterContainer.classList.add("hide");
-  newGameContainer.classList.add("hide");
   letterContainer.innerHTML = "";
 
   //creo i pulsanti della tastiera(cioè le lettere da A-Z)
@@ -131,8 +161,7 @@ const initializer = () => {
             //se winCount è uguale alla lunghezza della parola scelta random, allora ho vinto
             if (winCount == charArray.length) {
               win=true;
-              resultText.innerHTML = `<h2 class='win-msg'>Hai Vinto!!</h2><p>La parola era <span>${chosenWord}</span></p>`;
-              //blocco i pulsanti
+              //blocco i pulsanti e mostro il modale del risultato
               blocker();
             }
           }
@@ -145,7 +174,6 @@ const initializer = () => {
         //se count è uguale a 6 significa che il disegno dell'hangman è completo (ho perso)
         if (count == 6) {
           win=false;
-          resultText.innerHTML = `<h2 class='lose-msg'>Hai Perso!!</h2><p>La parola era <span>${chosenWord}</span></p>`;
           blocker();
         }
       }
@@ -243,7 +271,6 @@ const drawMan = (count) => {
       break;
   }
 };
-
 
 //funzione per il timer
 function startTimer(duration) {
