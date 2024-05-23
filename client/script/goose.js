@@ -5,6 +5,8 @@ const button = document.getElementById('button');
 const c = canvas.getContext('2d');
 const nameDiv = document.getElementById('playerName');
 const bonusCells = [3, 9, 26, 30, 36, 38];
+const backgroundMusic = document.getElementById("background-music");
+const missionImpossible = document.getElementById("mission-impossible");
 
 let gameEnded = false; // per distinguere disconnessione da vittoria
 // flag e bonusTurn vengono usate per gestire i 'turni extra' cioè spostamenti al di fuori del proprio turno
@@ -14,7 +16,7 @@ let bonusTurn = false;
 let admin = false;
 
 // importazioni necessarie per la gestione della musica
-import { changeMusic, change } from "./gooseMusic.js";
+import { changeMusic } from "./gooseMusic.js";
 // importiamo la funzione per mostrare le flipcards ad entrambi i giocatori
 import { showFlipCard} from "./gooseFlipcard.js";
 // importiamo la funzione per mostrare i messaggi nella chat
@@ -241,8 +243,6 @@ function rollDice(number) {
         // comparsa del dado
         dadoContainer.style.opacity = '1';
 
-        // TODO controllare che il numero sia effettivamente randomico
-        // e non preimpostato per una delle mille prove
         if (number) dadoNumber = number;
         else if (!number && !admin) dadoNumber = Math.floor(Math.random() * 6) + 1;
 
@@ -344,10 +344,6 @@ socket.on('yourTurn', (data) => {
 
     if (turnParam == null) {
         turn = data;
-        if (turn) { 
-            button.style.backgroundColor = '#59bb4c';
-            button.style.boxShadow = '0 9px #12480b';
-        }
         primaryPlayer = new Player(turn);
         secondaryPlayer = new Player(!turn);
         document.cookie = `primary=${turn}; path=/`;
@@ -359,7 +355,10 @@ socket.on('yourTurn', (data) => {
         primary = (primary === 'true');
         primaryPlayer = new Player(primary, Number(posFirstParam));
         secondaryPlayer = new Player(!primary, Number(posSecondParam));
-    
+
+        // a seconda della posizione può cambiare la musica di sottofondo
+        changeMusic (posFirstParam);
+
         // questa porzione di codice serve a gestire l'assegnazione dei turni nelle diverse casistiche
         // di vittoria, o meno, di minigame
         setTimeout( () => { 

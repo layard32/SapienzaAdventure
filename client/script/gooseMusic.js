@@ -14,7 +14,7 @@ function slowStart (music, increment) {
 }
 
 // quando la finestra si carica, parte la musica (col volume basso) e piano piano aumneta
-window.addEventListener('load', () => { slowStart(backgroundMusic, 0.05); });
+window.addEventListener('load', () => { slowStart(backgroundMusic, 0.01); });
 
 // fuznione per cambiare la musica da quella normale di sottofondo a 'missionImpossible'
 function changeMusic(cell) {
@@ -58,5 +58,5 @@ muteButton.addEventListener('click', function() {
     }
 });
 
-// esporto la variabile 'change' e la funzione 'changeMusic' da usare nel file .js principale
-export { changeMusic, change };
+// esporto le funzioni da usare nel file principale
+export { changeMusic };
