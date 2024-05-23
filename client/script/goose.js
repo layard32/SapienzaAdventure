@@ -457,8 +457,6 @@ socket.on('changeTurn', () => {
     if (primaryPlayer.cell != 39 && secondaryPlayer.cell != 39) {
         const intervalTurn = setInterval(() => {
             if (!bonusTurn) {
-                button.style.backgroundColor = '#59bb4c';
-                button.style.boxShadow = '0 9px #12480b';
                 turn = true;
                 appearTurn(turn);
                 clearInterval(intervalTurn);
@@ -471,6 +469,8 @@ socket.on('changeTurn', () => {
 function appearTurn(turn) {
     if (gameEnded) return;
     if (turn && !flag) {
+        button.style.backgroundColor = '#59bb4c';
+        button.style.boxShadow = '0 9px #12480b';
         const yourTurnDiv = document.getElementById('yourTurn');
         yourTurnDiv.style.visibility = 'visible';
         setTimeout(() => {
@@ -599,12 +599,14 @@ socket.on('gameLost', () => {
 });
 
 socket.on('redirectToBothGame', (data) => {
-    redirectPlayersToGame(data.game,data.roomId);
+    redirectPlayersToGame(data.game, data.roomId);
 });
 
 // funzione per reindirizzare entrambi i giocatori al gioco specificato
 function redirectPlayersToGame(game, data) {
-    const nextPage = `/${game}?room=${data}&pos1=${primaryPlayer.cell}&pos2=${secondaryPlayer.cell}&turn=${turn}`;
+    let nextPage;
+    // il timeout serve per assicurarsi che il turno si sia finito di configurare
+    setTimeout(() => { nextPage = `/${game}?room=${data}&pos1=${primaryPlayer.cell}&pos2=${secondaryPlayer.cell}&turn=${turn}`; }, 1000)
     window.location.href = nextPage;
 };
 
