@@ -12,12 +12,11 @@ document.addEventListener("DOMContentLoaded", function() {
      
     setTimeout(function() {
         button.classList.remove("progress");
-
         hand.style.opacity = "0";
         setTimeout(function(){
             hand.style.visibility = "hidden";
         }, 1100);
-    }, 3500); 
+    }, 3400); 
 
     button.addEventListener("contextmenu", function(e) {
         e.preventDefault();

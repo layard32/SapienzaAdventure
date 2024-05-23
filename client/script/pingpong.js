@@ -122,9 +122,10 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    //gestione del movimento della racchetta del player grazie all'evento mousemove
-    gameContainer.addEventListener('mousemove', function (event) {
-        const mouseY = event.clientY - gameContainer.getBoundingClientRect().top;
+    //gestione del movimento della racchetta del player grazie all'evento mousemove e touchmove
+    function movePaddle(event) {
+        const clientY = event.touches ? event.touches[0].clientY : event.clientY;
+        const mouseY = clientY - gameContainer.getBoundingClientRect().top;
         //la posizione della racchetta del player viene aggiornata in base alla posizione del mouse
         playerPaddleY = mouseY - paddleHeight / 2;
         //se la posizione della racchetta del player è maggiore o minore della dimensione del campo la racchetta si ferma ai bordi
@@ -135,7 +136,10 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         //viene aggiornata la posizione della racchetta del player
         playerPaddle.style.top = playerPaddleY + 'px';
-    });
+    }
+    
+    gameContainer.addEventListener('mousemove', movePaddle);
+    gameContainer.addEventListener('touchmove', movePaddle);
 
     let playerScore = 0;
     let computerScore = 0;
