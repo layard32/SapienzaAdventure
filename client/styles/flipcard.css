@@ -1,6 +1,6 @@
 .flip-card {
     background-color: transparent;
-    width: 220px;
+    width: 230px;
     height: 300px;
     perspective: 1000px; 
     position: fixed;
@@ -48,6 +48,6 @@
     color:#002c53;
     border-radius: 15px;
     border: 0.5vw solid #002c53;
-    padding: 5%;
+    padding: 4%;
     transform: rotateY(180deg);
 }

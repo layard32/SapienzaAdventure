@@ -31,8 +31,20 @@ function showFlipCard(cell) {
             flipcard.style.visibility = 'visible';
             flipcard.style.opacity=1;
             flipcardfront.style.backgroundImage = `url('../images/minerva.png')`;
-            flipcardfront.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>IMPREVISTO</h1>`;
-            flipcardback.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>IMPREVISTO</h1><p style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>Oh no, c'è stato un imprevisto!  Hai guardato la minerva negli occhi, vai indietro di 3 caselle.</p>`;   
+            const h1Front = document.createElement('h1');
+            h1Front.style.fontFamily = 'Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif';
+            h1Front.textContent = 'IMPREVISTO';
+            flipcardfront.appendChild(h1Front);
+
+            const h1Back = document.createElement('h1');
+            h1Back.style.fontFamily = 'Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif';
+            h1Back.textContent = 'IMPREVISTO';
+            flipcardback.appendChild(h1Back);
+
+            const pBack = document.createElement('p');
+            pBack.style.fontFamily = 'Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif';
+            pBack.textContent = "Oh no, c'è stato un imprevisto!  Hai guardato la minerva negli occhi, vai indietro di 3 caselle.";
+            flipcardback.appendChild(pBack);
             setTimeout(() => {
                 flipcard.style.opacity = '0';
             }, 3600);
@@ -47,8 +59,21 @@ function showFlipCard(cell) {
             flipcard.style.visibility = 'visible';
             flipcard.style.opacity=1;
             flipcardfront.style.backgroundImage = `url('../images/fisica.png')`;
-            flipcardfront.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>IMPREVISTO</h1>`;
-            flipcardback.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>IMPREVISTO</h1><p style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>Oh no, c'è stato un imprevisto! Non hai passato l'esame di fisica, vai indietro di 2 caselle.</p>`; 
+            const h1Front = document.createElement('h1');
+            h1Front.style.fontFamily = 'Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif';
+            h1Front.textContent = 'IMPREVISTO';
+            flipcardfront.appendChild(h1Front);
+
+            const h1Back = document.createElement('h1');
+            h1Back.style.fontFamily = 'Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif';
+            h1Back.textContent = 'IMPREVISTO';
+            flipcardback.appendChild(h1Back);
+
+            const pBack = document.createElement('p');
+            pBack.style.fontFamily = 'Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif';
+            pBack.textContent = "Oh no, c'è stato un imprevisto! Non hai passato l'esame di fisica, vai indietro di 2 caselle.";
+            flipcardback.appendChild(pBack);
+             
             setTimeout(() => {
                 flipcard.style.opacity = '0';
             }, 3600);
@@ -63,8 +88,22 @@ function showFlipCard(cell) {
             flipcard.style.visibility = 'visible';
             flipcard.style.opacity=1;
             flipcardfront.style.backgroundImage = `url('../images/tesi.png')`;
-            flipcardfront.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>IMPREVISTO</h1>`;
-            flipcardback.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>IMPREVISTO</h1><p style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>Oh no, c'è stato un imprevisto! Devi scrivere la tesi, vai indietro di 3 caselle.</p>`;   
+              
+            const h1Front = document.createElement('h1');
+            h1Front.style.fontFamily = 'Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif';
+            h1Front.textContent = 'IMPREVISTO';
+            flipcardfront.appendChild(h1Front);
+
+            const h1Back = document.createElement('h1');
+            h1Back.style.fontFamily = 'Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif';
+            h1Back.textContent = 'IMPREVISTO';
+            flipcardback.appendChild(h1Back);
+
+            const pBack = document.createElement('p');
+            pBack.style.fontFamily = 'Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif';
+            pBack.textContent = "Oh no, c'è stato un imprevisto! Devi scrivere la tesi, vai indietro di 3 caselle.";
+            flipcardback.appendChild(pBack);
+            
             setTimeout(() => {
                 flipcard.style.opacity = '0';
             }, 3600);
@@ -79,8 +118,22 @@ function showFlipCard(cell) {
             flipcard.style.visibility = 'visible';
             flipcard.style.opacity = 1;
             flipcardfront.style.backgroundImage = `url('../images/esonero.png')`;
-            flipcardfront.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>BONUS</h1>`;
-            flipcardback.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>BONUS</h1><p style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>Bravo! Hai superato un esonero, vai avanti di 2 caselle.</p>`;   
+              
+            const h1Front = document.createElement('h1');
+            h1Front.style.fontFamily = 'Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif';
+            h1Front.textContent = 'BONUS';
+            flipcardfront.appendChild(h1Front);
+
+            const h1Back = document.createElement('h1');
+            h1Back.style.fontFamily = 'Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif';
+            h1Back.textContent = 'BONUS';
+            flipcardback.appendChild(h1Back);
+
+            const pBack = document.createElement('p');
+            pBack.style.fontFamily = 'Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif';
+            pBack.textContent = "Bravo! Hai superato un esonero, vai avanti di 2 caselle.";
+            flipcardback.appendChild(pBack);
+            
             setTimeout(() => {
                 flipcard.style.opacity = '0';
             }, 3600);
@@ -95,8 +148,22 @@ function showFlipCard(cell) {
             flipcard.style.visibility = 'visible';
             flipcard.style.opacity=1;
             flipcardfront.style.backgroundImage = `url('../images/esonero.png')`;
-            flipcardfront.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>BONUS</h1>`;
-            flipcardback.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>BONUS</h1><p style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>Bravo! Hai superato l'ultimo esame, vai avanti di 1 casella.</p>`;
+            
+            const h1Front = document.createElement('h1');
+            h1Front.style.fontFamily = 'Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif';
+            h1Front.textContent = 'BONUS';
+            flipcardfront.appendChild(h1Front);
+
+            const h1Back = document.createElement('h1');
+            h1Back.style.fontFamily = 'Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif';
+            h1Back.textContent = 'BONUS';
+            flipcardback.appendChild(h1Back);
+
+            const pBack = document.createElement('p');
+            pBack.style.fontFamily = 'Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif';
+            pBack.textContent = "Bravo! Hai superato l'ultimo esame, vai avanti di 1 casella.";
+            flipcardback.appendChild(pBack);
+            
             setTimeout(() => {
                 flipcard.style.opacity = '0';
             }, 3600);
@@ -111,8 +178,22 @@ function showFlipCard(cell) {
             flipcard.style.visibility = 'visible';
             flipcard.style.opacity=1;
             flipcardfront.style.backgroundImage = `url('../images/relatore.png')`;
-            flipcardfront.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>BONUS</h1>`;
-            flipcardback.innerHTML = `<h1 style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>BONUS</h1><p style='font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;'>Bravo! Sei riuscito a trovare un relatore per la tesi, vai avanti di 2 caselle.</p>`;
+                        
+            const h1Front = document.createElement('h1');
+            h1Front.style.fontFamily = 'Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif';
+            h1Front.textContent = 'BONUS';
+            flipcardfront.appendChild(h1Front);
+
+            const h1Back = document.createElement('h1');
+            h1Back.style.fontFamily = 'Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif';
+            h1Back.textContent = 'BONUS';
+            flipcardback.appendChild(h1Back);
+
+            const pBack = document.createElement('p');
+            pBack.style.fontFamily = 'Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif';
+            pBack.textContent = "Bravo! Sei riuscito a trovare un relatore per la tesi, vai avanti di 2 caselle.";
+            flipcardback.appendChild(pBack);
+
             setTimeout(() => {
                 flipcard.style.opacity = '0';
             }, 3600);
