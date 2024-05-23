@@ -606,8 +606,10 @@ socket.on('redirectToBothGame', (data) => {
 function redirectPlayersToGame(game, data) {
     let nextPage;
     // il timeout serve per assicurarsi che il turno si sia finito di configurare
-    setTimeout(() => { nextPage = `/${game}?room=${data}&pos1=${primaryPlayer.cell}&pos2=${secondaryPlayer.cell}&turn=${turn}`; }, 1000)
-    window.location.href = nextPage;
+    setTimeout(() => { 
+        nextPage = `/${game}?room=${data}&pos1=${primaryPlayer.cell}&pos2=${secondaryPlayer.cell}&turn=${turn}`; 
+        window.location.href = nextPage;
+    }, 1000);
 };
 
 function checkFlagForRedirection(cell) {
