@@ -10,14 +10,16 @@ document.addEventListener('DOMContentLoaded', function () {
     let ballSpeedY = 0;
 
     const paddleHeight = playerPaddle.clientHeight;
-    let computerPaddleY = 150;
-    let playerPaddleY = 150;
-
+    
     const gameContainer = document.querySelector('.game-container');
     
     let gameStarted = false;
     let gameHeight = gameContainer.clientHeight;
     let gameWidth = gameContainer.clientWidth;
+
+    let computerPaddleY = gameHeight-paddleHeight+1;//150;
+    let playerPaddleY = gameHeight- paddleHeight+1;//150;
+
 
 
     let ballX = gameWidth-gameWidth/2;
@@ -95,8 +97,9 @@ document.addEventListener('DOMContentLoaded', function () {
         ball.style.top = ballY + 'px';
     }
 
-    let computerPaddleSpeed = 3;
+    let computerPaddleSpeed = 4;
     let computerPaddleDirection = 1;
+    computerPaddleY=0;
 
     //Funzione per il movimento della racchetta del computer
     function moveComputerPaddle() {
