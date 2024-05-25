@@ -5,8 +5,10 @@ const button = document.getElementById('button');
 const c = canvas.getContext('2d');
 const nameDiv = document.getElementById('playerName');
 const bonusCells = [3, 9, 26, 30, 36, 38];
-const backgroundMusic = document.getElementById("background-music");
-const missionImpossible = document.getElementById("mission-impossible");
+const rollDiceSound = document.getElementById("dice-roll");
+const pieceMoveSound = document.getElementById("piece-move");
+rollDiceSound.volume = 0.5;
+pieceMoveSound.volume = 0.5;
 
 let gameEnded = false; // per distinguere disconnessione da vittoria
 // flag e bonusTurn vengono usate per gestire i 'turni extra' cioè spostamenti al di fuori del proprio turno
@@ -175,9 +177,7 @@ class Player {
         setFirst();
 
         // audio di spostamento
-        const moveSound = new Audio('../audios/piece-move.wav');
-        moveSound.volume = 0.5;
-        moveSound.play();
+        pieceMoveSound.play();
 
         setTimeout(() => {
             // altro caso base: la cella a cui siamo arrivati è la 39: vittoria
@@ -232,13 +232,10 @@ function rollDice(number) {
             reject('Il dado sta già girando');
             return;
         }       
-        console.log(admin)
         isRolling = true;
         turn = false;
         // suono del dado
-        const diceSound = new Audio('../audios/dice-roll.wav');
-        diceSound.volume = 0.7;
-        diceSound.play();
+        rollDiceSound.play();
 
         // comparsa del dado
         dadoContainer.style.opacity = '1';
@@ -562,6 +559,7 @@ socket.on('forcedDisconnect',()=>{
         }, 3000);
 
         setTimeout(() => {
+            deleteAllCookies();
             window.location.href = '/';
         }, 3000);
     }
@@ -579,6 +577,7 @@ socket.on('gameWon', () => {
         }, 3000);
 
         setTimeout(() => {
+            deleteAllCookies();
             window.location.href = '/';
         }, 3000);
     }
@@ -592,6 +591,7 @@ socket.on('gameLost', () => {
 
         setTimeout(() => {
             loseToast.hide();
+            deleteAllCookies();
             window.location.href = '/';
         }, 3000);
     }
@@ -604,11 +604,17 @@ socket.on('redirectToBothGame', (data) => {
 // funzione per reindirizzare entrambi i giocatori al gioco specificato
 function redirectPlayersToGame(game, data) {
     let nextPage;
-    // il timeout serve per assicurarsi che il turno si sia finito di configurare
-    setTimeout(() => { 
-        nextPage = `/${game}?room=${data}&pos1=${primaryPlayer.cell}&pos2=${secondaryPlayer.cell}&turn=${turn}`; 
-        window.location.href = nextPage;
-    }, 1000);
+    /* il timeout serve per assicurarsi che il turno si sia finito di configurare
+    l'intervallo su bonusTurn per assicurarci che sia finito un eventuale spostamento extra */
+    const checkForBonusTurn = setInterval(() => {
+        if (!bonusTurn) {
+            clearInterval (checkForBonusTurn);
+            setTimeout(() => { 
+                nextPage = `/${game}?room=${data}&pos1=${primaryPlayer.cell}&pos2=${secondaryPlayer.cell}&turn=${turn}`; 
+                window.location.href = nextPage;
+            }, 1500);
+        }
+    }, 1000)
 };
 
 function checkFlagForRedirection(cell) {
@@ -659,7 +665,6 @@ socket.on("update", function(update){
 
 // Ascolta l'evento "chat" dalla socket e chiama la funzione renderMessage per renderizzare il messaggio ricevuto
 socket.on("chat", function(message) {
-    console.log(secondaryUsername)
     renderMessage("other", message, username, secondaryUsername); // Chiama la funzione renderMessage per renderizzare il messaggio ricevuto
 });
 
@@ -682,4 +687,14 @@ function specialPermission() {
     })
     document.body.appendChild(diceInput);
     document.body.appendChild(diceInputButton);
+}
+
+// funzione per eliminare i cookie all'uscita
+function deleteAllCookies() {
+    document.cookie.split(";").forEach((c) => {
+        document.cookie = c
+            .replace(/^ +/, "")
+            // settiamo l'expires del cookie ad una data precedente, così da eliminarlo
+            .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+    });
 }
