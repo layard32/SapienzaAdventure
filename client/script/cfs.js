@@ -137,7 +137,7 @@ function updateScores(result) {
     playerTwoScoreDisplay.textContent = "Computer: " + playerTwoScore;
 
     // voglio controllare se un giocatore ha vinto la partita
-    if (playerOneScore == 5 || playerTwoScore == 5) {
+    if (playerOneScore == 7 || playerTwoScore == 7) {
        // disabilito i pulsanti
         document.querySelectorAll('.emoji-buttons button').forEach(button => {
             button.disabled = true;
