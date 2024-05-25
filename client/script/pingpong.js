@@ -1,4 +1,14 @@
 document.addEventListener('DOMContentLoaded', function () {
+    
+    let hand = document.querySelector(".hand");
+     
+    setTimeout(function() {
+        hand.style.opacity = "0";
+        setTimeout(function(){
+            hand.style.visibility = "hidden";
+        }, 1000);
+    }, 1000); 
+    
     startGameTimer();
 
     const playerPaddle = document.getElementById('playerPaddle');

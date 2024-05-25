@@ -138,6 +138,24 @@ body {
     cursor: pointer;
 }
 
+.hand{
+    position: absolute;
+    background-image: url(../images/touch.png) !important;
+    background-size: 80%;
+    background-repeat: no-repeat;
+    top: 55%;
+    left: 51.5%;
+    transform: translate(-51.5%, -55%);
+    height: 60px;
+    width: 60px;
+    z-index: 3;
+    align-items: center;
+    background-color: transparent;
+    transition: opacity 1s;
+    opacity: 1;
+    visibility: visible;
+}
+
 @media (max-width: 850px) {
     .heading { font-size: 60px; } /* Adjust as needed */
 }
