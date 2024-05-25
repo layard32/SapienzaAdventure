@@ -6,6 +6,9 @@ let playerTwoChoice = ''; // scelta giocatore due
 let timer; // Timer per il turno del computer
 let timeout; // Timeout per il turno del computer
 
+const modal = document.getElementById('myModal');
+const modalText = document.getElementById('modalText');
+
 startGame();//come prima cosa avvio il gioco
 
 //creo una funzione per le scelte del computer (che sarebbe il giocatore 2)
@@ -132,6 +135,18 @@ function updateScores(result) {
     const playerTwoScoreDisplay = document.getElementById("computerScore");
     playerOneScoreDisplay.textContent = "Player: " + playerOneScore;
     playerTwoScoreDisplay.textContent = "Computer: " + playerTwoScore;
+
+    // voglio controllare se un giocatore ha vinto la partita
+    if (playerOneScore == 5 || playerTwoScore == 5) {
+       // disabilito i pulsanti
+        document.querySelectorAll('.emoji-buttons button').forEach(button => {
+            button.disabled = true;
+        });
+    
+        // e mostro il messaggio di fine partita
+        const winner = playerOneScore > playerTwoScore ? "Player" : "Computer";
+        showEndGameModal(`Il ${winner} ha vinto la partita!`);
+    }
 }
 
 //mostra il risultato
@@ -214,6 +229,22 @@ function resetGame() {
 
     document.getElementById('scoreInfo').textContent = 'Fai la tua scelta';
     document.getElementById('scoreMessage').textContent = 'Vinci per ottenere punti bonus per la corsa verso la Laurea!';
+}
+
+function hideEndGameModal() {
+    modal.style.display = 'none';
+}
+
+const closeButton = document.querySelector('.close');
+if (closeButton) {
+    closeButton.addEventListener('click', function() {
+        hideEndGameModal(); 
+    });
+}
+
+function showEndGameModal(message) {
+    modalText.textContent = message;
+    modal.style.display = 'block';
 }
 
 //serve per avviare il timer
