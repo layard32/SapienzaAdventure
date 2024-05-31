@@ -257,9 +257,9 @@ body {
 
 #diceInputButton {
     position: fixed;
-    top: 6%;
+    top: 7%;
     left: 1%;
-    transform: translate(-1%, -6%);
+    transform: translate(-1%, -7%);
 
     height: 55px;
     width: 130px;
