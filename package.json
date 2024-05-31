@@ -5,9 +5,7 @@
   "main": "nodes.js",
   "type": "module",
   "scripts": {
-    "start": "node server/server.js",
-    "dev": "node server/routes.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js"
   },
   "author": "",
   "license": "ISC",
